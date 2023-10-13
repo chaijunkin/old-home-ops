@@ -1,0 +1,19 @@
+---
+kubernetes:
+  children:
+    master:
+      hosts:
+        k3smaster01:
+          ansible_user: linux
+          ansible_host: 192.168.1.31
+    worker:
+      hosts:
+        k3sworker04:
+          ansible_user: linux
+          ansible_host: 192.168.1.34
+        k3sworker05:
+          ansible_user: linux
+          ansible_host: 192.168.1.35
+        k3sworker06:
+          ansible_user: linux
+          ansible_host: 192.168.1.36
