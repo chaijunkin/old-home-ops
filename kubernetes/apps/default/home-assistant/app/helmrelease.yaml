@@ -6,34 +6,73 @@ metadata:
   name: home-assistant
   namespace: default
 spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: local-path-provisioner
+      namespace: kube-system
   values:
-    addons:
-      codeserver:
+    controller:
+      type: statefulset
+      annotations:
+        reloader.stakater.com/auto: "true"
+    image:
+      repository: ghcr.io/onedr0p/home-assistant
+      tag: 2023.10.3@sha256:888ca6d7de294d28745c1ff0e9c33593371d4dbb46ba4d6754e0427339aaf71c
+    env:
+      TZ: Asia/Kuala_Lumpur
+      POSTGRES_HOST: 192.168.1.9
+      POSTGRES_DB: homeassistant
+      POSTGRES_PASSWORD: homeassistant
+    envFrom: *envFrom
+    service:
+      main:
+        ports:
+          http:
+            port: 8123
+    ingress:
+      main:
         enabled: true
-        image:
-          repository: ghcr.io/coder/code-server
-          tag: 4.17.1
-        env:
-          TZ: Asia/Kuala_Lumpur
-        workingDir: /config
-        args:
-          - --auth
-          - "none"
-          - --user-data-dir
-          - "/config/.vscode"
-          - --extensions-dir
-          - "/config/.vscode"
-        ingress:
-          enabled: true
-          ingressClassName: internal
-          hosts:
-            - host: &host hass-code.${SECRET_DOMAIN}
-              paths:
-                - path: /
-                  pathType: Prefix
-          tls:
-            - hosts:
-                - *host
-        volumeMounts:
-          - name: config
-            mountPath: /config
+        ingressClassName: internal
+        annotations:
+          hajimari.io/icon: home-assistant
+        hosts:
+          - host: &host "hass.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    probes:
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
+      startup:
+        enabled: false
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      enabled: true
+      storageClassName: local-path
