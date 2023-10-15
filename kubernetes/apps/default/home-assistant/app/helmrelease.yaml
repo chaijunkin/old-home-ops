@@ -41,7 +41,6 @@ spec:
       POSTGRES_HOST: 192.168.1.9
       POSTGRES_DB: homeassistant
       POSTGRES_PASSWORD: homeassistant
-    envFrom: *envFrom
     service:
       main:
         ports:
