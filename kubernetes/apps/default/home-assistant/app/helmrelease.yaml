@@ -73,5 +73,6 @@ spec:
       fsGroup: 568
       fsGroupChangePolicy: OnRootMismatch
     persistence:
-      enabled: true
-      storageClassName: local-path
+      config:
+        enabled: true
+        storageClass: local-path
