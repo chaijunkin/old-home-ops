@@ -75,4 +75,4 @@ spec:
     persistence:
       config:
         enabled: true
-        storageClass: local-path
+        existingClaim: home-assistant-config-pvc
