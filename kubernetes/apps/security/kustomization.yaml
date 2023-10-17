@@ -8,4 +8,4 @@ resources:
   # - ./authentik/ks.yaml
   # - ./crowdsec/ks.yaml
   # - ./kyverno/ks.yaml
-  # - ./vaultwarden/ks.yaml
+  - ./vaultwarden/ks.yaml

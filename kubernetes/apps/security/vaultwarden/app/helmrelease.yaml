@@ -3,100 +3,109 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: authentik
-  namespace: security
+  name: &app vaultwarden
+  namespace: default
 spec:
   interval: 30m
   chart:
     spec:
-      chart: authentik
-      version: 2023.8.3
-      interval: 30m
+      chart: app-template
+      version: 1.5.1
       sourceRef:
         kind: HelmRepository
-        name: authentik
-        namespace: security
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    # annotations:
-    #   secret.reloader.stakater.com/reload: authentik-secret,authentik-pguser-authentik,authentik-redis-secret
-
-    # authentik:
-    #   log_level: info
-    #   email:
-    #     port: 587
-    #     use_tls: true
-    #   error_reporting:
-    #     enabled: false
-    #     send_pii: false
-    #   redis:
-    #     host: "authentik-redis.security.svc.cluster.local"
-    #     password: ""
-
-    envValueFrom:
-      # AUTHENTIK_SECRET_KEY:
-      #   secretKeyRef:
-      #     name: authentik-secret
-      #     key: authentik_secret_key
-      # AUTHENTIK_EMAIL__HOST:
-      #   secretKeyRef:
-      #     name: authentik-secret
-      #     key: authentik_email_host
-      # AUTHENTIK_EMAIL__USERNAME:
-      #   secretKeyRef:
-      #     name: authentik-secret
-      #     key: authentik_email_username
-      # AUTHENTIK_EMAIL__PASSWORD:
-      #   secretKeyRef:
-      #     name: authentik-secret
-      #     key: authentik_email_password
-      # AUTHENTIK_EMAIL__FROM:
-      #   secretKeyRef:
-      #     name: authentik-secret
-      #     key: authentik_email_from
-      AUTHENTIK_POSTGRESQL__HOST:
-        secretKeyRef:
-          name: authentik-pguser-authentik
-          key: host
-      AUTHENTIK_POSTGRESQL__NAME:
-        secretKeyRef:
-          name: authentik-pguser-authentik
-          key: dbname
-      AUTHENTIK_POSTGRESQL__USER:
-        secretKeyRef:
-          name: authentik-pguser-authentik
-          key: user
-      AUTHENTIK_POSTGRESQL__PASSWORD:
-        secretKeyRef:
-          name: authentik-pguser-authentik
-          key: password
-      AUTHENTIK_REDIS__PASSWORD:
-        secretKeyRef:
-          name: authentik-redis-secret
-          key: AUTHENTIK_REDIS_PASSWORD
-
+    # initContainers:
+    #   01-init-db:
+    #     image: ghcr.io/auricom/postgres-init:15.4
+    #     imagePullPolicy: IfNotPresent
+    #     envFrom: &envFrom
+    #       - secretRef:
+    #           name: &secret vaultwarden-secret
+    # controller:
+    #   annotations:
+    #     reloader.stakater.com/auto: "true"
+    image:
+      repository: vaultwarden/server
+      tag: 1.29.2
+    env:
+      DATA_FOLDER: "data"
+      ICON_CACHE_FOLDER: "data/icon_cache"
+      ATTACHMENTS_FOLDER: "data/attachments"
+      DOMAIN: "https://vaultwarden.${SECRET_DOMAIN}"
+      TZ: "${TIMEZONE}"
+      SIGNUPS_ALLOWED: "false"
+      WEBSOCKET_ENABLED: "true"
+      WEBSOCKET_ADDRESS: 0.0.0.0
+      WEBSOCKET_PORT: 3012
+      SMTP_HOST: smtp-relay.default.svc.cluster.local.
+      SMTP_FROM: vaultwarden@${SECRET_DOMAIN}
+      SMTP_FROM_NAME: vaultwarden
+      SMTP_PORT: 2525
+      SMTP_SECURITY: "off"
+      ## SECRET TBC
+      DATABASE_URL: postgresql://{{ .Release.Name }}:{{ .Release.Name }}@192.168.1.11:5432/{{ .Release.Name }}
+      ADMIN_TOKEN: "{{ .Release.Name }}"
+      # Postgres Init
+      INIT_POSTGRES_DBNAME: "{{ .Release.Name }}"
+      INIT_POSTGRES_HOST: 192.168.1.11
+      INIT_POSTGRES_USER: "{{ .Release.Name }}"
+      INIT_POSTGRES_PASS: "{{ .Release.Name }}"
+      INIT_POSTGRES_SUPER_PASS: "{{ .Release.Name }}"
+    # envFrom: *envFrom
+    service:
+      main:
+        ports:
+          http:
+            port: &port 80
+          websocket:
+            enabled: true
+            port: &websocket-port 3012
+    persistence:
+      data:
+        enabled: true
+        existingClaim: vaultwarden-data
+        mountPath: /data
     ingress:
-      enabled: true
-      ingressClassName: external
-      annotations:
-        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-        nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-        nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-      hosts:
-        - host: &host "authentik.${SECRET_DOMAIN}"
-          paths:
-            - path: /
-      tls:
-        - hosts:
-            - *host
-
-    postgresql:
-      enabled: false
-
-    prometheus:
-      rules:
-        create: true
-      serviceMonitor:
-        create: true
-
-    redis:
-      enabled: false
+      main:
+        enabled: true
+        ingressClassName: internal
+        # annotations:
+        #   external-dns.home.arpa/enabled: "true"
+          # hajimari.io/icon: mdi:lock
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: *port
+              - path: /notifications/hub/negotiate
+                pathType: Prefix
+                service:
+                  port: *port
+              - path: /notifications/hub
+                pathType: Prefix
+                service:
+                  port: *websocket-port
+        tls:
+          - hosts:
+              - *host
+    resources:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+      limits:
+        memory: 2Gi
