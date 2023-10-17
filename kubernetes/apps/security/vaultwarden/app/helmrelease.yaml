@@ -75,9 +75,9 @@ spec:
             port: &websocket-port 3012
     persistence:
       data:
-        enabled: true
-        existingClaim: vaultwarden-data
-        mountPath: /data
+        enabled: false
+        # existingClaim: vaultwarden-data
+        # mountPath: /data
     ingress:
       main:
         enabled: true
