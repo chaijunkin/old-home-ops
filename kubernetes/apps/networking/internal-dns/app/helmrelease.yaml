@@ -34,11 +34,9 @@ spec:
       - --source=service
       - --source=ingress
       - --ingress-class=internal
-      - --provider=pihole
       - --policy=upsert-only
       - --registry=noop
       - --pihole-server=http://192.168.99.99
-      - --pihole-password=
     policy: sync
     sources: ["crd", "ingress"]
     txtPrefix: k8s.
