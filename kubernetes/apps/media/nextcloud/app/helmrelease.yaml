@@ -39,13 +39,13 @@ spec:
       # existingSecret:
       #   enabled: true
       #   secretName: nextcloud
-      host: &host nextcloud.{SECRET_DOMAIN}
+      host: &host nextcloud.${SECRET_DOMAIN}
       mail:
         enabled: false
         fromAddress: admin
-        domain: {SECRET_DOMAIN}
+        domain: ${SECRET_DOMAIN}
         smtp:
-          host: pfsense.{SECRET_DOMAIN}
+          host: pfsense.${SECRET_DOMAIN}
           port: 25
           authtype: NONE
           name: ""
