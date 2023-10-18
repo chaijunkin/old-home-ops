@@ -34,6 +34,7 @@ spec:
 
     # envValueFrom:
     env: 
+      AUTHENTIK_BOOTSTRAP_PASSWORD: authentik
       AUTHENTIK_SECRET_KEY: authentik  # "{{ .Release.Name }}"
       #   secretKeyRef:
       #     name: authentik-secret
