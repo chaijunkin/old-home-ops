@@ -2,43 +2,43 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: unifi
+  name: pihole
   namespace: network
   labels:
-    app.kubernetes.io/name: unifi
-    app.kubernetes.io/instance: unifi
+    app.kubernetes.io/name: pihole
+    app.kubernetes.io/instance: pihole
 spec:
   type: ExternalName
-  externalName: unifi.
+  externalName: pihole.${SECRET_DOMAIN}
   ports:
     - name: http
-      port: &port 8443
+      port: &port 80
       protocol: TCP
       targetPort: *port
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: unifi
+  name: pihole
   namespace: network
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   labels:
-    app.kubernetes.io/name: unifi
-    app.kubernetes.io/instance: unifi
+    app.kubernetes.io/name: pihole
+    app.kubernetes.io/instance: pihole
 spec:
-  ingressClassName: internal-nginx
+  ingressClassName: internal
   rules:
-    - host: &host unifi.bjw-s.dev
+    - host: &host pihole.${SECRET_DOMAIN}
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: unifi
+                name: pihole
                 port:
-                  number: 8443
+                  number: 80
   tls:
     - hosts:
         - *host

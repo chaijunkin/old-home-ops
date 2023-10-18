@@ -1,0 +1,44 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ap
+  namespace: network
+  labels:
+    app.kubernetes.io/name: ap
+    app.kubernetes.io/instance: ap
+spec:
+  type: ExternalName
+  externalName: ap.${SECRET_DOMAIN}
+  ports:
+    - name: http
+      port: &port 80
+      protocol: TCP
+      targetPort: *port
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ap
+  namespace: network
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  labels:
+    app.kubernetes.io/name: ap
+    app.kubernetes.io/instance: ap
+spec:
+  ingressClassName: internal
+  rules:
+    - host: &host ap.${SECRET_DOMAIN}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ap
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - *host
