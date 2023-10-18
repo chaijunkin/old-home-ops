@@ -1,0 +1,91 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nextcloud
+  namespace: media
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: nextcloud
+      version: 3.4.3
+      sourceRef:
+        kind: HelmRepository
+        name: nextcloud
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    image:
+      flavor: fpm-alpine
+    nginx:
+      enabled: true
+    nextcloud:
+      datadir: /var/www/data
+      extraEnv:
+        - name: REDIS_HOST
+          value: redis-lb.default.svc.cluster.local
+        - name: REDIS_HOST_PORT
+          value: "6379"
+      # existingSecret:
+      #   enabled: true
+      #   secretName: nextcloud
+      host: &host nextcloud.{SECRET_DOMAIN}
+      mail:
+        enabled: false
+        fromAddress: admin
+        domain: {SECRET_DOMAIN}
+        smtp:
+          host: pfsense.{SECRET_DOMAIN}
+          port: 25
+          authtype: NONE
+          name: ""
+          password: ""
+    internalDatabase:
+      enabled: false
+    externalDatabase:
+      enabled: true
+      type: '{{ .Release.Name }}'
+      host: '{{ .Release.Name }}:5432'
+      database: '{{ .Release.Name }}'
+    ingress:
+      enabled: true
+      className: "internal"
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "internal.${SECRET_DOMAIN}"
+        nginx.ingress.kubernetes.io/proxy-body-size: "10G"
+        nginx.ingress.kubernetes.io/proxy-buffering: "off"
+        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+        nginx.ingress.kubernetes.io/server-snippet: |-
+          server_tokens off;
+          proxy_hide_header X-Powered-By;
+      path: /
+      pathType: Prefix
+      tls:
+        - hosts:
+            - *host
+    persistence:
+      enabled: false
+      existingClaim: nextcloud
+      nextcloudData:
+        enabled: true
+        existingClaim: nextcloud-nfs
+        accessMode: ReadWriteMany
+  # valuesFrom:
+  #   - targetPath: externalDatabase.user
+  #     kind: Secret
+  #     name: nextcloud
+  #     valuesKey: database-username
+  #   - targetPath: externalDatabase.password
+  #     kind: Secret
+  #     name: nextcloud
+  #     valuesKey: database-password
