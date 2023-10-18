@@ -32,7 +32,6 @@ spec:
         value: pihole
     extraArgs:
       - --ingress-class=internal
-      - --registry=noop
       - --pihole-server=http://192.168.99.99
     registry: txt
     policy: upsert-only
