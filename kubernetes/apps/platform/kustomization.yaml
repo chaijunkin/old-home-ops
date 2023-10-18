@@ -5,5 +5,5 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # # Flux-Kustomizations
-  - ./jumpserver.yaml
+  - ./jumpserver/ks.yaml
   # - ./netbox.yaml
