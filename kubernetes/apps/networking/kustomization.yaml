@@ -9,6 +9,7 @@ resources:
   - ./echo-server/ks.yaml
   - ./external-dns/ks.yaml
   # - ./external-services/ks.yaml
+  - ./internal-dns/ks.yaml
   - ./k8s-gateway/ks.yaml
   # - ./kutt/ks.yaml
   # - ./multus/ks.yaml
