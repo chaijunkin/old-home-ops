@@ -33,7 +33,7 @@ spec:
     extraArgs:
       - --ingress-class=internal
       - --pihole-server=http://192.168.99.99
-    registry: txt
+    # registry: txt
     policy: upsert-only
     sources: ["service", "ingress"]
     txtPrefix: k8s.
