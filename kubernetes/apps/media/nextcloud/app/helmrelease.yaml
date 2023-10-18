@@ -13,7 +13,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: nextcloud
-        namespace: flux-system
+        namespace: nextcloud
   maxHistory: 2
   install:
     remediation:
