@@ -31,14 +31,11 @@ spec:
       - name: EXTERNAL_DNS_PIHOLE_PASSWORD
         value: pihole
     extraArgs:
-      - --source=service
-      - --source=ingress
       - --ingress-class=internal
-      - --policy=upsert-only
       - --registry=noop
       - --pihole-server=http://192.168.99.99
-    policy: sync
-    sources: ["crd", "ingress"]
+    policy: upsert-only
+    sources: ["service", "ingress"]
     txtPrefix: k8s.
     txtOwnerId: default
     domainFilters: ["${SECRET_DOMAIN}"]
