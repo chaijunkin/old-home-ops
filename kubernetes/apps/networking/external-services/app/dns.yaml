@@ -8,13 +8,25 @@ metadata:
     app.kubernetes.io/name: pihole
     app.kubernetes.io/instance: pihole
 spec:
-  type: ExternalName
-  externalName: 192.168.99.99
+  type: ClusterIP
+  clusterIP: None
   ports:
     - name: http
       port: &port 80
       protocol: TCP
       targetPort: *port
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: pihole
+subsets:
+- addresses:
+  - ip: 192.168.99.99
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
