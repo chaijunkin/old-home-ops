@@ -8,8 +8,10 @@ metadata:
     app.kubernetes.io/name: ap
     app.kubernetes.io/instance: ap
 spec:
-  type: ExternalName
-  externalName: ap.${SECRET_DOMAIN}
+  # type: ExternalName
+  # externalName: ap.${SECRET_DOMAIN}
+  externalIPs:
+    - 192.168.99.3
   ports:
     - name: http
       port: &port 80

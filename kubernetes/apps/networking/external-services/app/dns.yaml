@@ -8,8 +8,10 @@ metadata:
     app.kubernetes.io/name: pihole
     app.kubernetes.io/instance: pihole
 spec:
-  type: ExternalName
-  externalName: pihole.${SECRET_DOMAIN}
+  # type: ExternalName
+  # externalName: pihole.${SECRET_DOMAIN}
+  externalIPs:
+    - 192.168.99.99
   ports:
     - name: http
       port: &port 80
