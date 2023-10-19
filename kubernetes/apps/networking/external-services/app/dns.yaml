@@ -33,9 +33,9 @@ kind: Ingress
 metadata:
   name: pihole
   namespace: networking
-  annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    external-dns.alpha.kubernetes.io/hostname: pihole.${SECRET_DOMAIN}
+  # annotations:
+  #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  #   external-dns.alpha.kubernetes.io/hostname: pihole.${SECRET_DOMAIN}
   labels:
     app.kubernetes.io/name: pihole
     app.kubernetes.io/instance: pihole

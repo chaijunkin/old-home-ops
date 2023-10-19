@@ -33,9 +33,9 @@ kind: Ingress
 metadata:
   name: pfsense
   namespace: networking
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: pfsense.${SECRET_DOMAIN}
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  # annotations:
+  #   external-dns.alpha.kubernetes.io/hostname: pfsense.${SECRET_DOMAIN}
+  #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   labels:
     app.kubernetes.io/name: pfsense
     app.kubernetes.io/instance: pfsense
