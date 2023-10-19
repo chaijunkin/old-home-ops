@@ -22,6 +22,7 @@ metadata:
   name: switch
   namespace: networking
   annotations:
+    external-dns.alpha.kubernetes.io/hostname: switch.${SECRET_DOMAIN}
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   labels:
     app.kubernetes.io/name: switch

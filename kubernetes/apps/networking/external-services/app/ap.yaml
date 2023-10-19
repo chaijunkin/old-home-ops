@@ -22,6 +22,7 @@ metadata:
   name: ap
   namespace: networking
   annotations:
+    external-dns.alpha.kubernetes.io/hostname: ap.${SECRET_DOMAIN}
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   labels:
     app.kubernetes.io/name: ap
