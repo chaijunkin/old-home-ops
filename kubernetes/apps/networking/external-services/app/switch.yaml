@@ -71,7 +71,7 @@ spec:
   ports:
   - port: 80  # Port your Ingress should route to
     targetPort: 80  # Port on your non-Kubernetes service
-
+---
 # Create a Kubernetes Ingress resource
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -92,7 +92,7 @@ spec:
             name: switch  # Name of the Service to route to
             port:
               number: 80  # Port of the Service
-
+---
 # Create an ExternalDNS resource to manage DNS records
 apiVersion: "external-dns.net/v1alpha1"
 kind: "DNSEndpoint"
