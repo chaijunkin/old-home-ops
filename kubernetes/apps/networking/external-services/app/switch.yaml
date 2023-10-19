@@ -103,4 +103,4 @@ spec:
   endpoints:
   - dnsName: switch.${SECRET_DOMAIN}  # Replace with your hostname
     targets:
-    - host: 192.168.1.2  # Replace with the IP or domain of your external service
+    - 192.168.1.2  # Replace with the IP or domain of your external service
