@@ -79,9 +79,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "internal"
-        # annotations:
-        #   external-dns.alpha.kubernetes.io/target: hass.${SECRET_DOMAIN}
+        className: "external"
         hosts:
           - host: &host "hass.${SECRET_DOMAIN}"
             paths:
@@ -93,11 +91,9 @@ spec:
           - hosts:
               - *host
 
-    # persistence:
-      # deploy-key:
-      #   type: secret
-      #   name: home-assistant-secret
-      #   defaultMode: 256
-      #   globalMounts:
-      #     - path: /root/.ssh/id_rsa
-      #       subPath: GH_DEPLOY_KEY
+    persistence:
+      config:
+        enabled: true
+        existingClaim: homeassistant-config
+        globalMounts:
+          - path: /config
