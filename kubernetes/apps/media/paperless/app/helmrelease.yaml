@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: paperless
+  namespace: selfhosted
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.0.3
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  values:
+    controllers:
+      main:
+        type: statefulset
+
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        statefulset:
+          volumeClaimTemplates:
+            - name: data
+              accessMode: ReadWriteOnce
+              size: 15Gi
+              storageClass: local-path
+              # globalMounts:
+              #   - path: /data/local
+
+        containers:
+          main:
+            image:
+              repository: ghcr.io/paperless-ngx/paperless-ngx
+              tag: 1.17.4
+            envFrom:
+              - secretRef:
+                  name: paperless-secret
+              - configMapRef:
+                  name: paperless-configmap
+            resources:
+              requests:
+                cpu: 11m
+                memory: 1812M
+              limits:
+                memory: 1812M
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8000
+
+    ingress:
+      main:
+        enabled: true
+        className: "internal"
+        # annotations:
+        #   nginx.ingress.kubernetes.io/auth-url: http://ak-outpost-internal-proxy-outpost.security.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+        #   nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start?rd=$escaped_request_uri
+        #   nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+        #   nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: &host "paperless.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+
+    # persistence:
+    #   nas-consume:
+    #     type: nfs
+    #     server: "nas.bjw-s.casa"
+    #     path: /volume1/Docs/paperless/incoming
+    #     globalMounts:
+    #       - path: /data/nas/consume
+    #   nas-export:
+    #     type: nfs
+    #     server: "nas.bjw-s.casa"
+    #     path: /volume1/Docs/paperless/export
+    #     globalMounts:
+    #       - path: /data/nas/export
