@@ -63,12 +63,12 @@ spec:
                 enabled: false
               startup:
                 enabled: false
-            resources:
-              requests:
-                cpu: 47m
-                memory: 1254M
-              limits:
-                memory: 1254M
+            # resources:
+            #   requests:
+            #     cpu: 47m
+            #     memory: 1254M
+            #   limits:
+            #     memory: 1254M
 
     service:
       main:
