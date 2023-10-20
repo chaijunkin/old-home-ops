@@ -7,15 +7,15 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  path: "./kubernetes/cluster-0/apps/home-automation/home-assistant/app"
+  path: "./kubernetes/apps/home-automation/home-assistant/app"
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
+    name: home-kubernetes
   wait: false # no flux ks dependents
-  dependsOn:
-    - name: cluster-apps-multus-config
-    - name: cluster-apps-external-secrets-stores
-    - name: cluster-apps-rook-ceph-cluster
-    - name: cluster-apps-crunchy-postgres-operator
-    - name: cluster-apps-external-secrets-cluster-secrets
+  # dependsOn:
+  #   - name: cluster-apps-multus-config
+  #   - name: cluster-apps-external-secrets-stores
+  #   - name: cluster-apps-rook-ceph-cluster
+  #   - name: cluster-apps-crunchy-postgres-operator
+  #   - name: cluster-apps-external-secrets-cluster-secrets

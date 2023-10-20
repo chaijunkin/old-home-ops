@@ -24,38 +24,38 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        statefulset:
-          volumeClaimTemplates:
-            - name: config
-              accessMode: ReadWriteOnce
-              size: 1Gi
-              storageClass: ceph-block
-              globalMounts:
-                - path: /config
+        # statefulset:
+        #   volumeClaimTemplates:
+        #     - name: config
+        #       accessMode: ReadWriteOnce
+        #       size: 1Gi
+        #       storageClass: ceph-block
+        #       globalMounts:
+        #         - path: /config
 
-        pod:
-          annotations:
-            k8s.v1.cni.cncf.io/networks: |
-              [{
-                "name":"multus-iot",
-                "namespace": "network",
-                "ips": ["10.1.3.151/24"]
-              }]
+        # pod:
+        #   annotations:
+        #     k8s.v1.cni.cncf.io/networks: |
+        #       [{
+        #         "name":"multus-iot",
+        #         "namespace": "network",
+        #         "ips": ["10.1.3.151/24"]
+        #       }]
 
         containers:
           main:
             image:
               repository: ghcr.io/home-assistant/home-assistant
               tag: 2023.10.3@sha256:021e2afc6e573a3623dadfe7028e63b370ebc249f3217e1f8fce80ebbfe9afe5
-            env:
-              SECRET_RECORDER_DB_URL:
-                valueFrom:
-                  secretKeyRef:
-                    name: home-assistant-pguser-home-assistant
-                    key: uri
-            envFrom:
-              - secretRef:
-                  name: home-assistant-secret
+            # env:
+            #   SECRET_RECORDER_DB_URL:
+            #     valueFrom:
+            #       secretKeyRef:
+            #         name: home-assistant-pguser-home-assistant
+            #         key: uri
+            # envFrom:
+            #   - secretRef:
+            #       name: home-assistant-secret
             probes:
               liveness:
                 enabled: false
@@ -79,11 +79,11 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "external-nginx"
+        className: "internal"
         annotations:
-          external-dns.alpha.kubernetes.io/target: ingress-ext.bjw-s.dev
+          external-dns.alpha.kubernetes.io/target: hass.${SECRET_DOMAIN}
         hosts:
-          - host: &host "domo.bjw-s.dev"
+          - host: &host "hass.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -93,11 +93,11 @@ spec:
           - hosts:
               - *host
 
-    persistence:
-      deploy-key:
-        type: secret
-        name: home-assistant-secret
-        defaultMode: 256
-        globalMounts:
-          - path: /root/.ssh/id_rsa
-            subPath: GH_DEPLOY_KEY
+    # persistence:
+      # deploy-key:
+      #   type: secret
+      #   name: home-assistant-secret
+      #   defaultMode: 256
+      #   globalMounts:
+      #     - path: /root/.ssh/id_rsa
+      #       subPath: GH_DEPLOY_KEY
