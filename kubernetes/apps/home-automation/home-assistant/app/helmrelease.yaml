@@ -21,17 +21,17 @@ spec:
     controllers:
       main:
         type: statefulset
-        annotations:
-          reloader.stakater.com/auto: "true"
+        # annotations:
+        #   reloader.stakater.com/auto: "true"
 
-        # statefulset:
-        #   volumeClaimTemplates:
-        #     - name: config
-        #       accessMode: ReadWriteOnce
-        #       size: 1Gi
-        #       storageClass: ceph-block
-        #       globalMounts:
-        #         - path: /config
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              accessMode: ReadWriteOnce
+              size: 1Gi
+              storageClass: local-path
+              globalMounts:
+                - path: /config
 
         # pod:
         #   annotations:
