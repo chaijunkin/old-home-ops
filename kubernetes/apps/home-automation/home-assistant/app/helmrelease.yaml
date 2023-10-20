@@ -79,7 +79,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "external"
+        className: "internal"
         hosts:
           - host: &host "hass.${SECRET_DOMAIN}"
             paths:
