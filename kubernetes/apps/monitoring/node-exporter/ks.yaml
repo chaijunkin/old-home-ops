@@ -7,11 +7,11 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  path: "./kubernetes/cluster-0/apps/monitoring/node-exporter/app"
+  path: "./kubernetes/apps/monitoring/node-exporter/app"
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
+    name: home-kubernetes
   wait: false # no flux ks dependents
   dependsOn:
     - name: cluster-apps-kube-prometheus-stack
