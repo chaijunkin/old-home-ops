@@ -79,7 +79,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "internal"
+        ingressClassName: "internal"
         annotations:
           external-dns.alpha.kubernetes.io/target: hass.${SECRET_DOMAIN}
         hosts:
