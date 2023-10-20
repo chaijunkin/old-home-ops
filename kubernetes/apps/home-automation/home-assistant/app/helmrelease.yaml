@@ -80,8 +80,8 @@ spec:
       main:
         enabled: true
         ingressClassName: "internal"
-        annotations:
-          external-dns.alpha.kubernetes.io/target: hass.${SECRET_DOMAIN}
+        # annotations:
+        #   external-dns.alpha.kubernetes.io/target: hass.${SECRET_DOMAIN}
         hosts:
           - host: &host "hass.${SECRET_DOMAIN}"
             paths:
