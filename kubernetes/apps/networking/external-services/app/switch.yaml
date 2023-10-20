@@ -81,6 +81,7 @@ metadata:
   # annotations:
     # Add any necessary annotations for your Ingress controller
 spec:
+  ingressClassName: internal
   rules:
   - host: switch.${SECRET_DOMAIN}  # Replace with your desired hostname
     http:
