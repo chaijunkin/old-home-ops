@@ -30,8 +30,8 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
-dependsOn:
-  - name: cluster-apps-external-secrets
+  dependsOn:
+    - name: cluster-apps-external-secrets
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -48,6 +48,6 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
-dependsOn:
-  - name: cluster-apps-external-secrets
-  - name: cluster-apps-external-secrets-bitwarden
+  dependsOn:
+    - name: cluster-apps-external-secrets
+    - name: cluster-apps-external-secrets-bitwarden
