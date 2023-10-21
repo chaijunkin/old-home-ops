@@ -16,11 +16,11 @@ data:
   # PAPERLESS_ENABLE_HTTP_REMOTE_USER: "true"
   # PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: HTTP_X_AUTHENTIK_USERNAME
 
-  # Configure folders
-  PAPERLESS_CONSUMPTION_DIR: /data/nas/consume
-  PAPERLESS_DATA_DIR: /data/local/data
-  PAPERLESS_EXPORT_DIR: /data/nas/export
-  PAPERLESS_MEDIA_ROOT: /data/local/media
+  # # Configure folders
+  # PAPERLESS_CONSUMPTION_DIR: /data/nas/consume
+  # PAPERLESS_DATA_DIR: /data/local/data
+  # PAPERLESS_EXPORT_DIR: /data/nas/export
+  # PAPERLESS_MEDIA_ROOT: /data/local/media
 
   # Configure folder importer
   PAPERLESS_CONSUMER_POLLING: "60"
