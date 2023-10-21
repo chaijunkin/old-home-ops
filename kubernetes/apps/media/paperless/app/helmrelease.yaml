@@ -4,7 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: paperless
-  namespace: selfhosted
+  namespace: media
 spec:
   interval: 30m
   chart:
@@ -31,8 +31,8 @@ spec:
               accessMode: ReadWriteOnce
               size: 15Gi
               storageClass: local-path
-              # globalMounts:
-              #   - path: /data/local
+              globalMounts:
+                - path: /data/local
 
         containers:
           main:
