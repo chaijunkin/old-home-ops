@@ -20,9 +20,11 @@
 # kind: Endpoints
 # metadata:
 #   name: ap
+#   namespace: networking
+
 # subsets:
 # - addresses:
-#   - ip: 192.168.99.3
+#   - ip: 192.168.99.5
 #   ports:
 #   - name: http
 #     port: 80
@@ -34,6 +36,7 @@
 #   name: ap
 #   namespace: networking
 #   # annotations:
+#   #   nginx.ingress.kubernetes.io/rewrite-target: /
 #   #   external-dns.alpha.kubernetes.io/hostname: ap.${SECRET_DOMAIN}
 #   #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 #   labels:
@@ -55,7 +58,3 @@
 #   tls:
 #     - hosts:
 #         - *host
-#    status:
-#     loadBalancer:
-#       ingress:
-#       - ip: 192.168.1.248

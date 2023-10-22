@@ -1,107 +1,107 @@
-# ---
+# # ---
+# # apiVersion: v1
+# # kind: Service
+# # metadata:
+# #   name: switch
+# #   namespace: networking
+# #   labels:
+# #     app.kubernetes.io/name: switch
+# #     app.kubernetes.io/instance: switch
+# # spec:
+# #   type: ClusterIP
+# #   clusterIP: None
+# #   ports:
+# #     - name: http
+# #       port: &port 80
+# #       protocol: TCP
+# #       targetPort: *port
+# # ---
+# # apiVersion: v1
+# # kind: Endpoints
+# # metadata:
+# #   name: switch
+# # subsets:
+# # - addresses:
+# #   - ip: 192.168.1.2
+# #   ports:
+# #   - name: http
+# #     port: 80
+# #     protocol: TCP
+# # ---
+# # apiVersion: networking.k8s.io/v1
+# # kind: Ingress
+# # metadata:
+# #   name: switch
+# #   namespace: networking
+# #   # annotations:
+# #   #   external-dns.alpha.kubernetes.io/hostname: switch.${SECRET_DOMAIN}
+# #   #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+# #   labels:
+# #     app.kubernetes.io/name: switch
+# #     app.kubernetes.io/instance: switch
+# # spec:
+# #   ingressClassName: internal
+# #   rules:
+# #     - host: &host switch.${SECRET_DOMAIN}
+# #       http:
+# #         paths:
+# #           - path: /
+# #             pathType: Prefix
+# #             backend:
+# #               service:
+# #                 name: switch
+# #                 port:
+# #                   number: 80
+# #   tls:
+# #     - hosts:
+# #         - *host
+# #   status:
+# #     loadBalancer:
+# #       ingress:
+# #       - ip: 192.168.1.248
+
+
+# # Create a Kubernetes Service that routes traffic to your non-Kubernetes service
 # apiVersion: v1
 # kind: Service
 # metadata:
-#   name: switch
+#   name: switch  # Name of your Service
 #   namespace: networking
-#   labels:
-#     app.kubernetes.io/name: switch
-#     app.kubernetes.io/instance: switch
 # spec:
-#   type: ClusterIP
-#   clusterIP: None
 #   ports:
-#     - name: http
-#       port: &port 80
-#       protocol: TCP
-#       targetPort: *port
+#   - port: 80  # Port your Ingress should route to
+#     targetPort: 80  # Port on your non-Kubernetes service
 # ---
-# apiVersion: v1
-# kind: Endpoints
-# metadata:
-#   name: switch
-# subsets:
-# - addresses:
-#   - ip: 192.168.1.2
-#   ports:
-#   - name: http
-#     port: 80
-#     protocol: TCP
-# ---
+# # Create a Kubernetes Ingress resource
 # apiVersion: networking.k8s.io/v1
 # kind: Ingress
 # metadata:
 #   name: switch
 #   namespace: networking
 #   # annotations:
-#   #   external-dns.alpha.kubernetes.io/hostname: switch.${SECRET_DOMAIN}
-#   #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-#   labels:
-#     app.kubernetes.io/name: switch
-#     app.kubernetes.io/instance: switch
+#     # Add any necessary annotations for your Ingress controller
 # spec:
 #   ingressClassName: internal
 #   rules:
-#     - host: &host switch.${SECRET_DOMAIN}
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: switch
-#                 port:
-#                   number: 80
-#   tls:
-#     - hosts:
-#         - *host
-#   status:
-#     loadBalancer:
-#       ingress:
-#       - ip: 192.168.1.248
-
-
-# Create a Kubernetes Service that routes traffic to your non-Kubernetes service
-apiVersion: v1
-kind: Service
-metadata:
-  name: switch  # Name of your Service
-  namespace: networking
-spec:
-  ports:
-  - port: 80  # Port your Ingress should route to
-    targetPort: 80  # Port on your non-Kubernetes service
----
-# Create a Kubernetes Ingress resource
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: switch
-  namespace: networking
-  # annotations:
-    # Add any necessary annotations for your Ingress controller
-spec:
-  ingressClassName: internal
-  rules:
-  - host: switch.${SECRET_DOMAIN}  # Replace with your desired hostname
-    http:
-      paths:
-      - path: /      # Replace with your desired path
-        pathType: Prefix
-        backend:
-          service:
-            name: switch  # Name of the Service to route to
-            port:
-              number: 80  # Port of the Service
----
-# Create an ExternalDNS resource to manage DNS records
-apiVersion: "externaldns.k8s.io/v1alpha1"
-kind: "DNSEndpoint"
-metadata:
-  name: switch
-  namespace: networking
-spec:
-  endpoints:
-  - dnsName: switch.${SECRET_DOMAIN}  # Replace with your hostname
-    targets:
-    - 192.168.1.2  # Replace with the IP or domain of your external service
+#   - host: switch.${SECRET_DOMAIN}  # Replace with your desired hostname
+#     http:
+#       paths:
+#       - path: /      # Replace with your desired path
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: switch  # Name of the Service to route to
+#             port:
+#               number: 80  # Port of the Service
+# ---
+# # Create an ExternalDNS resource to manage DNS records
+# apiVersion: "externaldns.k8s.io/v1alpha1"
+# kind: "DNSEndpoint"
+# metadata:
+#   name: switch
+#   namespace: networking
+# spec:
+#   endpoints:
+#   - dnsName: switch.${SECRET_DOMAIN}  # Replace with your hostname
+#     targets:
+#     - 192.168.1.2  # Replace with the IP or domain of your external service
