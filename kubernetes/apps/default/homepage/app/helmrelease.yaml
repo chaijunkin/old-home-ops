@@ -132,7 +132,7 @@ spec:
             - Calibre-web:
                 description: Book service
                 href: https://book.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/calibreweb.png
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/calibre-web.png
             - Immich:
                 description: Mobile media backup service
                 href: https://immich.${SECRET_DOMAIN}
@@ -146,14 +146,6 @@ spec:
             #     description: Network hypervisor
             #     href: https://jumpy.${SECRET_DOMAIN}
             #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/proxmox.png
-            - Rancher (k3s):
-                description: K3S management
-                href: https://rancher.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/rancher.png
-            - Truenas:
-                description: NAS & HyperConverged storage
-                href: https://truenas.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/truenas.png
             - Minio:
                 description: Object Storage
                 href: https://minio-console.${SECRET_DOMAIN}/login
@@ -167,28 +159,22 @@ spec:
             - Pihole:
                 description: Local DNS Server and Adblocker
                 href: https://pihole.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pihole.png
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pi-hole.png
+            - Switch:
+                description: Managed switch
+                href: https://switch.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/tp-link.png
+            - Access point:
+                description: Wifi provider
+                href: https://ap.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/omada.png
                 # widget:
                 #   type: pihole
                 #   url: https://pihole.${SECRET_DOMAIN}
-            - Traefik (Internal):
-                description: Reverse Proxy and Load Balancer (Internal)
-                href: https://traefik.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/traefik.png
-                # widget:
-                #   type: traefik
-                #   url: https://traefik.${SECRET_DOMAIN}
-            - Traefik (External):
-                description: Reverse Proxy and Load Balancer (External)
-                href: https://traefik.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/traefik.png
-                # widget:
-                #   type: traefik
-                #   url: https://traefik.${SECRET_DOMAIN}
-            - JumpServer:
-                description: Bastion Host
-                href: https://jumpserver.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/guacamole.png
+            - Hubble:
+                description: Network, Service & Security Observability
+                href: https://hubble.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/hubble.png
             - Kutt:
                 description: URL shortner
                 href: https://kutt.${SECRET_DOMAIN}
@@ -201,15 +187,11 @@ spec:
             - Authentik:
                 description: Authentication provider
                 href: https://authentik.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/authentik-orange.png
-            # - DroneCI:
-            #     description: Continuous Integration provider
-            #     href: https://droneci.${SECRET_DOMAIN}
-            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/drone.png
-            # - Gitea:
-            #     description: Git provider
-            #     href: https://gitea.${SECRET_DOMAIN}
-            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/gitea.png
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/authentik.png
+            - Kubernetes:
+                description: Container Orchestrator dashboard
+                href: https://kubernetes.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kubernetes-dashboard.png
             - NetBox:
                 description: DCIM/IPAM tools
                 href: https://netbox.${SECRET_DOMAIN}
@@ -231,7 +213,7 @@ spec:
             - ChangeDetection.io:
                 description: Change detection
                 href: https://changedetectionio.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/changedetectionio.png
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/changedetection-io.png
             - AlertManager:
                 description: Alert manager server
                 href: https://alertmanager.${SECRET_DOMAIN}
@@ -292,10 +274,24 @@ spec:
                 description: Pastebin services
                 href: https://privatebin.${SECRET_DOMAIN}/
                 icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/privatebin.png
+
+        - Management Tools:
             - VsCode:
                 description: Coding services
                 href: https://coder.${SECRET_DOMAIN}/
                 icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/vscode.png
+            - JumpServer:
+                description: Bastion Host
+                href: https://jumpserver.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/guacamole.png
+            - PiKVM:
+                description: PiKVM services
+                href: https://pikvm.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pikvm.png
+            - RustDesk:
+                description: PiKVM services
+                href: https://pikvm.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pikvm.png
 
       widgets:
         # - resources:
