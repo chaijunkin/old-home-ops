@@ -1,7 +1,0 @@
-apiVersion: v2
-name: kutt
-version: 0.0.0
-dependencies:
-  - name: kutt
-    version: 2.3.0
-    repository: https://christianknell.github.io/helm-charts
