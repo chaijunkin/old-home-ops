@@ -31,7 +31,7 @@ ports:
     port: 9090
 endpoints:
   - addresses:
-      - "10.10.30.102"
+      - "10.10.30.10"
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
