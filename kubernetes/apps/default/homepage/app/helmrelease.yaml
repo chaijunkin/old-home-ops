@@ -158,7 +158,7 @@ spec:
                 icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pfsense.png
             - Pihole:
                 description: Local DNS Server and Adblocker
-                href: https://pihole.${SECRET_DOMAIN}
+                href: https://pihole.${SECRET_DOMAIN}/admin
                 icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pi-hole.png
             - Switch:
                 description: Managed switch
