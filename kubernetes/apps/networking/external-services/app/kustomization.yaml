@@ -6,5 +6,6 @@ resources:
   - ./ap.yaml
   - ./dns.yaml
   - ./hypervisor.yaml
+  - ./nas.yaml
   - ./pfsense.yaml
   - ./switch.yaml
