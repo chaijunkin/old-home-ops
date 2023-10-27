@@ -77,16 +77,15 @@ spec:
           - hosts:
               - *host
 
-    # persistence:
-    #   nas-consume:
-    #     type: nfs
-    #     server: "nas.bjw-s.casa"
-    #     path: /volume1/Docs/paperless/incoming
-    #     globalMounts:
-    #       - path: /data/nas/consume
-    #   nas-export:
-    #     type: nfs
-    #     server: "nas.bjw-s.casa"
-    #     path: /volume1/Docs/paperless/export
-    #     globalMounts:
-    #       - path: /data/nas/export
+    persistence:
+      nas-consume:
+        type: persistentVolumeClaim
+        storageClass: smb
+        accessMode: ReadWriteMany
+        volumeName: pv-smb-paperless
+      nas-export:
+        type: persistentVolumeClaim
+        storageClass: smb
+        accessMode: ReadWriteMany
+        volumeName: pv-smb-paperless
+        
