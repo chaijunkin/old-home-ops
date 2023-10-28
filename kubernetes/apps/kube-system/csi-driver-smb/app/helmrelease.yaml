@@ -65,7 +65,7 @@ spec:
 
     controller:
       name: csi-smb-controller
-      replicas: 3
+      replicas: 1
       dnsPolicy: ClusterFirstWithHostNet  # available values: Default, ClusterFirstWithHostNet, ClusterFirst
       metricsPort: 29644
       livenessProbe:
