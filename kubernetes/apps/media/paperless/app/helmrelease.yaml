@@ -77,15 +77,15 @@ spec:
           - hosts:
               - *host
 
-    persistence:
-      nas-consume:
-        type: persistentVolumeClaim
-        storageClass: smb
-        accessMode: ReadWriteMany
-        volumeName: pv-smb-paperless
-      nas-export:
-        type: persistentVolumeClaim
-        storageClass: smb
-        accessMode: ReadWriteMany
-        volumeName: pv-smb-paperless
+    # persistence:
+      # nas-consume:
+      #   type: persistentVolumeClaim
+      #   storageClass: smb
+      #   accessMode: ReadWriteMany
+      #   volumeName: pv-smb-paperless
+      # nas-export:
+      #   type: persistentVolumeClaim
+      #   storageClass: smb
+      #   accessMode: ReadWriteMany
+      #   volumeName: pv-smb-paperless
         
