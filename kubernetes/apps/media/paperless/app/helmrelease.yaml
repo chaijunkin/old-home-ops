@@ -30,7 +30,7 @@ spec:
             - name: data
               accessMode: ReadWriteOnce
               size: 15Gi
-              storageClass: local-path
+              storageClass: smb
               globalMounts:
                 - path: /data/local
 
