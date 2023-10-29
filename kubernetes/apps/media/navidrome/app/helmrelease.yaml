@@ -43,7 +43,7 @@ spec:
               ND_ENABLESHARING: "false"
               ND_ENABLESTARRATING: "false"
               ND_LOGLEVEL: info
-              ND_MUSICFOLDER: /media/Music
+              ND_MUSICFOLDER: /data/media/Music
               ND_PORT: &port 4533
               ND_SCANSCHEDULE: 30m
             resources:
@@ -87,6 +87,5 @@ spec:
       media:
         enabled: true
         existingClaim: pvc-smb-media
-        subPath: /Music
-        mountPath: /data
+        mountPath: /data/media
         readOnly: true
