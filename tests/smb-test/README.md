@@ -1,0 +1,1 @@
+https://cloud.google.com/kubernetes-engine/docs/how-to/access-smb-volume
