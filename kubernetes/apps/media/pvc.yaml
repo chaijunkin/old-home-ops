@@ -21,7 +21,7 @@ spec:
     volumeHandle: smb-vol-media  # make sure it's a unique id in the cluster
     volumeAttributes:
       source: //smb.${SECRET_DOMAIN}/services
-      subDir: media
+      # subDir: media
     nodeStageSecretRef:
       name: smb-secret
       namespace: kube-system
