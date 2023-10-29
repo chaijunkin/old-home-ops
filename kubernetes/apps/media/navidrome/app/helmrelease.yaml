@@ -87,5 +87,6 @@ spec:
       media:
         enabled: true
         existingClaim: pvc-smb-media
-        mountPath: /media
-        # readOnly: true
+        subPath: /Music
+        mountPath: /data
+        readOnly: true

@@ -1,32 +1,30 @@
+## CASE 1 (EASIEST WAY, SUPPORT PROVISIONER WITH SUBDIR CREATION DYNAMICALLY)
 ---
-apiVersion: v1
-kind: PersistentVolume
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
 metadata:
-  name: pv-smb-media-test
-  namespace: media
-spec:
-  storageClassName: "smb"
-  capacity:
-    storage: 1Mi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - dir_mode=0777
-    - file_mode=0777
-    - uid=1000
-    - gid=1000
-    - vers=3.0
-  csi:
-    driver: smb.csi.k8s.io
-    readOnly: false
-    volumeHandle: smb-vol-media-test-1  # make sure it's a unique id in the cluster
-    volumeAttributes:
-      source: //smb.${SECRET_DOMAIN}/services
-      subDir: media
-    nodeStageSecretRef:
-      name: smb-secret
-      namespace: kube-system
+  name: smb-media-test
+provisioner: smb.csi.k8s.io
+parameters:
+  # On Windows, "*.default.svc.cluster.local" could not be recognized by csi-proxy
+  source: //smb.${SECRET_DOMAIN}/services
+  subDir: media
+  # if csi.storage.k8s.io/provisioner-secret is provided, will create a sub directory
+  # with PV name under source
+  csi.storage.k8s.io/provisioner-secret-name: "smb-secret"
+  csi.storage.k8s.io/provisioner-secret-namespace: kube-system
+  csi.storage.k8s.io/node-stage-secret-name: "smb-secret"
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+volumeBindingMode: Immediate
+mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=1001
+  - gid=1001
+  - noperm
+  - mfsymlinks
+  - cache=strict
+  - noserverino  # required to prevent data corruption
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -39,5 +37,7 @@ spec:
   resources:
     requests:
       storage: 1Mi
-  volumeName: pv-smb-media-test
-  storageClassName: "smb"
+  storageClassName: "smb-media-test"
+
+---
+## CASE 2 CREATE PV AND PVC (only one shared used) - NICHE CASE
