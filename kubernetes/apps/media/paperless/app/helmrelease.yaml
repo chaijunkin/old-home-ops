@@ -81,5 +81,6 @@ spec:
       config:
         enabled: true
         existingClaim: pvc-smb-media
-        mountPath: /data/media
+        globalMounts:
+          - path: /data/media
         
