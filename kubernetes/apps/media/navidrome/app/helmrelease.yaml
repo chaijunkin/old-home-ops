@@ -23,15 +23,6 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        statefulset:
-          volumeClaimTemplates:
-            - name: data
-              accessMode: ReadWriteOnce
-              size: 1Gi
-              storageClass: ceph-block
-              globalMounts:
-                - path: /data
-
         pod:
           securityContext:
             runAsUser: 1000
@@ -52,7 +43,7 @@ spec:
               ND_ENABLESHARING: "false"
               ND_ENABLESTARRATING: "false"
               ND_LOGLEVEL: info
-              ND_MUSICFOLDER: /music
+              ND_MUSICFOLDER: /media/Music
               ND_PORT: &port 4533
               ND_SCANSCHEDULE: 30m
             resources:
@@ -71,11 +62,11 @@ spec:
     ingress:
       main:
         enabled: true
-        annotations:
-          external-dns.alpha.kubernetes.io/target: ingress-ext.bjw-s.dev
-        className: "external-nginx"
+        # annotations:
+        #   external-dns.alpha.kubernetes.io/target: ingress-ext.bjw-s.dev
+        className: "internal"
         hosts:
-          - host: &host navidrome-main.bjw-s.dev
+          - host: &host music.${SECRET_DOMAIN}
             paths:
               - path: /
                 service:
@@ -85,11 +76,16 @@ spec:
           - hosts:
               - *host
 
+    volumeClaimTemplates:
+      - name: config
+        mountPath: /config
+        accessMode: ReadWriteOnce
+        size: 5Gi
+        storageClass: local-path
+
     persistence:
-      music-main:
-        type: nfs
-        server: nas.bjw-s.casa
-        path: /volume1/Media/Library/Main/Music
-        globalMounts:
-          - path: /music
-            readOnly: true
+      media:
+        enabled: true
+        existingClaim: pvc-smb-media
+        mountPath: /media
+        readOnly: true
