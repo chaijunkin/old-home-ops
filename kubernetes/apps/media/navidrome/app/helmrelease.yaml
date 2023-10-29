@@ -84,7 +84,7 @@ spec:
         storageClass: local-path
 
     persistence:
-      media:
+      config:
         enabled: true
         existingClaim: pvc-smb-media
         mountPath: /data/media
