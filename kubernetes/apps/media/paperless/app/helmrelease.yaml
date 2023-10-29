@@ -25,14 +25,14 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        # statefulset:
-        #   volumeClaimTemplates:
-        #     - name: data
-        #       accessMode: ReadWriteOnce
-        #       size: 15Gi
-        #       storageClass: smb
-        #       globalMounts:
-        #         - path: /data/local
+        statefulset:
+          volumeClaimTemplates:
+            - name: data
+              accessMode: ReadWriteOnce
+              size: 15Gi
+              storageClass: local-path
+              globalMounts:
+                - path: /data/local
 
         containers:
           main:
@@ -78,10 +78,8 @@ spec:
               - *host
 
     persistence:
-       persistence:
       media:
         enabled: true
         existingClaim: pvc-smb-media
         mountPath: /data/media
-        readOnly: true
         
