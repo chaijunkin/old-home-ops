@@ -88,4 +88,4 @@ spec:
         enabled: true
         existingClaim: pvc-smb-media
         mountPath: /media
-        readOnly: true
+        # readOnly: true

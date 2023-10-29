@@ -5,7 +5,7 @@ metadata:
   name: pv-smb-media
   namespace: media
 spec:
-  storageClassName: "smb-media"
+  storageClassName: "smb"
   capacity:
     storage: 1Mi
   accessModes:
@@ -40,4 +40,4 @@ spec:
     requests:
       storage: 1Mi
   volumeName: pv-smb-media
-  storageClassName: "smb-media"
+  storageClassName: "smb"
