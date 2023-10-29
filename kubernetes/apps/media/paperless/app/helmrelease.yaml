@@ -77,15 +77,11 @@ spec:
           - hosts:
               - *host
 
-    # persistence:
-      # nas-consume:
-      #   type: persistentVolumeClaim
-      #   storageClass: smb
-      #   accessMode: ReadWriteMany
-      #   volumeName: pv-smb-paperless
-      # nas-export:
-      #   type: persistentVolumeClaim
-      #   storageClass: smb
-      #   accessMode: ReadWriteMany
-      #   volumeName: pv-smb-paperless
+    persistence:
+       persistence:
+      media:
+        enabled: true
+        existingClaim: pvc-smb-media
+        mountPath: /data/media
+        readOnly: true
         
