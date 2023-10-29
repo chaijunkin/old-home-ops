@@ -37,13 +37,13 @@ spec:
               repository: ghcr.io/navidrome/navidrome
               tag: 0.49.3
             env:
-              ND_DATAFOLDER: /data
+              ND_DATAFOLDER: /
               ND_ENABLEDOWNLOADS: "true"
               ND_ENABLEEXTERNALSERVICES: "false"
               ND_ENABLESHARING: "false"
               ND_ENABLESTARRATING: "false"
               ND_LOGLEVEL: info
-              ND_MUSICFOLDER: /data/media/Music
+              ND_MUSICFOLDER: /
               ND_PORT: &port 4533
               ND_SCANSCHEDULE: 30m
             resources:
