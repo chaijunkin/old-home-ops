@@ -82,5 +82,5 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: smb-minio
+        existingClaim: pvc-smb-minio
         mountPath: /data
