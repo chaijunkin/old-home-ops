@@ -17,7 +17,6 @@ spec:
         namespace: flux-system
   interval: 30m
   values:
-    values:
     controllers:
       main:
         type: statefulset
