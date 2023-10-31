@@ -62,8 +62,8 @@ spec:
     ingress:
       main:
         enabled: true
-        # annotations:
-        #   external-dns.alpha.kubernetes.io/target: ingress-ext.bjw-s.dev
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         className: "external"
         hosts:
           - host: &host music.${SECRET_DOMAIN}
