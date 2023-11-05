@@ -148,7 +148,7 @@ spec:
             #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/proxmox.png
             - Minio:
                 description: Object Storage
-                href: https://minio-console.${SECRET_DOMAIN}/login
+                href: https://minio.${SECRET_DOMAIN}/login
                 icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/minio.png
         
         - Network Infrastructure:
@@ -160,6 +160,9 @@ spec:
                 description: Local DNS Server and Adblocker
                 href: https://pihole.${SECRET_DOMAIN}/admin
                 icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pi-hole.png
+                widget:
+                  type: pihole
+                  url: https://pihole.${SECRET_DOMAIN}
             - Switch:
                 description: Managed switch
                 href: https://switch.${SECRET_DOMAIN}
@@ -168,9 +171,6 @@ spec:
                 description: Wifi provider
                 href: https://ap.${SECRET_DOMAIN}
                 icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/omada.png
-                # widget:
-                #   type: pihole
-                #   url: https://pihole.${SECRET_DOMAIN}
             - Hubble:
                 description: Network, Service & Security Observability
                 href: https://hubble.${SECRET_DOMAIN}
