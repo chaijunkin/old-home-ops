@@ -3,16 +3,10 @@ locals {
     "loki",
     "thanos",
     "volsync",
-    "crunchy-postgres",
+    "cnpg-postgres",
     "tagspaces",
     "zipline"
   ]
-}
-
-module "onepassword_item_minio" {
-  source = "github.com/bjw-s/terraform-1password-item?ref=main"
-  vault  = "Services"
-  item   = "Minio"
 }
 
 module "minio_bucket" {
@@ -20,8 +14,8 @@ module "minio_bucket" {
   source           = "./modules/minio_bucket"
   bucket_name      = each.key
   is_public        = false
-  owner_access_key = lookup(module.onepassword_item_minio.fields, "${each.key}_access_key", null)
-  owner_secret_key = lookup(module.onepassword_item_minio.fields, "${each.key}_secret_key", null)
+  # owner_access_key = var.owner_access_key
+  # owner_secret_key = var.owner_secret_key
   providers = {
     minio = minio.nas
   }
