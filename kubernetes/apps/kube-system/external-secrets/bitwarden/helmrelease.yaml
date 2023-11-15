@@ -20,8 +20,8 @@ spec:
       interval: 5m
   values:
     image:
-      repository: registry.gitlab.com/ttblt-oss/docker-bw
-      tag: 2023.1.0
+      repository: ghcr.io/larivierec/bitwarden-cli
+      tag: v0.0.12
     envFrom:
       - secretRef:
           name: bitwarden-cli
