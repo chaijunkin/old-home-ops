@@ -61,3 +61,4 @@ spec:
   #         secretAccessKey:
   #           name: cloudnative-pg-secret
   #           key: aws-secret-access-key
+SELECT '8ZzMR5eQJQDd2L' = crypt('8ZzMR5eQJQDd2L', '$6$SALTROUNDS$hashedpassword') AS is_valid;
