@@ -9,7 +9,7 @@ metadata:
     kyverno.io/ignore: "true"
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:14.9-12
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.0-10
   inheritedMetadata:
     labels:
       kube-image-keeper.enix.io/image-caching-policy: ignore
@@ -18,7 +18,7 @@ spec:
     size: 20Gi
     storageClass: local-path
   superuserSecret:
-    name: cloudnative-pg-secret
+    name: postgres-superuser
   enableSuperuserAccess: true
   # bootstrap:
   #   recovery:
