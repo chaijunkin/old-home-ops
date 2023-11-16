@@ -6,6 +6,6 @@ resources:
   - namespace.yaml
   # Flux-Kustomizations
   # - api-query
-  - busybox/ks.yaml
+  # - busybox/ks.yaml
   # - cuda
-  - dns-utils/ks.yaml
+  # - dns-utils/ks.yaml
