@@ -8,4 +8,4 @@ resources:
   # - api-query
   - busybox/ks.yaml
   # - cuda
-  - dnsutils/ks.yaml
+  - dns-utils/ks.yaml
