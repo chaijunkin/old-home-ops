@@ -76,6 +76,10 @@ spec:
         secretKeyRef:
           name: authentik-secret
           key: AUTHENTIK_POSTGRESQL__PASSWORD
+      AUTHENTIK_REDIS__PASSWORD:
+        secretKeyRef:
+          name: authentik-secret
+          key: AUTHENTIK_REDIS__PASSWORD
 
     ingress:
       enabled: true
