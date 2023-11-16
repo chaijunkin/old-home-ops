@@ -41,27 +41,42 @@ spec:
       databases:
         - authentik
       options: "SUPERUSER"
-  backups:
-    pgbackrest:
-      configuration:
-        - secret:
-            name: pgo-s3-creds
-      global:
-        archive-push-queue-max: 4GiB
-        repo1-retention-full: "14"
-        repo1-retention-full-type: time
-        repo1-path: /authentik/repo1
-        repo1-s3-uri-style: path
-      manual:
-        repoName: repo1
-        options:
-          - --type=full
-      repos:
-        - name: repo1
-          schedules:
-            full: "0 1 * * 0"
-            differential: "0 1 * * 1-6"
-          s3:
-            bucket: "crunchy-postgres"
-            endpoint: "s3.${SECRET_DOMAIN}"
-            region: "us-east-1"
+  # backups:
+  #   pgbackrest:
+  #     configuration:
+  #       - secret:
+  #           name: pgo-s3-creds
+  #     global:
+  #       archive-push-queue-max: 4GiB
+  #       repo1-retention-full: "14"
+  #       repo1-retention-full-type: time
+  #       repo1-path: /authentik/repo1
+  #       repo1-s3-uri-style: path
+  #     manual:
+  #       repoName: repo1
+  #       options:
+  #         - --type=full
+  #     repos:
+  #       - name: repo1
+  #         schedules:
+  #           full: "0 1 * * 0"
+  #           differential: "0 1 * * 1-6"
+  #         s3:
+  #           bucket: "crunchy-postgres"
+  #           endpoint: "s3.${SECRET_DOMAIN}"
+  #           region: "us-east-1"
+
+
+####
+
+## sudo mv /PATH/TO/pgo /usr/local/bin/pgo
+## sudo chmod +x /usr/local/bin/pgo
+
+#### SKIP THIS
+## curl https://raw.githubusercontent.com/CrunchyData/postgres-operator/v4.5.1/installers/kubectl/client-setup.sh > client-setup.sh
+## chmod +x client-setup.sh
+## ./client-setup.sh
+
+## kubectl -n security port-forward service/authentik-primary 5432:5432  # test connection for expose postgres
+            
+      
