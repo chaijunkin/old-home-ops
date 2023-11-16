@@ -37,7 +37,7 @@ spec:
         enabled: false
         send_pii: false
       redis:
-        host: "redis.database.svc.cluster.local:26379"
+        host: "redis.database.svc.cluster.local"
 
     envValueFrom:
       AUTHENTIK_SECRET_KEY:
