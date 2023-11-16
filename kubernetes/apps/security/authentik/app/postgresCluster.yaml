@@ -78,5 +78,4 @@ spec:
 ## ./client-setup.sh
 
 ## kubectl -n security port-forward service/authentik-primary 5432:5432  # test connection for expose postgres
-            
-      
+## k get secret postgres-app -n database -o jsonpath='{.data.password}' | base64 -d 
