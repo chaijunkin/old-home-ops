@@ -28,7 +28,7 @@ spec:
         synchronous_commit: "on"
   instances:
     - name: postgres
-      replicas: 2
+      replicas: 1
       dataVolumeClaimSpec:
         storageClassName: local-path
         accessModes:
