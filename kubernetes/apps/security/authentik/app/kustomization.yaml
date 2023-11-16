@@ -4,8 +4,8 @@ kind: Kustomization
 namespace: security
 resources:
   - ./externalsecret.yaml
-  - ./helmrelease.yaml
-  - ./helmrepository.yaml
+  # - ./helmrelease.yaml
+  # - ./helmrepository.yaml
   # - ./postgresCluster.yaml
 commonLabels:
   app.kubernetes.io/name: authentik
