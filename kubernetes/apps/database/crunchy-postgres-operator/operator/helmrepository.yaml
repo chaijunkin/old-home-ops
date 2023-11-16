@@ -4,7 +4,7 @@ apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
   name: crunchydata
-  namespace: flux-system
+  namespace: database
 spec:
   type: oci
   interval: 30m

@@ -14,7 +14,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: crunchydata
-        namespace: flux-system
+        namespace: database
       interval: 5m
   install:
     crds: CreateReplace
