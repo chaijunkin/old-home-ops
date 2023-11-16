@@ -51,3 +51,23 @@ spec:
   dependsOn:
     - name: cluster-apps-external-secrets
     - name: cluster-apps-external-secrets-bitwarden
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-external-secrets-cluster-secrets
+  namespace: flux-system
+spec:
+  path: ./kubernetes/apps/kube-system/external-secrets/cluster-secrets
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  dependsOn:
+    - name: cluster-apps-external-secrets
+    - name: cluster-apps-external-secrets-bitwarden
+    - name: cluster-apps-external-secrets-stores

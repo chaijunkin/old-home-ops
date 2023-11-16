@@ -15,3 +15,5 @@ spec:
   wait: true
   dependsOn:
     - name: cluster-apps-external-secrets-stores
+    - name: cluster-apps-external-secrets-cluster-secrets
+    - name: cluster-apps-crunchy-postgres-operator
