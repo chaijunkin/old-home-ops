@@ -83,4 +83,5 @@ spec:
       config:
         enabled: true
         existingClaim: pvc-smb-minio
-        mountPath: /data
+        globalMounts:
+          - path: /data
