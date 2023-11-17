@@ -83,7 +83,7 @@ spec:
 
     ingress:
       enabled: true
-      ingressClassName: internal
+      ingressClassName: external
       annotations:
         external-dns.alpha.kubernetes.io/target: authentik.${SECRET_DOMAIN}
         nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
