@@ -2,7 +2,7 @@
 terraform {
   cloud { 
     organization = "chaijunkin" 
-    workspaces { name = "storage-workspace" } 
+    workspaces { name = "minio-workspace" } 
   }
   required_providers {
     b2 = {
