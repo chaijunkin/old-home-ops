@@ -18,14 +18,6 @@ spec:
         namespace: flux-system
 
   values:
-    initContainers:
-      init-db:
-        image: ghcr.io/onedr0p/postgres-init:14.9
-        imagePullPolicy: IfNotPresent
-        envFrom:
-          - secretRef:
-              name: wallabag-secret
-
     controllers:
       main:
         annotations:
@@ -35,6 +27,14 @@ spec:
 
         pod:
           enableServiceLinks: false
+
+        initContainers:
+          init-db:
+            image: ghcr.io/onedr0p/postgres-init:14.9
+            imagePullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: wallabag-secret
 
         containers:
           main:
