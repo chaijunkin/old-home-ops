@@ -88,8 +88,8 @@ spec:
       main:
         enabled: true
         className: "external"
-        # annotations:
-        #   external-dns.alpha.kubernetes.io/target: ingress-ext.${SECRET_DOMAIN}
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: &host "wallabag.${SECRET_DOMAIN}"
             paths:
