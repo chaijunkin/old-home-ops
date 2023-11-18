@@ -29,6 +29,12 @@ spec:
       flavor: fpm-alpine
     nginx:
       enabled: true
+    extraInitContainers:
+      - name: init-db
+        image: ghcr.io/onedr0p/postgres-init:14.9
+        envFrom:
+          - secretRef:
+              name: nextcloud-secret
     nextcloud:
       datadir: /var/www/data
       extraEnv:
@@ -55,6 +61,13 @@ spec:
     externalDatabase:
       enabled: true
       type: 'postgresql'
+      existingSecret:
+        enabled: false
+        secretName: nextcloud-secret
+        usernameKey: NEXTCLOUD_POSTGRESQL_USER
+        passwordKey: NEXTCLOUD_POSTGRESQL_PASSWORD
+        hostKey: NEXTCLOUD_POSTGRESQL_HOST
+        databaseKey: NEXTCLOUD_POSTGRESQL_NAME
       host: '192.168.1.11:5432'
       database: *app
       password: *app
