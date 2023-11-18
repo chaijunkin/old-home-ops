@@ -129,7 +129,7 @@ spec:
         - hosts:
             - *host
     persistence:
-      enabled: false
+      enabled: true
       existingClaim: pvc-smb-nextcloud
       # nextcloudData:
       #   enabled: true
