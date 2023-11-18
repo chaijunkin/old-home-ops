@@ -40,6 +40,9 @@ spec:
 
             env:
               TZ: "${TIMEZONE}"
+            securityContext:
+              privileged: true
+              runAsUser: 0
     service:
       main:
         ports:
