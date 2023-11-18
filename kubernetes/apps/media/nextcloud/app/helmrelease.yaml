@@ -130,11 +130,11 @@ spec:
             - *host
     persistence:
       enabled: true
-      existingClaim: pvc-smb-nextcloud
-      # nextcloudData:
-      #   enabled: true
-      #   existingClaim: pvc-smb-nextcloud
-      #   accessMode: ReadWriteMany
+      # existingClaim: pvc-smb-nextcloud
+      nextcloudData:
+        enabled: true
+        existingClaim: pvc-smb-nextcloud
+        accessMode: ReadWriteMany
   # valuesFrom:
   #   - targetPath: externalDatabase.user
   #     kind: Secret
