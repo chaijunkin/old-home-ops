@@ -67,12 +67,12 @@ spec:
           envFrom:
             - secretRef:
                 name: nextcloud-secret
-    # redis:
-    #   enabled: true
-    #   auth:
-    #     enabled: true
-    #     redis.auth.existingSecret: nextcloud-secret
-    #     redis.auth.existingSecretPasswordKey: NEXTCLOUD_REDIS_PASSWORD
+    redis:
+      enabled: false
+      # auth:
+      #   enabled: true
+      #   redis.auth.existingSecret: nextcloud-secret
+      #   redis.auth.existingSecretPasswordKey: NEXTCLOUD_REDIS_PASSWORD
     internalDatabase:
       enabled: false
     externalDatabase:
