@@ -33,7 +33,7 @@ spec:
       datadir: /var/www/data
       extraEnv:
         - name: REDIS_HOST
-          value: 192.168.1.10
+          value: 192.168.1.11
         - name: REDIS_HOST_PORT
           value: "6379"
       # existingSecret:
