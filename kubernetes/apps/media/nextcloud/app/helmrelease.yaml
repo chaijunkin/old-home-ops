@@ -45,9 +45,9 @@ spec:
         fromAddress: admin
         domain: ${SECRET_DOMAIN}
         smtp:
-          host: pfsense.${SECRET_DOMAIN}
-          port: 25
-          authtype: NONE
+          host: smtp.${SECRET_DOMAIN}
+          port: 587
+          authtype: tls
           name: ""
           password: ""
       extraInitContainers:
