@@ -100,3 +100,8 @@ spec:
         tls:
           - hosts:
               - *host
+
+## EXECUTE ME
+### wallabag /var/www/wallabag/bin/console doctrine:migrations:migrate --env=prod --no-interaction
+
+### php bin/console wallabag:install --env=prod

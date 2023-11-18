@@ -1,4 +1,8 @@
 terraform {
+  cloud { 
+    organization = "chaijunkin" 
+    workspaces { name = "b2-workspace" } 
+  }
   required_providers {
     b2 = {
        source  = "Backblaze/b2"

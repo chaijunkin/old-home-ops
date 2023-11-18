@@ -33,7 +33,7 @@ spec:
       datadir: /var/www/data
       extraEnv:
         - name: REDIS_HOST
-          value: redis-lb.default.svc.cluster.local
+          value: 192.168.1.10
         - name: REDIS_HOST_PORT
           value: "6379"
       # existingSecret:

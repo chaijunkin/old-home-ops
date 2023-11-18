@@ -3,83 +3,56 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: jellyfin
-  namespace: media
+  name: &app jellyfin
+  namespace: default
 spec:
+  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.0.3
-      interval: 30m
+      version: 2.2.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  interval: 30m
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    controllers:
-      main:
-        type: statefulset
-        annotations:
-          reloader.stakater.com/auto: "true"
-
-        statefulset:
-          volumeClaimTemplates:
-            - name: config
-              accessMode: ReadWriteOnce
-              size: 30Gi
-              storageClass: ceph-block
-              globalMounts:
-                - path: /config
-
-        pod:
-          enableServiceLinks: false
-          nodeSelector:
-            intel.feature.node.kubernetes.io/gpu: "true"
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups:
-              - 44
-              - 109
-              - 65539
-
-        containers:
-          main:
-            image:
-              repository: ghcr.io/onedr0p/jellyfin
-              tag: 10.8.11@sha256:041977cb09d964ed4e00dec2bd0af3208f0121b8385a69617d30657596ffa292
-            env:
-              DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
-              JELLYFIN_FFmpeg__probesize: 50000000
-              JELLYFIN_FFmpeg__analyzeduration: 500000000
-            resources:
-              requests:
-                cpu: 100m
-                gpu.intel.com/i915: 1
-                memory: 9248M
-              limits:
-                gpu.intel.com/i915: 1
-                memory: 9248M
-
+    automountServiceAccountToken: false
+    # podLabels:
+    #   ingress.home.arpa/nginx: "allow"
+    #   egress.home.arpa/world-https: "allow"
+    #   egress.home.arpa/dlna: "allow"
+    #   authentik.home.arpa/ldap: "allow"
+    #   egress.home.arpa/r2: "allow"
+    controller:
+      type: "deployment"
+      replicas: 1
+    image:
+      repository: ghcr.io/onedr0p/jellyfin
+      tag: 10.8.9@sha256:01a6497a1290b73f63251aebe6d01327c15b3413c3e1013c2a396ffe116ced4d
+    env:
+      TZ: "${TIMEZONE}"
     service:
       main:
-        type: LoadBalancer
-        externalTrafficPolicy: Cluster
-        annotations:
-          io.cilium/lb-ipam-ips: "10.45.0.22"
         ports:
           http:
             port: 8096
-
     ingress:
       main:
         enabled: true
-        className: internal-nginx
+        className: "internal"
         hosts:
-          - host: &host jellyfin.bjw-s.dev
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -88,15 +61,19 @@ spec:
         tls:
           - hosts:
               - *host
-
     persistence:
-      nfs-nas-media:
-        type: nfs
-        server: nas.bjw-s.casa
-        path: /volume1/Media
+      config:
+        enabled: true
+        existingClaim: pvc-smb-jellyfin
         globalMounts:
-          - path: /data/nas-media
+          - path: /config
+      media:
+        enabled: true
+        existingClaim: pvc-smb-media
+        globalMounts:
+          - path: /media
       transcode:
+        enabled: true
         type: emptyDir
         globalMounts:
           - path: /transcode

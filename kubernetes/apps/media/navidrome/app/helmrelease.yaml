@@ -84,7 +84,7 @@ spec:
         storageClass: local-path
 
     persistence:
-      config:
+      media:
         enabled: true
         existingClaim: pvc-smb-media
         globalMounts:

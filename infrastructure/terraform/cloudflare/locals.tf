@@ -71,6 +71,16 @@ locals {
       value = "blue-cherry-8641.fly.dev"
       type  = "CNAME"
     }
+    "external-uptimekuma" = {
+      name = "ext-uptime"
+      value = "uptime-kuma-rdm12exn709.fly.dev"
+      type = "CNAME"
+    }
+    # "external-uptimekuma-status-page" = {
+    #   name = "ext-status"
+    #   value = "ext-uptime.${var.cloudflare_zone_name}"
+    #   type = "CNAME"
+    # }
   }
 
   github_A_record = [

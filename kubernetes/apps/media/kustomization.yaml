@@ -10,8 +10,7 @@ resources:
   # - ./calibre-web/ks.yaml
   # - ./freshrss/ks.yaml
   # - ./ghost/ks.yaml
-  # - ./jellyfin/ks.yaml
-  # - ./littlelink-server/ks.yaml
+  - ./jellyfin/ks.yaml
   - ./minio/ks.yaml
   - ./navidrome/ks.yaml
   - ./nextcloud/ks.yaml

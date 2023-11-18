@@ -7,11 +7,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  path: "./kubernetes/cluster-0/apps/media/jellyfin/app"
+  path: "./kubernetes/apps/media/jellyfin/app"
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
+    name: home-kubernetes
   wait: false
-  dependsOn:
-    - name: cluster-apps-rook-ceph-cluster

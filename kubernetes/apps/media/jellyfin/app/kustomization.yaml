@@ -4,7 +4,8 @@ kind: Kustomization
 namespace: media
 resources:
   - ./helmrelease.yaml
-  - ./volsync.yaml
+  - ./pvc.yaml
+  # - ./volsync.yaml
 commonLabels:
   app.kubernetes.io/name: jellyfin
   app.kubernetes.io/instance: jellyfin

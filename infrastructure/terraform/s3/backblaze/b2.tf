@@ -15,16 +15,16 @@ resource "b2_bucket" "vw-backup" {
 
 }
 
-# resource "b2_application_key" "nas-restic" {
-#   key_name  = "nas-restic"
-#   capabilities = [
-#     "deleteFiles",
-#     "listAllBucketNames",
-#     "listBuckets",
-#     "listFiles",
-#     "readBuckets",
-#     "readFiles",
-#     "shareFiles",
-#     "writeFiles"
-#   ]
-# }
+resource "b2_application_key" "vw-restic" {
+  key_name  = "vw-restic"
+  capabilities = [
+    "deleteFiles",
+    "listAllBucketNames",
+    "listBuckets",
+    "listFiles",
+    "readBuckets",
+    "readFiles",
+    "shareFiles",
+    "writeFiles"
+  ]
+}
