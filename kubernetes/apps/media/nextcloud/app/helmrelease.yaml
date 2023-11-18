@@ -73,7 +73,7 @@ spec:
       enabled: true
       type: 'postgresql'
       existingSecret:
-        enabled: false
+        enabled: true
         secretName: nextcloud-secret
         usernameKey: NEXTCLOUD_POSTGRESQL_USER
         passwordKey: NEXTCLOUD_POSTGRESQL_PASSWORD
@@ -122,9 +122,9 @@ spec:
       tls:
         - hosts:
             - *host
-    # persistence:
-    #   enabled: false
-    #   existingClaim: pvc-smb-nextcloud
+    persistence:
+      enabled: false
+      existingClaim: pvc-smb-nextcloud
       # nextcloudData:
       #   enabled: true
       #   existingClaim: pvc-smb-nextcloud
