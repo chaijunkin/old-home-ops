@@ -68,10 +68,15 @@ spec:
         passwordKey: NEXTCLOUD_POSTGRESQL_PASSWORD
         hostKey: NEXTCLOUD_POSTGRESQL_HOST
         databaseKey: NEXTCLOUD_POSTGRESQL_NAME
+    service:
+      type: ClusterIP
+      port: 80
+      loadBalancerIP: ""
+      nodePort: nil
     ingress:
       enabled: true
       className: "internal"
-      # servicePort: http
+      servicePort: http
       annotations:
         external-dns.alpha.kubernetes.io/target: "nextcloud.${SECRET_DOMAIN}"
         # nginx.ingress.kubernetes.io/proxy-buffering: "off"
