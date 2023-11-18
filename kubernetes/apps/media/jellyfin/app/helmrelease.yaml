@@ -34,13 +34,17 @@ spec:
     #   egress.home.arpa/dlna: "allow"
     #   authentik.home.arpa/ldap: "allow"
     #   egress.home.arpa/r2: "allow"
-    controller:
+    controllers:
       main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
         containers:
           main:
             image:
               repository: ghcr.io/onedr0p/jellyfin
               tag: 10.8.11@sha256:926e2a9f6677a0c7b12feba29f36c954154869318d6a52df72f72ff9c74cf494
+
             env:
               TZ: "${TIMEZONE}"
     service:
@@ -53,7 +57,7 @@ spec:
         enabled: true
         className: "internal"
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "jellyfin.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
