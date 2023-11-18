@@ -70,7 +70,7 @@ spec:
         databaseKey: NEXTCLOUD_POSTGRESQL_NAME
     ingress:
       enabled: true
-      className: "external"
+      className: "internal"
       annotations:
         external-dns.alpha.kubernetes.io/target: "nextcloud.${SECRET_DOMAIN}"
         nginx.ingress.kubernetes.io/proxy-buffering: "off"
@@ -86,10 +86,10 @@ spec:
     persistence:
       enabled: true
       existingClaim: pvc-smb-nextcloud
-      nextcloudData:
-        enabled: true
-        existingClaim: pvc-smb-nextcloud
-        accessMode: ReadWriteMany
+      # nextcloudData:
+      #   enabled: true
+      #   existingClaim: pvc-smb-nextcloud
+      #   accessMode: ReadWriteMany
   # valuesFrom:
   #   - targetPath: externalDatabase.user
   #     kind: Secret
