@@ -13,6 +13,6 @@ resources:
   - ./jellyfin/ks.yaml
   - ./minio/ks.yaml
   - ./navidrome/ks.yaml
-  - ./nextcloud/ks.yaml
+  # - ./nextcloud/ks.yaml
   - ./paperless/ks.yaml
   # - ./wikijs/ks.yaml
