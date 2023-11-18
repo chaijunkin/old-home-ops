@@ -63,11 +63,6 @@ spec:
           - hosts:
               - *host
     persistence:
-      config:
-        enabled: true
-        existingClaim: pvc-smb-jellyfin
-        globalMounts:
-          - path: /config
       media:
         enabled: true
         existingClaim: pvc-smb-media
