@@ -36,7 +36,7 @@ spec:
           value: authentik-redis.security.svc.cluster.local
         - name: REDIS_HOST_PORT
           value: "6379"
-        - name: REDIS_PASSWORD
+        - name: REDIS_HOST_PASSWORD
           valueFrom:
             secretKeyRef:
               name: "nextcloud-secret"
