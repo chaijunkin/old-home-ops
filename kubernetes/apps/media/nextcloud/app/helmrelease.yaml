@@ -30,6 +30,9 @@ spec:
     nginx:
       enabled: true
     extraInitContainers:
+      - name: do-something
+        image: busybox
+        command: ['echo HELLO']
       - name: init-db
         image: ghcr.io/onedr0p/postgres-init:14.9
         envFrom:
@@ -58,8 +61,6 @@ spec:
           password: ""
     internalDatabase:
       enabled: false
-    postgresql:
-      enabled: true
     externalDatabase:
       enabled: true
       type: 'postgresql'
