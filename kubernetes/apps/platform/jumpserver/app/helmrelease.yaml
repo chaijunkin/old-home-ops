@@ -109,7 +109,7 @@ spec:
       image:
         registry: docker.io
         repository: jumpserver/core
-        tag: v3.3.1
+        tag: v3.8.2
         pullPolicy: IfNotPresent
 
       command: []
