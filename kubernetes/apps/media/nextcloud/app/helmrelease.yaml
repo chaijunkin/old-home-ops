@@ -74,7 +74,6 @@ spec:
       type: 'postgresql'
       existingSecret:
         enabled: true
-        database: nextcloud
         secretName: nextcloud-secret
         usernameKey: NEXTCLOUD_POSTGRESQL_USER
         passwordKey: NEXTCLOUD_POSTGRESQL_PASSWORD
