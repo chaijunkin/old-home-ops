@@ -58,6 +58,8 @@ spec:
           password: ""
     internalDatabase:
       enabled: false
+    postgresql:
+      enabled: true
     externalDatabase:
       enabled: true
       type: 'postgresql'
