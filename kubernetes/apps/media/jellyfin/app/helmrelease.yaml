@@ -35,13 +35,14 @@ spec:
     #   authentik.home.arpa/ldap: "allow"
     #   egress.home.arpa/r2: "allow"
     controller:
-      type: "deployment"
-      replicas: 1
-    image:
-      repository: ghcr.io/onedr0p/jellyfin
-      tag: 10.8.9@sha256:01a6497a1290b73f63251aebe6d01327c15b3413c3e1013c2a396ffe116ced4d
-    env:
-      TZ: "${TIMEZONE}"
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/jellyfin
+              tag: 10.8.11@sha256:926e2a9f6677a0c7b12feba29f36c954154869318d6a52df72f72ff9c74cf494
+            env:
+              TZ: "${TIMEZONE}"
     service:
       main:
         ports:
