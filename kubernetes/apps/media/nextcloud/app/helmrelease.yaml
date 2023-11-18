@@ -31,6 +31,15 @@ spec:
       enabled: true
     nextcloud:
       datadir: /var/www/data
+      existingSecret:
+        enabled: true
+        secretName: &secret nextcloud-secret
+        usernameKey: NEXTCLOUD_ADMIN_USER
+        passwordKey: NEXTCLOUD_ADMIN_PASSWORD
+        # tokenKey: METRICS_TOKEN
+        # smtpHostKey: SMTP_HOST
+        # smtpUsernameKey: SMTP_USERNAME
+        # smtpPasswordKey: SMTP_PASSWORD
       extraEnv:
         - name: REDIS_HOST
           value: nextcloud-redis.media.svc.cluster.local
@@ -39,11 +48,8 @@ spec:
         - name: REDIS_HOST_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: "nextcloud-secret"
+              name: *secret
               key: NEXTCLOUD_REDIS_PASSWORD
-      # existingSecret:
-      #   enabled: true
-      #   secretName: nextcloud
       host: &host nextcloud.${SECRET_DOMAIN}
       mail:
         enabled: false
@@ -74,7 +80,7 @@ spec:
       type: 'postgresql'
       existingSecret:
         enabled: true
-        secretName: nextcloud-secret
+        secretName: *secret
         usernameKey: NEXTCLOUD_POSTGRESQL_USER
         passwordKey: NEXTCLOUD_POSTGRESQL_PASSWORD
         hostKey: NEXTCLOUD_POSTGRESQL_HOST
