@@ -31,11 +31,16 @@ spec:
       enabled: true
     nextcloud:
       datadir: /var/www/data
-      # extraEnv:
-      #   - name: REDIS_HOST
-      #     value: authentik-redis.security.svc.cluster.local
-      #   - name: REDIS_HOST_PORT
-      #     value: "6379"
+      extraEnv:
+        - name: REDIS_HOST
+          value: authentik-redis.security.svc.cluster.local
+        - name: REDIS_HOST_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "nextcloud-secret"
+              key: NEXTCLOUD_REDIS_PASSWORD
       # existingSecret:
       #   enabled: true
       #   secretName: nextcloud
@@ -56,12 +61,12 @@ spec:
           envFrom:
             - secretRef:
                 name: nextcloud-secret
-    redis:
-      enabled: true
-      auth:
-        enabled: true
-        redis.auth.existingSecret: nextcloud-secret
-        redis.auth.existingSecretPasswordKey: NEXTCLOUD_REDIS_PASSWORD
+    # redis:
+    #   enabled: true
+    #   auth:
+    #     enabled: true
+    #     redis.auth.existingSecret: nextcloud-secret
+    #     redis.auth.existingSecretPasswordKey: NEXTCLOUD_REDIS_PASSWORD
     internalDatabase:
       enabled: false
     externalDatabase:
