@@ -29,15 +29,6 @@ spec:
       flavor: fpm-alpine
     nginx:
       enabled: true
-    extraInitContainers:
-      - name: do-something
-        image: busybox
-        command: ['echo HELLO']
-      - name: init-db
-        image: ghcr.io/onedr0p/postgres-init:14.9
-        envFrom:
-          - secretRef:
-              name: nextcloud-secret
     nextcloud:
       datadir: /var/www/data
       extraEnv:
@@ -59,6 +50,12 @@ spec:
           authtype: NONE
           name: ""
           password: ""
+      extraInitContainers:
+        - name: init-db
+          image: ghcr.io/onedr0p/postgres-init:14.9
+          envFrom:
+            - secretRef:
+                name: nextcloud-secret
     internalDatabase:
       enabled: false
     externalDatabase:
