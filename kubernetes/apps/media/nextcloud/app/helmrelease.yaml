@@ -68,9 +68,6 @@ spec:
         passwordKey: NEXTCLOUD_POSTGRESQL_PASSWORD
         hostKey: NEXTCLOUD_POSTGRESQL_HOST
         databaseKey: NEXTCLOUD_POSTGRESQL_NAME
-      host: '192.168.1.11:5432'
-      database: *app
-      password: *app
     ingress:
       enabled: true
       className: "internal"
