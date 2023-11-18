@@ -33,7 +33,7 @@ spec:
       datadir: /var/www/data
       extraEnv:
         - name: REDIS_HOST
-          value: authentik-redis.security.svc.cluster.local
+          value: nextcloud-redis.media.svc.cluster.local
         - name: REDIS_HOST_PORT
           value: "6379"
         - name: REDIS_HOST_PASSWORD
@@ -83,6 +83,12 @@ spec:
       enabled: true
       className: "internal"
       # servicePort: http
+      configs:
+        proxy.config.php: |-
+          <?php
+          $CONFIG = array (
+            'trusted_proxies' => array('${SERVICE_CIDR}')
+          );
       annotations:
         external-dns.alpha.kubernetes.io/target: "nextcloud.${SECRET_DOMAIN}"
         # nginx.ingress.kubernetes.io/proxy-buffering: "off"
