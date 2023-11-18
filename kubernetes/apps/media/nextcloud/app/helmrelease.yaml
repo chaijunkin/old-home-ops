@@ -54,9 +54,10 @@ spec:
       enabled: false
     externalDatabase:
       enabled: true
-      type: '{{ .Release.Name }}'
-      host: '{{ .Release.Name }}:5432'
+      type: 'postgresql'
+      host: '192.168.1.11:5432'
       database: '{{ .Release.Name }}'
+      password: '{{ .Release.Name }}'
     ingress:
       enabled: true
       className: "internal"
