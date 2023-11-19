@@ -30,6 +30,12 @@ spec:
     nginx:
       enabled: true
     nextcloud:
+      configs:
+        proxy.config.php: |-
+          <?php
+          $CONFIG = array (
+            'trusted_proxies' => array('${SERVICE_CIDR}')
+          );
       datadir: /var/www/data
       existingSecret:
         enabled: true
@@ -89,16 +95,8 @@ spec:
       enabled: true
       className: "internal"
       # servicePort: http
-      configs:
-        proxy.config.php: |-
-          <?php
-          $CONFIG = array (
-            'trusted_proxies' => array('${SERVICE_CIDR}')
-          );
       annotations:
         external-dns.alpha.kubernetes.io/target: "nextcloud.${SECRET_DOMAIN}"
-        # nginx.ingress.kubernetes.io/proxy-buffering: "off"
-        # nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
         nginx.ingress.kubernetes.io/server-snippet: |-
           server_tokens off;
           proxy_hide_header X-Powered-By;
@@ -123,6 +121,10 @@ spec:
           location ~ ^/(?:autotest|occ|issue|indie|db_|console) {
             deny all;
           }
+      ## ADDITIONAL HEADER
+      nginx.ingress.kubernetes.io/enable-global-auth: "false"
+      nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For"
       path: /
       pathType: Prefix
       tls:
