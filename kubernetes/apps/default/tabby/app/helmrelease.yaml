@@ -28,9 +28,6 @@ spec:
     global:
       nameOverride: tabby
 
-    defaultPodOptions:
-      runtimeClassName: nvidia
-
     controllers:
       main:
         replicas: 1
