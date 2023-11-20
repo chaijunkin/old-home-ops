@@ -41,7 +41,7 @@ spec:
         containers:
           main:
             image:
-              repository: docker.io/odoo/odoo
+              repository: docker.io/library/odoo
               tag: 17.0
             envFrom:
               - secretRef:
