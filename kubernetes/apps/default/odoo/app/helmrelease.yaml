@@ -42,10 +42,10 @@ spec:
           main:
             image:
               repository: docker.io/library/odoo
-              tag: 17.0
+              tag: "17.0"
             envFrom:
               - secretRef:
-                  name: odoo-secrets
+                  name: odoo-secret
             resources:
               requests:
                 cpu: 12m
