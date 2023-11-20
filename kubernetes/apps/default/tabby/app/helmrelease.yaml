@@ -82,20 +82,15 @@ spec:
     ingress:
       main:
         enabled: true
-        className: internal
-        annotations:
-          nginx.ingress.kubernetes.io/proxy-body-size: 32m
-        tls:
-        - secretName: tabby-cert
-          hosts:
-          - tabby.${SECRET_DOMAIN}
+        ingressClassName: internal
         hosts:
-        - host: tabby.${SECRET_DOMAIN}
-          paths:
-          - path: /
-            service:
-              name: tabby
-              port: 8080
+          - host: &host "privatebin.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
 
     persistence:
       data:
