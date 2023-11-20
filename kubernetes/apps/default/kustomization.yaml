@@ -11,7 +11,7 @@ resources:
   - ./hajimari/ks.yaml
   - ./homepage/ks.yaml
   - ./it-tools/ks.yaml
-  # - ./odoo/ks.yaml
+  - ./odoo/ks.yaml
   - ./privatebin/ks.yaml
   - ./tabby/ks.yaml
   - ./wallabag/ks.yaml
