@@ -27,7 +27,7 @@ spec:
   values:
     image:
       repository: docker.io/tabbyml/tabby
-      tag: 20231118
+      tag: latest
     service:
       main:
         ports:
