@@ -79,10 +79,12 @@ spec:
     persistence:
       config:
         enabled: true
+        type: emptyDir
         # existingCLaim: odoo-config-v1
         # mountPath: /var/lib/odoo
       etc-config-file:
         enabled: true
+        type: emptyDir
       #   type: configMap
       #   name: odoo-configmap
       #   mountPath: /etc/odoo/odoo.conf
@@ -90,6 +92,7 @@ spec:
       #   readOnly: true
       extra-addons:
         enabled: true
+        type: emptyDir       
         # existingClaim: odoo-addons-v1
         # mountPath: /mnt/extra-addons
 
