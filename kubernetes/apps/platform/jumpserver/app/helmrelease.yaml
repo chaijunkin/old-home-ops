@@ -197,7 +197,7 @@ spec:
       image:
         registry: docker.io
         repository: jumpserver/koko
-        tag: v3.3.1
+        tag: v3.9.2
         pullPolicy: IfNotPresent
 
       command: []
