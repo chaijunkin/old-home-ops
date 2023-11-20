@@ -26,7 +26,7 @@ spec:
     keepHistory: false
   values:
     image:
-      repository: tabbyml/tabby
+      repository: docker.io/tabbyml/tabby
       tag: 20231118
     service:
       main:
