@@ -81,7 +81,7 @@ spec:
         existingClaim: pvc-smb-media
         globalMounts:
           - path: /data
-      # config:
+      # config:  ## to be continue
       #   enabled: true
       #   existingClaim: pvc-smb-sonarr
       #   globalMounts:

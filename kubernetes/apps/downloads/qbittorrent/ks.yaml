@@ -1,60 +1,23 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &appname qbittorrent
+  name: cluster-apps-qbittorrent
   namespace: flux-system
 spec:
-  targetNamespace: downloads
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *appname
-  interval: 10m
-  path: "./kubernetes/cluster-0/apps/downloads/qbittorrent/app"
+  # dependsOn:
+  #   - name: cluster-apps-qbittorrent-pod-gateway-downloads
+  path: ./kubernetes/apps/downloads/qbittorrent/app
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
-  wait: true
-  dependsOn:
-    - name: rook-ceph-cluster
-    - name: volsync
-    - name: external-secrets-stores
-  postBuild:
-    substitute:
-      APP: *appname
-      HOSTNAME: qbittorrent.bjw-s.dev
-      APP_UID: "568"
-      APP_GID: "568"
-      VOLSYNC_CLAIM: qbittorrent-config
-      VOLSYNC_CAPACITY: 2Gi
-      VOLSYNC_ACCESSMODES: ReadWriteMany
-      VOLSYNC_STORAGECLASS: ceph-filesystem
-      VOLSYNC_SNAPSHOTCLASS: csi-ceph-filesystem
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &appname qbtools
-  namespace: flux-system
-spec:
-  targetNamespace: downloads
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *appname
-  interval: 10m
-  path: "./kubernetes/cluster-0/apps/downloads/qbittorrent/tools"
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: home-ops-kubernetes
-  wait: false
-  dependsOn:
-    - name: qbittorrent
-  postBuild:
-    substitute:
-      APP: *appname
-      APP_UID: "568"
-      APP_GID: "568"
+    name: home-kubernetes
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: qbittorrent
+      namespace: downloads
+  wait: false # no flux ks dependents
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m

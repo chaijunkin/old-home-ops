@@ -11,17 +11,17 @@ spec:
     labels:
       app.kubernetes.io/name: *appname
   interval: 10m
-  path: "./kubernetes/cluster-0/apps/downloads/cross-seed/app"
+  path: "./kubernetes/apps/downloads/cross-seed/app"
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
+    name: home-kubernetes
   wait: false
   dependsOn:
     - name: external-secrets-stores
-    - name: qbittorrent
-  postBuild:
-    substitute:
-      APP: *appname
-      APP_UID: "568"
-      APP_GID: "568"
+    # - name: qbittorrent
+  # postBuild:
+  #   substitute:
+  #     APP: *appname
+  #     APP_UID: "568"
+  #     APP_GID: "568"
