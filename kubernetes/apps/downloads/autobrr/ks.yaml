@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *appname
   interval: 10m
-  path: "./kubernetes/cluster-0/apps/downloads/autobrr/app"
+  path: "./kubernetes/apps/downloads/autobrr/app"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -19,14 +19,6 @@ spec:
   wait: false
   dependsOn:
     - name: external-secrets-stores
-    - name: rook-ceph-cluster
-    - name: crunchy-postgres-operator
-    - name: qbittorrent
-  postBuild:
-    substitute:
-      APP: *appname
-      HOSTNAME: autobrr.bjw-s.dev
-      APP_UID: "568"
-      APP_GID: "568"
-      DB_NAME: autobrr
-      DB_USER: autobrr
+    # - name: rook-ceph-cluster
+    - name: cloudnative-pg-cluster
+    # - name: qbittorrent
