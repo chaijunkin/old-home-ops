@@ -24,9 +24,6 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-  dependsOn:
-    - name: longhorn
-      namespace: storage
   values:
     controllers:
       main:
@@ -81,11 +78,11 @@ spec:
                         operator: In
                         values: ["qbittorrent"]
                   topologyKey: kubernetes.io/hostname
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
+          # securityContext:
+          #   runAsUser: 568
+          #   runAsGroup: 568
+          #   fsGroup: 568
+          #   fsGroupChangePolicy: OnRootMismatch
     service:
       main:
         ports:
@@ -96,13 +93,6 @@ spec:
         enabled: true
         className: internal
         annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Downloads
-          gethomepage.dev/name: SABnzbd
-          gethomepage.dev/icon: sabnzbd.png
-          gethomepage.dev/widget.type: sabnzbd
-          gethomepage.dev/widget.url: http://sabnzbd.downloads:8080
-          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_SABNZBD_TOKEN}}"
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_set_header Accept-Encoding "";
             sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/sabnzbd/nord.css"></head>';
@@ -119,10 +109,10 @@ spec:
               - *host
     persistence:
       config:
-        enabled: true
+        enabled: false
         existingClaim: *app
       media:
-        existingClaim: downloads
+        existingClaim: pvc-smb-media
         globalMounts:
           - path: /downloads/
             subPath: usenet

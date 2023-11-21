@@ -20,5 +20,5 @@ spec:
   dependsOn:
     - name: cluster-apps-external-secrets-stores
     # - name: rook-ceph-cluster
-    - name: cloudnative-pg-cluster
+    - name: cluster-apps-cloudnative-pg
     # - name: qbittorrent

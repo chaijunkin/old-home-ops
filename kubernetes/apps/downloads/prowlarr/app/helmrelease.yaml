@@ -54,12 +54,12 @@ spec:
               requests:
                 cpu: 10m
                 memory: 500Mi
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
+        # pod:
+        #   securityContext:
+        #     runAsUser: 568
+        #     runAsGroup: 568
+        #     fsGroup: 568
+        #     fsGroupChangePolicy: OnRootMismatch
     service:
       main:
         ports:
@@ -70,19 +70,12 @@ spec:
         enabled: true
         className: internal
         annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Downloads
-          gethomepage.dev/name: Prowlarr
-          gethomepage.dev/icon: prowlarr.png
-          gethomepage.dev/widget.type: prowlarr
-          gethomepage.dev/widget.url: http://prowlarr.downloads
-          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_PROWLARR_TOKEN}}"
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_set_header Accept-Encoding "";
             sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/prowlarr/nord.css"></head>';
             sub_filter_once on;
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "prowlarr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -94,5 +87,5 @@ spec:
               - *host
     persistence:
       config:
-        enabled: true
+        enabled: false
         existingClaim: *app

@@ -24,9 +24,6 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-  dependsOn:
-    - name: longhorn
-      namespace: storage
   values:
     controllers:
       main:
@@ -75,12 +72,12 @@ spec:
                 memory: 256M
               limits:
                 memory: 1Gi
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
+        # pod:
+        #   securityContext:
+        #     runAsUser: 568
+        #     runAsGroup: 568
+        #     fsGroup: 568
+        #     fsGroupChangePolicy: OnRootMismatch
     service:
       main:
         ports:
@@ -91,19 +88,12 @@ spec:
         enabled: true
         className: internal
         annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Downloads
-          gethomepage.dev/name: Radarr
-          gethomepage.dev/icon: radarr.png
-          gethomepage.dev/widget.type: radarr
-          gethomepage.dev/widget.url: http://radarr.downloads
-          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_RADARR_TOKEN}}"
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_set_header Accept-Encoding "";
             sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/radarr/nord.css"></head>';
             sub_filter_once on;
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "radarr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -114,7 +104,8 @@ spec:
               - *host
     persistence:
       config:
-        enabled: true
+        enabled: false
         existingClaim: *app
       data:
-        existingClaim: downloads
+        enabled: true
+        existingClaim: pvc-smb-media
