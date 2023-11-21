@@ -94,7 +94,7 @@ spec:
             sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/qbittorrent/nord.css"></head>';
             sub_filter_once on;
         hosts:
-          - host: &host "qbittorent.${SECRET_DOMAIN}"
+          - host: &host "qbittorrent.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
