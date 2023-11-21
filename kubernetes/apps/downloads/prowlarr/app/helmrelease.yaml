@@ -4,13 +4,12 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: prowlarr
-  namespace: downloads
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.0.3
+      version: 2.3.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -25,16 +24,16 @@ spec:
 
         pod:
           securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
+            runAsUser: ${APP_UID}
+            runAsGroup: ${APP_GID}
+            fsGroup: ${APP_GID}
             fsGroupChangePolicy: OnRootMismatch
 
         containers:
           main:
             image:
               repository: ghcr.io/onedr0p/prowlarr-nightly
-              tag: 1.9.4.4035@sha256:fd3d494868e175a095bf21a4668dfd406c6c8aa781595c563ae9654dc228c619
+              tag: 1.10.5.4091@sha256:7f2f99aeb6329b1eb0f19745f85fa6c2fc1f4d63910e02e84d7dcc7bd4105257
             env:
               PROWLARR__INSTANCE_NAME: Prowlarr
               PROWLARR__PORT: &port 9696
@@ -64,7 +63,7 @@ spec:
         enabled: true
         className: "internal-nginx"
         hosts:
-          - host: &host "{{ .Release.Name }}.bjw-s.dev"
+          - host: "${HOSTNAME}"
             paths:
               - path: /
                 service:
@@ -72,9 +71,9 @@ spec:
                   port: http
         tls:
           - hosts:
-              - *host
+              - "${HOSTNAME}"
 
     persistence:
       config:
         enabled: true
-        existingClaim: prowlarr-config
+        existingClaim: ${VOLSYNC_CLAIM}

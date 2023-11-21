@@ -3,71 +3,70 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: sonarr
-  namespace: downloads
+  name: &app sonarr
+  namespace: media
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
       version: 2.0.3
-      interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
     controllers:
       main:
         annotations:
           reloader.stakater.com/auto: "true"
-
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups:
-              - 65539
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 14.9
+              pullPolicy: IfNotPresent
+            envFrom: &envFrom
+              - secretRef:
+                  name: sonarr-secret
 
         containers:
           main:
             image:
-              repository: ghcr.io/onedr0p/sonarr-develop
-              tag: 4.0.0.697@sha256:fa87be887075ebef98933fe409b83e348eb0a3908e9c86ed5526a333250b98e6
+              repository: ghcr.io/onedr0p/sonarr
+              tag: 3.0.10.1567
             env:
+              TZ: "${TIMEZONE}"
               SONARR__INSTANCE_NAME: Sonarr
-              SONARR__PORT: &port 8989
-              SONARR__AUTHENTICATION_METHOD: External
-              SONARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
-              SONARR__APPLICATION_URL: "https://sonarr.bjw-s.dev"
+              SONARR__PORT: &port 80
               SONARR__LOG_LEVEL: info
-              SONARR__API_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: sonarr-secret
-                    key: api_key
-            resources:
-              requests:
-                cpu: 20m
-                memory: 323M
-              limits:
-                memory: 323M
-
+              SONARR__THEME: dark
+            envFrom: *envFrom
+            securityContext:
+              privileged: true
+              runAsUser: 0
     service:
       main:
         ports:
           http:
             port: *port
-
     ingress:
       main:
         enabled: true
-        className: "internal-nginx"
+        className: "internal"
         hosts:
-          - host: &host "sonarr.bjw-s.dev"
+          - host: &host "sonarr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -76,12 +75,14 @@ spec:
         tls:
           - hosts:
               - *host
-
     persistence:
-      config:
-        enabled: true
-        existingClaim: sonarr-config
       media:
-        existingClaim: nas-media
+        enabled: true
+        existingClaim: pvc-smb-media
         globalMounts:
-          - path: /data/nas-media
+          - path: /data
+      # config:
+      #   enabled: true
+      #   existingClaim: pvc-smb-sonarr
+      #   globalMounts:
+      #     - path: /config

@@ -4,13 +4,12 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: qbittorrent
-  namespace: downloads
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.0.3
+      version: 2.3.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -22,20 +21,21 @@ spec:
       main:
         annotations:
           configmap.reloader.stakater.com/reload: qbittorrent-scripts,qbittorrent-dnsdist
+          secret.reloader.stakater.com/reload: qbittorrent-secret
 
         pod:
           securityContext:
-            fsGroup: 568
+            fsGroup: ${APP_GID}
             fsGroupChangePolicy: "OnRootMismatch"
             supplementalGroups:
-              - 65539
+              - 65542 # gladius:external-services
 
         containers:
           main:
             nameOverride: qbittorrent
             image:
               repository: ghcr.io/onedr0p/qbittorrent
-              tag: 4.5.5@sha256:f4a1a5eece13beed61e579172d2a54b1fc2e7ff2bbdbd7ef22a4d9f6fc36e198
+              tag: 4.6.1@sha256:796f135bcb572a3fb3138b0c65034535c0a7b1dcb83940fe12e00cad1b47fcbb
             env:
               UMASK: "022"
               QBITTORRENT__PORT: &port 8080
@@ -46,8 +46,8 @@ spec:
               limits:
                 memory: 8192Mi
             securityContext:
-              runAsUser: 568
-              runAsGroup: 568
+              runAsUser: ${APP_UID}
+              runAsGroup: ${APP_GID}
 
           dnsdist:
             image:
@@ -113,7 +113,7 @@ spec:
         enabled: true
         className: "internal-nginx"
         hosts:
-          - host: &host "{{ .Release.Name }}.bjw-s.dev"
+          - host: "${HOSTNAME}"
             paths:
               - path: /
                 service:
@@ -121,12 +121,12 @@ spec:
                   port: http
         tls:
           - hosts:
-              - *host
+              - "${HOSTNAME}"
 
     persistence:
       config:
         enabled: true
-        existingClaim: qbittorrent-config
+        existingClaim: "${VOLSYNC_CLAIM}"
         advancedMounts:
           main:
             main:

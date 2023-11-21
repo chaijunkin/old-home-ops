@@ -4,13 +4,12 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: cross-seed
-  namespace: downloads
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.0.3
+      version: 2.3.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -18,7 +17,6 @@ spec:
         namespace: flux-system
   dependsOn:
     - name: qbittorrent
-
   values:
     controllers:
       main:
@@ -27,18 +25,18 @@ spec:
 
         pod:
           securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
+            runAsUser: ${APP_UID}
+            runAsGroup: ${APP_GID}
+            fsGroup: ${APP_GID}
             fsGroupChangePolicy: "OnRootMismatch"
             supplementalGroups:
-              - 65539
+              - 65542 # gladius:external-services
 
         containers:
           main:
             image:
               repository: ghcr.io/cross-seed/cross-seed
-              tag: 5.5.4
+              tag: 5.8.3
             args:
               - daemon
             resources:

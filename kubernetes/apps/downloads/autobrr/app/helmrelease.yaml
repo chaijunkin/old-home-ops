@@ -4,73 +4,44 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: autobrr
-  namespace: downloads
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.0.3
+      version: 2.3.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  dependsOn:
-    - name: qbittorrent
-
   values:
     controllers:
       main:
         annotations:
-          secret.reloader.stakater.com/reload: autobrr-secret
-          configmap.reloader.stakater.com/reload: autobrr-configmap
-
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
-
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 14
+              pullPolicy: IfNotPresent
+            envFrom: &envFrom
+              - secretRef:
+                  name: autobrr-secret
         containers:
           main:
             image:
-              repository: ghcr.io/autobrr/autobrr
-              tag: v1.29.0-rc1
+              repository: ghcr.io/buroa/autobrr
+              tag: develop@sha256:407c6d98cea5b0f4ea41fe5a3898d8291dfd1f148979c0d55f7f7167faf4e923
+              # repository: ghcr.io/autobrr/autobrr
+              # tag: v1.33.0
             env:
               AUTOBRR__CHECKFORUPDATES: "false"
               AUTOBRR__HOST: 0.0.0.0
-              AUTOBRR__PORT: &port 7474
+              AUTOBRR__PORT: &port 80
               AUTOBRR__LOGLEVEL: DEBUG
-              AUTOBRR__DATABASETYPE: postgres
-              AUTOBRR__POSTGRESHOST:
-                valueFrom:
-                  secretKeyRef:
-                    name: autobrr-pguser-autobrr
-                    key: host
-              AUTOBRR__POSTGRESPORT: "5432"
-              AUTOBRR__POSTGRESUSER:
-                valueFrom:
-                  secretKeyRef:
-                    name: autobrr-pguser-autobrr
-                    key: user
-              AUTOBRR__POSTGRESPASS:
-                valueFrom:
-                  secretKeyRef:
-                    name: autobrr-pguser-autobrr
-                    key: password
-              AUTOBRR__POSTGRESDATABASE:
-                valueFrom:
-                  secretKeyRef:
-                    name: autobrr-pguser-autobrr
-                    key: dbname
-
-              AUTOBRR__SESSIONSECRET:
-                valueFrom:
-                  secretKeyRef:
-                    name: autobrr-secret
-                    key: session_secret
+            envFrom: *envFrom
             resources:
               requests:
                 cpu: 10m
@@ -87,9 +58,9 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "internal-nginx"
+        className: internal
         hosts:
-          - host: &host "{{ .Release.Name }}.bjw-s.dev"
+          - host: &host "autobrr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:

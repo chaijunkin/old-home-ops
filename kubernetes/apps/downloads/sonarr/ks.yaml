@@ -7,12 +7,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  path: "./kubernetes/cluster-0/apps/downloads/sonarr/app"
+  path: "./kubernetes/apps/media/sonarr/app"
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
-  wait: false # no flux ks dependents
-  dependsOn:
-    - name: cluster-apps-external-secrets-stores
-    - name: cluster-apps-rook-ceph-cluster
+    name: home-kubernetes
+  wait: false

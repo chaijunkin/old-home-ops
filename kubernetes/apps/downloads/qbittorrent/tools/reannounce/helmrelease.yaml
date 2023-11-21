@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.0.3
+      version: 2.3.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -24,8 +24,8 @@ spec:
       main:
         pod:
           securityContext:
-            runAsUser: 568
-            runAsGroup: 568
+            runAsUser: ${APP_UID}
+            runAsGroup: ${APP_GID}
 
         containers:
           main:

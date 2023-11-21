@@ -3,7 +3,7 @@ apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: sonarr-restic
-  namespace: downloads
+  namespace: media
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
@@ -26,12 +26,13 @@ apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
   name: sonarr
-  namespace: downloads
+  namespace: media
 spec:
-  sourcePVC: sonarr-config
+  sourcePVC: config-sonarr-0
   trigger:
     schedule: "0 */12 * * *"
   restic:
+    cacheCapacity: 3G
     copyMethod: Snapshot
     pruneIntervalDays: 14
     repository: sonarr-restic-secret
