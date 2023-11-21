@@ -105,7 +105,7 @@ spec:
               - *host
     persistence:
       config:
-        enabled: true
+        enabled: false
         # existingClaim: qbittorrent-config
       media:
         enabled: true
