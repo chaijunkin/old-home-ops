@@ -100,3 +100,6 @@ spec:
 ### odoo /var/www/odoo/bin/console doctrine:migrations:migrate --env=prod --no-interaction
 
 ### php bin/console odoo:install --env=prod
+
+
+#### odoo --init base --database ${POSTGRES_DB} --stop-after-init --db_host=${POSTGRES_HOST} --db_user ${POSTGRES_USER} --db_password ${POSTGRES_PASSWORD}
