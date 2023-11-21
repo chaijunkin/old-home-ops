@@ -84,3 +84,5 @@ spec:
       config:
         enabled: true
         existingClaim: pvc-smb-sonarr
+        globalMounts:
+          - path: /config
