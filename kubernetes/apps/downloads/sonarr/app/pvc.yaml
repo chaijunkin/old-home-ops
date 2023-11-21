@@ -29,7 +29,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: pvc-smb-sonarr
-  namespace: media
+  namespace: downloads
 spec:
   accessModes:
     - ReadWriteMany
