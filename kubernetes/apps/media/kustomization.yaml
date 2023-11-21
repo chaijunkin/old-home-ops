@@ -15,4 +15,5 @@ resources:
   - ./navidrome/ks.yaml
   - ./nextcloud/ks.yaml
   - ./paperless/ks.yaml
+  - ./sonarr/ks.yaml
   # - ./wikijs/ks.yaml
