@@ -270,7 +270,7 @@ data:
         - Tabby:
             description: AI Recommendation Developer tools (Copilot)
             href: https://tabby.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/tabby.png
+            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/hajimari.png
         - Hajimari:
             description: Second homepage (Temp)
             href: https://hajimari.${SECRET_DOMAIN}
