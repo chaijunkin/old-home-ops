@@ -13,7 +13,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: backube
-        namespace: flux-system
+        namespace: volsync
   maxHistory: 2
   install:
     remediation:
