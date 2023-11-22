@@ -1,19 +1,20 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: homepage
+  name: &app homepage
   namespace: default
 spec:
   interval: 30m
   chart:
     spec:
-      chart: homepage
-      version: 1.2.3
+      chart: app-template
+      version: 2.2.0
       sourceRef:
         kind: HelmRepository
-        name: homepage
-        namespace: default
+        name: bjw-s
+        namespace: flux-system
   maxHistory: 2
   install:
     remediation:
@@ -25,351 +26,67 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    image:
-      repository: ghcr.io/benphelps/homepage
-      tag: v0.7.1
-
-    # Enable RBAC. RBAC is necessary to use Kubernetes integration
-    enableRbac: true
-
-    serviceAccount:
-      # Specify a different service account name
-      name: homepage
-      # Create service account. Needed when RBAC is enabled.
-      create: true
-
+    controllers:
+      main:
+        replicas: 2
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/gethomepage/homepage
+              tag: v0.8.0
+            env:
+              TZ: ${TIMEZONE}
+            envFrom:
+              - secretRef:
+                  name: homepage-secret
+            resources:
+              requests:
+                cpu: 15m
+                memory: 200M
+              limits:
+                memory: 2G
     service:
       main:
         ports:
           http:
             port: 3000
-
-    controller:
-      strategy: RollingUpdate
-      rollingUpdate:
-        maxSurge: 25%
-        maxUnavailable: 25%
-
-    # Enable the ingress to expose Homepage to the network.
     ingress:
       main:
         enabled: true
-        # labels:
-        #   # This label will enable discover of this deployment in Homepage
-        #   gethomepage.dev/enabled: "true"
-        # annotations:
-        #   # These annotations will configure how this deployment is shown in Homepage
-        #   gethomepage.dev/name: "Homepage"
-        #   gethomepage.dev/description: "A modern, secure, highly customizable application dashboard."
-        #   gethomepage.dev/group: "A New Group"
-        #   gethomepage.dev/icon: "homepage.png"
-        ingressClassName: "internal"
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
-          - host: &host homepage.${SECRET_DOMAIN}
+          - host: &host "home.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
-        
-
-    # All the config files for Homepage can be specified under their relevant config block.
-    config:
-      # To use an existing ConfigMap uncomment this line and specify the name
-      # useExistingConfigMap: existing-homepage-configmap
-      bookmarks:
-        - Developer:
-            - Github:
-                - abbr: GitHub
-                  href: https://github.com/chaijunkin
-        - My Service:
-            - Myself:
-                - abbr: ME
-                  href: https://me.${SECRET_DOMAIN}
-      services:
-        - Application Service (Misc.):
-            - VaultWarden:
-                description: Password manager
-                href: https://vaultwarden.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/vaultwarden.png
-            - FireFly-iii:
-                description: Finance & Budgeting service
-                href: https://firefly-iii.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/firefly.png
-            - Ghost:
-                description: Blogging service
-                href: https://ghost.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/ghost.png
-            - Freshrss:
-                description: Feed aggregator services
-                href: https://freshrss.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/freshrss.png
-
-        - Home Service:
-            - Home Assistant:
-                description: Home automation service
-                href: https://hass.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/home-assistant.png
-            - Odoo:
-                description: ERP service
-                href: https://odoo.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/odoo.png
-
-        - Media/Storage Service:
-            - Autobrr:
-                description: Autobrr service
-                href: https://autobrr.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/autobrr.png
-            - Lidarr:
-                description: Lidarr service
-                href: https://lidarr.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/lidarr.png
-            - Prowlarr:
-                description: Prowlarr service
-                href: https://prowlarr.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/prowlarr.png
-            - qbittorrent:
-                description: qbittorrent service
-                href: https://qbittorrent.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/qbittorrent.png
-            - Radarr:
-                description: Radarr service
-                href: https://radarr.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/radarr.png
-            - Readarr:
-                description: Readarr service
-                href: https://readarr.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/readarr.png
-            - Sabnzbd:
-                description: Sabnzbd service
-                href: https://sabnzbd.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/sabnzbd.png
-            - Sonarr:
-                description: Sonarr service
-                href: https://sonarr.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/sonarr.png
-            - Nextcloud:
-                description: File hosting service
-                href: https://nextcloud.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/nextcloud.png
-            # - Wikijs:
-            #     description: Wiki service
-            #     href: https://wikijs.${SECRET_DOMAIN}
-            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/wikijs.png
-            - Paperless-ngx:
-                description: Document service
-                href: https://paperless.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/paperless.png
-            # - Calibre-web:
-            #     description: Book service
-            #     href: https://book.${SECRET_DOMAIN}
-            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/calibre-web.png
-            # - Immich:
-            #     description: Mobile media backup service
-            #     href: https://immich.${SECRET_DOMAIN}
-            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/immich.png
-        - Compute/Storage Infrastructure:
-            - Proxmox (Dashy):
-                description: Compute hypervisor
-                href: https://dashy.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/proxmox.png
-            # - Proxmox (Jumpy):
-            #     description: Network hypervisor
-            #     href: https://jumpy.${SECRET_DOMAIN}
-            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/proxmox.png
-            - Minio:
-                description: Object Storage
-                href: https://minio.${SECRET_DOMAIN}/login
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/minio.png
-        
-        - Network Infrastructure:
-            - Pfsense:
-                description: Router & Firewall Appliance
-                href: https://pfsense.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pfsense.png
-            - Pihole:
-                description: Local DNS Server and Adblocker
-                href: https://pihole.${SECRET_DOMAIN}/admin
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pi-hole.png
-                widget:
-                  type: pihole
-                  url: https://pihole.${SECRET_DOMAIN}
-            - Switch:
-                description: Managed switch
-                href: https://switch.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/tp-link.png
-            - Access point:
-                description: Wifi provider
-                href: https://ap.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/omada.png
-            - Hubble:
-                description: Network, Service & Security Observability
-                href: https://hubble.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/hubble.png
-            - Kutt:
-                description: URL shortner
-                href: https://kutt.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kutt.png
-        - Platform Service:
-            # - Argocd:
-            #     description: Kubernetes GitOps
-            #     href: https://argocd.${SECRET_DOMAIN}
-            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/argocd.png
-            - Authentik:
-                description: Authentication provider
-                href: https://authentik.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/authentik.png
-            - Kubernetes:
-                description: Container Orchestrator dashboard
-                href: https://kubernetes.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kubernetes-dashboard.png
-            - NetBox:
-                description: DCIM/IPAM tools
-                href: https://netbox.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/netbox.png
-            # - Node-Red:
-            #     description: Flow-based tools
-            #     href: https://node-red.${SECRET_DOMAIN}
-            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/nodered.png
-            # - Rundeck:
-            #     description: Automation operator
-            #     href: https://rundeck.${SECRET_DOMAIN}
-            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/rundeck.png
-            # - Vault:
-            #     description: Secret manager
-            #     href: https://vault.${SECRET_DOMAIN}
-            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/vault.png
-
-        - Monitoring Service:
-            - ChangeDetection.io:
-                description: Change detection
-                href: https://changedetectionio.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/changedetection-io.png
-            - AlertManager:
-                description: Alert manager server
-                href: https://alertmanager.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/alertmanager.png
-            - Jaeger:
-                description: Distributed tracing server
-                href: https://jaeger.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/jaeger.png
-            - Grafana:
-                description: Monitoring Visualization Dashboard
-                href: https://grafana.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/grafana.png
-            - Loki:
-                description: Log management server
-                href: https://grafana.${SECRET_DOMAIN}/explore?orgId=1&left=%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D%7D
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/loki.png
-            - Prometheus:
-                description: Metrics server
-                href: https://prometheus.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/prometheus.png
-            - Uptime Kuma:
-                description: Uptime monitoring
-                href: https://uptime-kuma.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/uptime-kuma.png
-
-        - External Service:
-            - Cloudflare:
-                description: Cloudflare dashboard
-                href: https://dash.cloudflare.com/
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/cloudflare.png
-            - Zohomail:
-                description: Mail provider
-                href: https://mailadmin.zoho.com/hosting?domain=${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/zohomail.png
-            - Porkbun:
-                description: DNS registrar
-                href: https://porkbun.com/
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/porkbun.png
-            - Tailscale:
-                description: Mesh VPN provider
-                href: https://login.tailscale.com/admin/machines
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/tailscale.png
-            - BackBlaze:
-                description: External backup provider
-                href: https://secure.backblaze.com/user_overview.htm
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/backblaze.png
-
-        - Utility Service:
-            - It-Tools:
-                description: Developer utility tools
-                href: https://it-tools.${SECRET_DOMAIN}/
-                icon: https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/it-tools.png
-            - CyberChef:
-                description: Cyber operation tools
-                href: https://cyberchef.${SECRET_DOMAIN}/
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/cyberchef.png
-            - PrivateBin:
-                description: Pastebin services
-                href: https://privatebin.${SECRET_DOMAIN}/
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/privatebin.png
-
-        - Management Tools:
-            - VsCode:
-                description: Coding services
-                href: https://coder.${SECRET_DOMAIN}/
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/vscode.png
-            - JumpServer:
-                description: Bastion Host
-                href: https://jumpserver.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/guacamole.png
-            - PiKVM:
-                description: PiKVM services
-                href: https://pikvm.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pikvm.png
-            - RustDesk:
-                description: PiKVM services
-                href: https://pikvm.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/pikvm.png
-
-      widgets:
-        # - resources:
-        #     # change backend to 'kubernetes' to use Kubernetes integration. Requires RBAC.
-        #     backend: resources
-        #     expanded: true
-        #     cpu: true
-        #     memory: true
-        ## Uncomment to enable Kubernetes integration
-        - kubernetes:
-            cluster:
-              show: true
-              cpu: true
-              memory: true
-              showLabel: true
-              label: "cluster"
-            nodes:
-              show: false
-              cpu: false
-              memory: false
-              showLabel: false
-        - search:
-            provider: google # google, duckduckgo, bing, baidu, brave or custom
-            focus: true # Optional, will set focus to the search bar on page load
-            target: _blank # One of _self, _blank, _parent or _top  
-        - datetime:
-            locale: nl
-            format:
-              dateStyle: long
-              timeStyle: long
-      kubernetes:
-        # change mode to 'cluster' to use RBAC service account
-        mode: cluster
-      docker:
-      settings:
-
     persistence:
-      logs:
+      config:
         enabled: true
-        type: emptyDir
-        mountPath: /app/config/logs
-
-    resources:
-      requests:
-        memory: 10Mi
-        cpu: 10m
-      limits:
-        memory: 200Mi
-        cpu: 500m
+        type: configMap
+        name: homepage-config
+        globalMounts:
+          - subPath: bookmarks
+            path: /app/config/bookmarks
+          - subPath: docker
+            path: /app/config/docker
+          - subPath: kubernetes
+            path: /app/config/kubernetes
+          - subPath: services
+            path: /app/config/services
+          - subPath: settings
+            path: /app/config/settings
+          - subPath: widgets
+            path: /app/config/widgets
+    serviceAccount:
+      create: true
