@@ -117,26 +117,58 @@ spec:
                 icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/odoo.png
 
         - Media/Storage Service:
+            - Autobrr:
+                description: Autobrr service
+                href: https://autobrr.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/autobrr.png
+            - Lidarr:
+                description: Lidarr service
+                href: https://lidarr.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/lidarr.png
+            - Prowlarr:
+                description: Prowlarr service
+                href: https://prowlarr.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/prowlarr.png
+            - qbittorrent:
+                description: qbittorrent service
+                href: https://qbittorrent.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/qbittorrent.png
+            - Radarr:
+                description: Radarr service
+                href: https://radarr.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/radarr.png
+            - Readarr:
+                description: Readarr service
+                href: https://readarr.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/readarr.png
+            - Sabnzbd:
+                description: Sabnzbd service
+                href: https://sabnzbd.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/sabnzbd.png
+            - Sonarr:
+                description: Sonarr service
+                href: https://sonarr.${SECRET_DOMAIN}
+                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/sonarr.png
             - Nextcloud:
                 description: File hosting service
                 href: https://nextcloud.${SECRET_DOMAIN}
                 icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/nextcloud.png
-            - Wikijs:
-                description: Wiki service
-                href: https://wikijs.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/wikijs.png
+            # - Wikijs:
+            #     description: Wiki service
+            #     href: https://wikijs.${SECRET_DOMAIN}
+            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/wikijs.png
             - Paperless-ngx:
                 description: Document service
                 href: https://paperless.${SECRET_DOMAIN}
                 icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/paperless.png
-            - Calibre-web:
-                description: Book service
-                href: https://book.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/calibre-web.png
-            - Immich:
-                description: Mobile media backup service
-                href: https://immich.${SECRET_DOMAIN}
-                icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/immich.png
+            # - Calibre-web:
+            #     description: Book service
+            #     href: https://book.${SECRET_DOMAIN}
+            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/calibre-web.png
+            # - Immich:
+            #     description: Mobile media backup service
+            #     href: https://immich.${SECRET_DOMAIN}
+            #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/immich.png
         - Compute/Storage Infrastructure:
             - Proxmox (Dashy):
                 description: Compute hypervisor
