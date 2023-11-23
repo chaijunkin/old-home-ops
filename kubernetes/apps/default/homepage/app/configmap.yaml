@@ -25,7 +25,24 @@ data:
     #         - abbr: ME
     #           href: https://me.${SECRET_DOMAIN}
   services.yaml: |
-    - Application Service (Misc.):
+    - Calendar:
+        - Calendar:
+            widget:
+              type: calendar
+              firstDayInWeek: sunday # optional - defaults to monday
+              #view: monthly # optional - possible values monthly, agenda
+              maxEvents: 10 # optional - defaults to 10
+            #   integrations: # optional
+            #     - type: sonarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr, lidarr, readarr
+            #       service_group: Downloads # group name where widget exists
+            #       service_name: Sonarr # service name for that widget
+            #     - type: radarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr, lidarr, readarr
+            #       service_group: Downloads # group name where widget exists
+            #       service_name: Radarr # service name for that widget
+            #     - type: readarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr, lidarr, readarr
+            #       service_group: Downloads # group name where widget exists
+            #       service_name: Readarr # service name for that widget
+    - Application Service:
         - VaultWarden:
             description: Primary Password manager
             href: https://vw.${SECRET_DOMAIN}
@@ -65,7 +82,29 @@ data:
             href: https://odoo.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/odoo.png
 
-    - Media/Storage Service:
+    - Media Service:
+        - Nextcloud:
+            description: File hosting service
+            href: https://nextcloud.${SECRET_DOMAIN}
+            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/nextcloud.png
+        - Paperless-ngx:
+            description: Document service
+            href: https://paperless.${SECRET_DOMAIN}
+            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/paperless.png
+        # - Wikijs:
+        #     description: Wiki service
+        #     href: https://wikijs.${SECRET_DOMAIN}
+        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/wikijs.png
+        # - Calibre-web:
+        #     description: Book service
+        #     href: https://book.${SECRET_DOMAIN}
+        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/calibre-web.png
+        # - Immich:
+        #     description: Mobile media backup service
+        #     href: https://immich.${SECRET_DOMAIN}
+        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/immich.png
+
+    - Downloads Service:
         - Autobrr:
             description: Autobrr service
             href: https://autobrr.${SECRET_DOMAIN}
@@ -98,26 +137,6 @@ data:
             description: Sonarr service
             href: https://sonarr.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/sonarr.png
-        - Nextcloud:
-            description: File hosting service
-            href: https://nextcloud.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/nextcloud.png
-        - Paperless-ngx:
-            description: Document service
-            href: https://paperless.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/paperless.png
-        # - Wikijs:
-        #     description: Wiki service
-        #     href: https://wikijs.${SECRET_DOMAIN}
-        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/wikijs.png
-        # - Calibre-web:
-        #     description: Book service
-        #     href: https://book.${SECRET_DOMAIN}
-        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/calibre-web.png
-        # - Immich:
-        #     description: Mobile media backup service
-        #     href: https://immich.${SECRET_DOMAIN}
-        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/immich.png
     - Compute/Storage Infrastructure:
         - Proxmox (Dashy):
             description: Compute hypervisor
@@ -160,6 +179,7 @@ data:
             description: URL shortner
             href: https://kutt.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kutt.png
+
     - Platform Service:
         - GitOps:
             description: Kubernetes GitOps
@@ -308,9 +328,11 @@ data:
         target: _blank # One of _self, _blank, _parent or _top  
     - datetime:
         locale: nl
+        text_size: l
         format:
           dateStyle: long
-          timeStyle: long
+          timeStyle: short
+          hourCycle: h23
   kubernetes.yaml: |
     # change mode to 'cluster' to use RBAC service account
     mode: cluster
@@ -320,3 +342,44 @@ data:
     favicon: https://github.com/walkxcode/dashboard-icons/blob/main/png/heimdall.png
     theme: dark
     color: slate
+    headerStyle: clean
+    layout:
+      Calendar:
+        style: column
+        icon: mdi-calendar
+      Application Service:
+        style: column
+        icon: mdi-application
+      Home Service:
+        style: column
+        icon: mdi-home-automation
+      Media Service:
+        style: column
+        icon: mdi-play-circle
+      Downloads Service:
+        style: row
+        columns: 3
+        icon: mdi-download-circle
+      Compute/Storage Infrastructure:
+        style: row
+        columns: 3
+        icon: mdi-server
+      Network Infrastructure:
+        style: row
+        columns: 2
+        icon: mdi-access-point-network
+      Monitoring Service:
+        style: column
+        icon: mdi-chart-line
+      External Service:
+        style: row
+        columns: 3
+        icon: mdi-cloud
+      Utility Service:
+        style: row
+        columns: 3
+        icon: mdi-tools
+      Management Tools:
+        style: row
+        columns: 3
+        icon: mdi-toolbox
