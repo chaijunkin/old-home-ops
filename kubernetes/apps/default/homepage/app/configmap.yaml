@@ -14,10 +14,10 @@ data:
         - Github:
             - abbr: GitHub
               href: https://github.com/chaijunkin
-    - My Service:
-        - Myself:
-            - abbr: ME
-              href: https://me.${SECRET_DOMAIN}
+    # - My Service:
+    #     - Myself:
+    #         - abbr: ME
+    #           href: https://me.${SECRET_DOMAIN}
   services:
     - Application Service (Misc.):
         - VaultWarden:
@@ -297,7 +297,7 @@ data:
           memory: false
           showLabel: false
     - search:
-        provider: google # google, duckduckgo, bing, baidu, brave or custom
+        provider: [duckduckgo, google] # google, duckduckgo, bing, baidu, brave or custom
         focus: true # Optional, will set focus to the search bar on page load
         target: _blank # One of _self, _blank, _parent or _top  
     - datetime:
