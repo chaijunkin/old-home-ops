@@ -357,29 +357,29 @@ data:
         style: column
         icon: mdi-play-circle
       Downloads Service:
-        style: row
+        style: column
         icon: mdi-download-circle
       Compute/Storage Infrastructure:
-        style: row
+        style: column
         icon: mdi-server
       Network Infrastructure:
-        style: row
+        style: column
         icon: mdi-access-point-network
       Monitoring Service:
         style: column
         icon: mdi-chart-line
       External Service:
-        style: row
+        style: column
         icon: mdi-cloud
       Utility Service:
-        style: row
+        style: column
         icon: mdi-tools
       Platform Service:
-        style: row
+        style: column
         icon: mdi-cellphone-link
       Management Tools:
-        style: row
+        style: column
         icon: mdi-toolbox
       Developer:
-        style: row
+        style: column
         icon: mdi-toolbox

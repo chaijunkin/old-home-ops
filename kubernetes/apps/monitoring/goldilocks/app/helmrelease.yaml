@@ -41,6 +41,7 @@ spec:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/icon: etcd.png
           gethomepage.dev/name: Goldilocks
+          gethomepage.dev/description: Resource Optimization
           gethomepage.dev/group: Monitoring Service
         hosts:
           - host: &host goldilocks.${SECRET_DOMAIN}
