@@ -10,7 +10,6 @@ debug: false
 ui:
   title: Health Status
   header: Health Status
-  logo: https://raw.githubusercontent.com/LilDrunkenSmurf/k3s-home-cluster/main/icons/lds-transparent.png
 alerting:
   discord:
     # webhook-url: ${DISCORD_WEBHOOK_URL}
@@ -23,12 +22,12 @@ connectivity:
   checker:
     target: 1.1.1.1:53
     interval: 1m
-endpoints:
-  - name: status
-    group: external
-    url: https://status.${SECRET_DOMAIN}
-    interval: 1m
-    client:
-      dns-resolver: tcp://1.1.1.1:53
-    conditions:
-      - "[STATUS] == 200"
+# endpoints:
+#   - name: status
+#     group: external
+#     url: https://status.${SECRET_DOMAIN}
+#     interval: 1m
+#     client:
+#       dns-resolver: tcp://1.1.1.1:53
+#     conditions:
+#       - "[STATUS] == 200"
