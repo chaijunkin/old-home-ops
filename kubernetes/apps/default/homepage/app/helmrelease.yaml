@@ -77,16 +77,16 @@ spec:
         name: homepage-config
         globalMounts:
           - subPath: bookmarks
-            path: /app/config/bookmarks
+            path: /app/config/bookmarks.yaml
           - subPath: docker
-            path: /app/config/docker
+            path: /app/config/docker.yaml
           - subPath: kubernetes
-            path: /app/config/kubernetes
+            path: /app/config/kubernetes.yaml
           - subPath: services
-            path: /app/config/services
+            path: /app/config/services.yaml
           - subPath: settings
-            path: /app/config/settings
+            path: /app/config/settings.yaml
           - subPath: widgets
-            path: /app/config/widgets
+            path: /app/config/widgets.yaml
     serviceAccount:
       create: true

@@ -9,16 +9,22 @@ metadata:
 data:
   # To use an existing ConfigMap uncomment this line and specify the name
   # useExistingConfigMap: existing-homepage-configmap
-  bookmarks:
+  bookmarks.yaml: |
     - Developer:
         - Github:
             - abbr: GitHub
               href: https://github.com/chaijunkin
+        - k8s-at-home:
+            - icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kubernetes.png
+              href: 'https://nanne.dev/k8s-at-home-search/'
+        - k3s-home-cluster:
+            - icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/github.png
+              href: 'https://github.com/chaijunkin/home-ops'
     # - My Service:
     #     - Myself:
     #         - abbr: ME
     #           href: https://me.${SECRET_DOMAIN}
-  services:
+  services.yaml: |
     - Application Service (Misc.):
         - VaultWarden:
             description: Primary Password manager
@@ -276,7 +282,7 @@ data:
             href: https://hajimari.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/hajimari.png
 
-  widgets:
+  widgets.yaml: |
     # - resources:
     #     # change backend to 'kubernetes' to use Kubernetes integration. Requires RBAC.
     #     backend: resources
@@ -305,8 +311,12 @@ data:
         format:
           dateStyle: long
           timeStyle: long
-  kubernetes:
+  kubernetes.yaml: |
     # change mode to 'cluster' to use RBAC service account
     mode: cluster
-  docker:
-  settings:
+  docker.yaml: ""
+  settings.yaml: |
+    title: Dashboard
+    favicon: https://github.com/walkxcode/dashboard-icons/blob/main/png/heimdall.png
+    theme: dark
+    color: slate
