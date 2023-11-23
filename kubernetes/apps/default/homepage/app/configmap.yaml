@@ -184,7 +184,7 @@ data:
         - GitOps:
             description: Kubernetes GitOps
             href: https://gitops.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/svg/flux-cd.png
+            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/svg/flux-cd.svg
         - Authentik:
             description: Authentication provider
             href: https://auth.${SECRET_DOMAIN}
