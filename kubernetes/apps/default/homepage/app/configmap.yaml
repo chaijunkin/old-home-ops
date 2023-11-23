@@ -223,10 +223,6 @@ data:
             description: Metrics server
             href: https://prometheus.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/prometheus.png
-        - Gatus:
-            description: Internal Uptime monitoring
-            href: https://gatus.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/gatus.png
         # - Jaeger:
         #     description: Distributed tracing server
         #     href: https://jaeger.${SECRET_DOMAIN}
