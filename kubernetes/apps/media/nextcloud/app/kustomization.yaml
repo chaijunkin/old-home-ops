@@ -6,7 +6,7 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./helmrepository.yaml
-  - ./pvc.yaml
+  # - ./pvc.yaml
 commonLabels:
   app.kubernetes.io/name: nextcloud
   app.kubernetes.io/instance: nextcloud
