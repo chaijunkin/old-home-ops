@@ -1,0 +1,1386 @@
+BASH_BUILTINS(1)                                  General Commands Manual                                  BASH_BUILTINS(1)
+
+[1mNAME[0m
+       bash,  :, ., [, alias, bg, bind, break, builtin, caller, cd, command, compgen, complete, compopt, continue, declare,
+       dirs, disown, echo, enable, eval, exec, exit, export, false, fc, fg, getopts, hash, help, history, jobs, kill,  let,
+       local,  logout, mapfile, popd, printf, pushd, pwd, read, readonly, return, set, shift, shopt, source, suspend, test,
+       times, trap, true, type, typeset, ulimit, umask, unalias, unset, wait - bash built-in commands, see [1mbash[22m(1)
+
+[1mBASH BUILTIN COMMANDS[0m
+       Unless otherwise noted, each builtin command documented in this section as accepting options preceded by  [1m-  [22maccepts
+       [1m--  [22mto  signify  the  end  of the options.  The [1m:[22m, [1mtrue[22m, [1mfalse[22m, and [1mtest[22m/[1m[ [22mbuiltins do not accept options and do not
+       treat [1m-- [22mspecially.  The [1mexit[22m, [1mlogout[22m, [1mreturn[22m, [1mbreak[22m, [1mcontinue[22m, [1mlet[22m, and [1mshift [22mbuiltins accept and process arguments
+       beginning  with [1m- [22mwithout requiring [1m--[22m.  Other builtins that accept arguments but are not specified as accepting op‐
+       tions interpret arguments beginning with [1m- [22mas invalid options and require [1m-- [22mto prevent this interpretation.
+       [1m: [22m[[4marguments[24m]
+              No effect; the command does nothing beyond expanding [4marguments[24m and  performing  any  specified  redirections.
+              The return status is zero.
+
+        [1m.  [4m[22mfilename[24m [[4marguments[24m]
+       [1msource [4m[22mfilename[24m [[4marguments[24m]
+              Read  and  execute  commands from [4mfilename[24m in the current shell environment and return the exit status of the
+              last command executed from [4mfilename[24m.  If [4mfilename[24m does not contain a slash, filenames in  [1mPATH  [22mare  used  to
+              find  the directory containing [4mfilename[24m.  The file searched for in [1mPATH [22mneed not be executable.  When [1mbash [22mis
+              not in [4mposix[24m [4mmode[24m, the current directory is searched if no file is found in [1mPATH[22m.  If the  [1msourcepath  [22moption
+              to  the  [1mshopt  [22mbuiltin command is turned off, the [1mPATH [22mis not searched.  If any [4marguments[24m are supplied, they
+              become the positional parameters when [4mfilename[24m is executed.  Otherwise  the  positional  parameters  are  un‐
+              changed.  If the [1m-T [22moption is enabled, [1msource [22minherits any trap on [1mDEBUG[22m; if it is not, any [1mDEBUG [22mtrap string
+              is saved and restored around the call to [1msource[22m, and [1msource [22munsets the [1mDEBUG [22mtrap while it executes.   If  [1m-T[0m
+              is  not  set,  and  the sourced file changes the [1mDEBUG [22mtrap, the new value is retained when [1msource [22mcompletes.
+              The return status is the status of the last command exited within the script (0 if no commands are executed),
+              and false if [4mfilename[24m is not found or cannot be read.
+
+       [1malias [22m[[1m-p[22m] [[4mname[24m[=[4mvalue[24m] ...]
+              [1mAlias  [22mwith  no  arguments  or  with the [1m-p [22moption prints the list of aliases in the form [1malias [4m[22mname[24m=[4mvalue[24m on
+              standard output.  When arguments are supplied, an alias is defined for each [4mname[24m whose  [4mvalue[24m  is  given.   A
+              trailing space in [4mvalue[24m causes the next word to be checked for alias substitution when the alias is expanded.
+              For each [4mname[24m in the argument list for which no [4mvalue[24m is supplied,  the  name  and  value  of  the  alias  is
+              printed.  [1mAlias [22mreturns true unless a [4mname[24m is given for which no alias has been defined.
+
+       [1mbg [22m[[4mjobspec[24m ...]
+              Resume  each  suspended  job  [4mjobspec[24m in the background, as if it had been started with [1m&[22m.  If [4mjobspec[24m is not
+              present, the shell's notion of the [4mcurrent[24m [4mjob[24m is used.  [1mbg [4m[22mjobspec[24m returns 0 unless run when job control  is
+              disabled  or,  when  run with job control enabled, any specified [4mjobspec[24m was not found or was started without
+              job control.
+
+       [1mbind [22m[[1m-m [4m[22mkeymap[24m] [[1m-lpsvPSVX[22m]
+       [1mbind [22m[[1m-m [4m[22mkeymap[24m] [[1m-q [4m[22mfunction[24m] [[1m-u [4m[22mfunction[24m] [[1m-r [4m[22mkeyseq[24m]
+       [1mbind [22m[[1m-m [4m[22mkeymap[24m] [1m-f [4m[22mfilename[0m
+       [1mbind [22m[[1m-m [4m[22mkeymap[24m] [1m-x [4m[22mkeyseq[24m:[4mshell-command[0m
+       [1mbind [22m[[1m-m [4m[22mkeymap[24m] [4mkeyseq[24m:[4mfunction-name[0m
+       [1mbind [22m[[1m-m [4m[22mkeymap[24m] [4mkeyseq[24m:[4mreadline-command[0m
+              Display current [1mreadline [22mkey and function bindings, bind a key sequence to a [1mreadline [22mfunction or  macro,  or
+              set  a  [1mreadline  [22mvariable.   Each  non-option argument is a command as it would appear in [4m.inputrc[24m, but each
+              binding or command must be passed as a separate argument; e.g., '"\C-x\C-r": re-read-init-file'.  Options, if
+              supplied, have the following meanings:
+              [1m-m [4m[22mkeymap[0m
+                     Use  [4mkeymap[24m  as  the  keymap  to  be affected by the subsequent bindings.  Acceptable [4mkeymap[24m names are
+                     [4memacs,[24m [4memacs-standard,[24m [4memacs-meta,[24m [4memacs-ctlx,[24m [4mvi,[24m [4mvi-move,[24m [4mvi-command[24m, and [4mvi-insert[24m.  [4mvi[24m is  equiva‐
+                     lent to [4mvi-command[24m ([4mvi-move[24m is also a synonym); [4memacs[24m is equivalent to [4memacs-standard[24m.
+              [1m-l     [22mList the names of all [1mreadline [22mfunctions.
+              [1m-p     [22mDisplay [1mreadline [22mfunction names and bindings in such a way that they can be re-read.
+              [1m-P     [22mList current [1mreadline [22mfunction names and bindings.
+              [1m-s     [22mDisplay [1mreadline [22mkey sequences bound to macros and the strings they output in such a way that they can
+                     be re-read.
+              [1m-S     [22mDisplay [1mreadline [22mkey sequences bound to macros and the strings they output.
+              [1m-v     [22mDisplay [1mreadline [22mvariable names and values in such a way that they can be re-read.
+              [1m-V     [22mList current [1mreadline [22mvariable names and values.
+              [1m-f [4m[22mfilename[0m
+                     Read key bindings from [4mfilename[24m.
+              [1m-q [4m[22mfunction[0m
+                     Query about which keys invoke the named [4mfunction[24m.
+              [1m-u [4m[22mfunction[0m
+                     Unbind all keys bound to the named [4mfunction[24m.
+              [1m-r [4m[22mkeyseq[0m
+                     Remove any current binding for [4mkeyseq[24m.
+              [1m-x [4m[22mkeyseq[24m[1m:[4m[22mshell-command[0m
+                     Cause [4mshell-command[24m to be executed whenever [4mkeyseq[24m is entered.  When [4mshell-command[24m  is  executed,  the
+                     shell  sets  the  [1mREADLINE_LINE  [22mvariable  to  the  contents of the [1mreadline [22mline buffer and the [1mREAD‐[0m
+                     [1mLINE_POINT [22mand [1mREADLINE_MARK [22mvariables to the current location of the insertion point  and  the  saved
+                     insertion  point  (the mark), respectively.  If the executed command changes the value of any of [1mREAD‐[0m
+                     [1mLINE_LINE[22m, [1mREADLINE_POINT[22m, or [1mREADLINE_MARK[22m, those new values will be reflected in the editing state.
+              [1m-X     [22mList all key sequences bound to shell commands and the associated commands in a  format  that  can  be
+                     reused as input.
+
+              The return value is 0 unless an unrecognized option is given or an error occurred.
+
+       [1mbreak [22m[[4mn[24m]
+              Exit from within a [1mfor[22m, [1mwhile[22m, [1muntil[22m, or [1mselect [22mloop.  If [4mn[24m is specified, break [4mn[24m levels.  [4mn[24m must be ≥ 1.  If
+              [4mn[24m is greater than the number of enclosing loops, all enclosing loops are exited.  The return value is  0  un‐
+              less [4mn[24m is not greater than or equal to 1.
+
+       [1mbuiltin [4m[22mshell-builtin[24m [[4marguments[24m]
+              Execute  the  specified shell builtin, passing it [4marguments[24m, and return its exit status.  This is useful when
+              defining a function whose name is the same as a shell builtin, retaining the  functionality  of  the  builtin
+              within  the  function.   The  [1mcd  [22mbuiltin  is  commonly  redefined  this  way.  The return status is false if
+              [4mshell-builtin[24m is not a shell builtin command.
+
+       [1mcaller [22m[[4mexpr[24m]
+              Returns the context of any active subroutine call (a shell function or a script executed with the [1m. [22mor [1msource[0m
+              builtins).  Without [4mexpr[24m, [1mcaller [22mdisplays the line number and source filename of the current subroutine call.
+              If a non-negative integer is supplied as [4mexpr[24m, [1mcaller [22mdisplays the line number, subroutine name,  and  source
+              file corresponding to that position in the current execution call stack.  This extra information may be used,
+              for example, to print a stack trace.  The current frame is frame 0.  The return value is 0 unless  the  shell
+              is not executing a subroutine call or [4mexpr[24m does not correspond to a valid position in the call stack.
+
+       [1mcd [22m[[1m-L[22m|[[1m-P [22m[[1m-e[22m]] [-@]] [[4mdir[24m]
+              Change the current directory to [4mdir[24m.  if [4mdir[24m is not supplied, the value of the [1mHOME [22mshell variable is the de‐
+              fault.  Any additional arguments following [4mdir[24m are ignored.  The variable [1mCDPATH [22mdefines the search path  for
+              the directory containing [4mdir[24m: each directory name in [1mCDPATH [22mis searched for [4mdir[24m.  Alternative directory names
+              in [1mCDPATH [22mare separated by a colon (:).  A null directory name in [1mCDPATH [22mis the same as  the  current  direc‐
+              tory,  i.e., ``[1m.[22m''.  If [4mdir[24m begins with a slash (/), then [1mCDPATH [22mis not used.  The [1m-P [22moption causes [1mcd [22mto use
+              the physical directory structure by resolving symbolic links while traversing [4mdir[24m and before  processing  in‐
+              stances of [4m..[24m in [4mdir[24m (see also the [1m-P [22moption to the [1mset [22mbuiltin command); the [1m-L [22moption forces symbolic links
+              to be followed by resolving the link after processing instances of [4m..[24m in [4mdir[24m.  If [4m..[24m appears in  [4mdir[24m,  it  is
+              processed  by removing the immediately previous pathname component from [4mdir[24m, back to a slash or the beginning
+              of [4mdir[24m.  If the [1m-e [22moption is supplied with [1m-P[22m, and the current working directory cannot be  successfully  de‐
+              termined after a successful directory change, [1mcd [22mwill return an unsuccessful status.  On systems that support
+              it, the [1m-@ [22moption presents the extended attributes associated with a file as a directory.  An argument  of  [1m-[0m
+              is  converted to [1m$OLDPWD [22mbefore the directory change is attempted.  If a non-empty directory name from [1mCDPATH[0m
+              is used, or if [1m- [22mis the first argument, and the directory change is successful, the absolute pathname of  the
+              new  working directory is written to the standard output.  The return value is true if the directory was suc‐
+              cessfully changed; false otherwise.
+
+       [1mcommand [22m[[1m-pVv[22m] [4mcommand[24m [[4marg[24m ...]
+              Run [4mcommand[24m with [4margs[24m suppressing the normal shell function lookup.  Only builtin commands or commands  found
+              in  the  [1mPATH  [22mare  executed.  If the [1m-p [22moption is given, the search for [4mcommand[24m is performed using a default
+              value for [1mPATH [22mthat is guaranteed to find all of the standard utilities.  If either the [1m-V [22mor  [1m-v  [22moption  is
+              supplied,  a description of [4mcommand[24m is printed.  The [1m-v [22moption causes a single word indicating the command or
+              filename used to invoke [4mcommand[24m to be displayed; the [1m-V [22moption produces a more verbose description.   If  the
+              [1m-V  [22mor  [1m-v [22moption is supplied, the exit status is 0 if [4mcommand[24m was found, and 1 if not.  If neither option is
+              supplied and an error occurred or [4mcommand[24m cannot be found, the exit status is 127.  Otherwise, the exit  sta‐
+              tus of the [1mcommand [22mbuiltin is the exit status of [4mcommand[24m.
+
+       [1mcompgen [22m[[4moption[24m] [[4mword[24m]
+              Generate  possible  completion matches for [4mword[24m according to the [4moption[24ms, which may be any option accepted by
+              the [1mcomplete [22mbuiltin with the exception of [1m-p [22mand [1m-r[22m, and write the matches to the standard output.  When us‐
+              ing  the  [1m-F  [22mor [1m-C [22moptions, the various shell variables set by the programmable completion facilities, while
+              available, will not have useful values.
+
+              The matches will be generated in the same way as if the programmable completion code had generated  them  di‐
+              rectly  from  a  completion  specification with the same flags.  If [4mword[24m is specified, only those completions
+              matching [4mword[24m will be displayed.
+
+              The return value is true unless an invalid option is supplied, or no matches were generated.
+
+       [1mcomplete [22m[[1m-abcdefgjksuv[22m] [[1m-o [4m[22mcomp-option[24m] [[1m-DEI[22m] [[1m-A [4m[22maction[24m] [[1m-G [4m[22mglobpat[24m] [[1m-W [4m[22mwordlist[24m]
+              [[1m-F [4m[22mfunction[24m] [[1m-C [4m[22mcommand[24m] [[1m-X [4m[22mfilterpat[24m] [[1m-P [4m[22mprefix[24m] [[1m-S [4m[22msuffix[24m] [4mname[24m [[4mname[24m [4m...[24m]
+       [1mcomplete -pr [22m[[1m-DEI[22m] [[4mname[24m ...]
+              Specify how arguments to each [4mname[24m should be completed.  If the [1m-p [22moption is supplied, or if no  options  are
+              supplied,  existing  completion  specifications  are printed in a way that allows them to be reused as input.
+              The [1m-r [22moption removes a completion specification for each [4mname[24m, or, if no [4mname[24ms are supplied, all  completion
+              specifications.   The  [1m-D  [22moption indicates that other supplied options and actions should apply to the ``de‐
+              fault'' command completion; that is, completion attempted on a command for which no completion has previously
+              been defined.  The [1m-E [22moption indicates that other supplied options and actions should apply to ``empty'' com‐
+              mand completion; that is, completion attempted on a blank line.  The [1m-I [22moption indicates that other  supplied
+              options  and  actions  should  apply to completion on the initial non-assignment word on the line, or after a
+              command delimiter such as [1m; [22mor [1m|[22m, which is usually command name completion.  If  multiple  options  are  sup‐
+              plied, the [1m-D [22moption takes precedence over [1m-E[22m, and both take precedence over [1m-I[22m.  If any of [1m-D[22m, [1m-E[22m, or [1m-I [22mare
+              supplied, any other [4mname[24m arguments are ignored; these completions only apply to the case specified by the op‐
+              tion.
+
+              The  process of applying these completion specifications when word completion is attempted is described above
+              under [1mProgrammable Completion[22m.
+
+              Other options, if specified, have the following meanings.  The arguments to the [1m-G[22m, [1m-W[22m, and [1m-X [22moptions  (and,
+              if  necessary,  the  [1m-P  [22mand  [1m-S [22moptions) should be quoted to protect them from expansion before the [1mcomplete[0m
+              builtin is invoked.
+              [1m-o [4m[22mcomp-option[0m
+                      The [4mcomp-option[24m controls several aspects of the compspec's behavior beyond the simple  generation  of
+                      completions.  [4mcomp-option[24m may be one of:
+                      [1mbashdefault[0m
+                              Perform the rest of the default [1mbash [22mcompletions if the compspec generates no matches.
+                      [1mdefault [22mUse readline's default filename completion if the compspec generates no matches.
+                      [1mdirnames[0m
+                              Perform directory name completion if the compspec generates no matches.
+                      [1mfilenames[0m
+                              Tell  readline that the compspec generates filenames, so it can perform any filename-specific
+                              processing (like adding a slash to directory names, quoting special characters, or  suppress‐
+                              ing trailing spaces).  Intended to be used with shell functions.
+                      [1mnoquote [22mTell  readline  not  to quote the completed words if they are filenames (quoting filenames is
+                              the default).
+                      [1mnosort  [22mTell readline not to sort the list of possible completions alphabetically.
+                      [1mnospace [22mTell readline not to append a space (the default) to words completed at the end of the line.
+                      [1mplusdirs[0m
+                              After any matches defined by the compspec are generated, directory  name  completion  is  at‐
+                              tempted and any matches are added to the results of the other actions.
+              [1m-A [4m[22maction[0m
+                      The [4maction[24m may be one of the following to generate a list of possible completions:
+                      [1malias   [22mAlias names.  May also be specified as [1m-a[22m.
+                      [1marrayvar[0m
+                              Array variable names.
+                      [1mbinding Readline [22mkey binding names.
+                      [1mbuiltin [22mNames of shell builtin commands.  May also be specified as [1m-b[22m.
+                      [1mcommand [22mCommand names.  May also be specified as [1m-c[22m.
+                      [1mdirectory[0m
+                              Directory names.  May also be specified as [1m-d[22m.
+                      [1mdisabled[0m
+                              Names of disabled shell builtins.
+                      [1menabled [22mNames of enabled shell builtins.
+                      [1mexport  [22mNames of exported shell variables.  May also be specified as [1m-e[22m.
+                      [1mfile    [22mFile names.  May also be specified as [1m-f[22m.
+                      [1mfunction[0m
+                              Names of shell functions.
+                      [1mgroup   [22mGroup names.  May also be specified as [1m-g[22m.
+                      [1mhelptopic[0m
+                              Help topics as accepted by the [1mhelp [22mbuiltin.
+                      [1mhostname[0m
+                              Hostnames, as taken from the file specified by the [1mHOSTFILE [22mshell variable.
+                      [1mjob     [22mJob names, if job control is active.  May also be specified as [1m-j[22m.
+                      [1mkeyword [22mShell reserved words.  May also be specified as [1m-k[22m.
+                      [1mrunning [22mNames of running jobs, if job control is active.
+                      [1mservice [22mService names.  May also be specified as [1m-s[22m.
+                      [1msetopt  [22mValid arguments for the [1m-o [22moption to the [1mset [22mbuiltin.
+                      [1mshopt   [22mShell option names as accepted by the [1mshopt [22mbuiltin.
+                      [1msignal  [22mSignal names.
+                      [1mstopped [22mNames of stopped jobs, if job control is active.
+                      [1muser    [22mUser names.  May also be specified as [1m-u[22m.
+                      [1mvariable[0m
+                              Names of all shell variables.  May also be specified as [1m-v[22m.
+              [1m-C [4m[22mcommand[0m
+                      [4mcommand[24m is executed in a subshell environment, and its output is used as the possible completions.
+              [1m-F [4m[22mfunction[0m
+                      The  shell function [4mfunction[24m is executed in the current shell environment.  When the function is exe‐
+                      cuted, the first argument ([1m$1[22m) is the name of the command whose arguments are  being  completed,  the
+                      second  argument  ([1m$2[22m) is the word being completed, and the third argument ([1m$3[22m) is the word preceding
+                      the word being completed on the current command line.  When it finishes, the possible completions are
+                      retrieved from the value of the [1mCOMPREPLY [22marray variable.
+              [1m-G [4m[22mglobpat[0m
+                      The pathname expansion pattern [4mglobpat[24m is expanded to generate the possible completions.
+              [1m-P [4m[22mprefix[0m
+                      [4mprefix[24m  is  added  at the beginning of each possible completion after all other options have been ap‐
+                      plied.
+              [1m-S [4m[22msuffix[0m
+                      [4msuffix[24m is appended to each possible completion after all other options have been applied.
+              [1m-W [4m[22mwordlist[0m
+                      The [4mwordlist[24m is split using the characters in the [1mIFS [22mspecial variable as delimiters, and each resul‐
+                      tant word is expanded.  Shell quoting is honored within [4mwordlist[24m, in order to provide a mechanism for
+                      the words to contain shell metacharacters or characters in the value of [1mIFS[22m.   The  possible  comple‐
+                      tions are the members of the resultant list which match the word being completed.
+              [1m-X [4m[22mfilterpat[0m
+                      [4mfilterpat[24m is a pattern as used for pathname expansion.  It is applied to the list of possible comple‐
+                      tions generated by the preceding options and arguments, and each completion matching [4mfilterpat[24m is re‐
+                      moved  from the list.  A leading [1m! [22min [4mfilterpat[24m negates the pattern; in this case, any completion not
+                      matching [4mfilterpat[24m is removed.
+
+              The return value is true unless an invalid option is supplied, an option other than  [1m-p  [22mor  [1m-r  [22mis  supplied
+              without  a  [4mname[24m  argument,  an  attempt is made to remove a completion specification for a [4mname[24m for which no
+              specification exists, or an error occurs adding a completion specification.
+
+       [1mcompopt [22m[[1m-o [4m[22moption[24m] [[1m-DEI[22m] [[1m+o [4m[22moption[24m] [[4mname[24m]
+              Modify completion options for each [4mname[24m according to the [4moption[24ms, or for the  currently-executing  completion
+              if  no [4mname[24ms are supplied.  If no [4moption[24ms are given, display the completion options for each [4mname[24m or the cur‐
+              rent completion.  The possible values of [4moption[24m are those valid for the  [1mcomplete  [22mbuiltin  described  above.
+              The  [1m-D [22moption indicates that other supplied options should apply to the ``default'' command completion; that
+              is, completion attempted on a command for which no completion has previously been defined.  The [1m-E [22moption in‐
+              dicates  that  other  supplied  options should apply to ``empty'' command completion; that is, completion at‐
+              tempted on a blank line.  The [1m-I [22moption indicates that other supplied options should apply to  completion  on
+              the  initial  non-assignment  word on the line, or after a command delimiter such as [1m; [22mor [1m|[22m, which is usually
+              command name completion.
+
+              The return value is true unless an invalid option is supplied, an attempt is made to modify the options for a
+              [4mname[24m for which no completion specification exists, or an output error occurs.
+
+       [1mcontinue [22m[[4mn[24m]
+              Resume  the  next iteration of the enclosing [1mfor[22m, [1mwhile[22m, [1muntil[22m, or [1mselect [22mloop.  If [4mn[24m is specified, resume at
+              the [4mn[24mth enclosing loop.  [4mn[24m must be ≥ 1.  If [4mn[24m is greater than the number of enclosing loops, the last enclos‐
+              ing loop (the ``top-level'' loop) is resumed.  The return value is 0 unless [4mn[24m is not greater than or equal to
+              1.
+
+       [1mdeclare [22m[[1m-aAfFgiIlnrtux[22m] [[1m-p[22m] [[4mname[24m[=[4mvalue[24m] ...]
+       [1mtypeset [22m[[1m-aAfFgiIlnrtux[22m] [[1m-p[22m] [[4mname[24m[=[4mvalue[24m] ...]
+              Declare variables and/or give them attributes.  If no [4mname[24ms are given then display the values  of  variables.
+              The  [1m-p [22moption will display the attributes and values of each [4mname[24m.  When [1m-p [22mis used with [4mname[24m arguments, ad‐
+              ditional options, other than [1m-f [22mand [1m-F[22m, are ignored.  When [1m-p [22mis supplied without  [4mname[24m  arguments,  it  will
+              display the attributes and values of all variables having the attributes specified by the additional options.
+              If no other options are supplied with [1m-p[22m, [1mdeclare [22mwill display the attributes and values of all  shell  vari‐
+              ables.   The  [1m-f  [22moption will restrict the display to shell functions.  The [1m-F [22moption inhibits the display of
+              function definitions; only the function name and attributes are printed.  If the [1mextdebug [22mshell option is en‐
+              abled  using  [1mshopt[22m,  the  source file name and line number where each [4mname[24m is defined are displayed as well.
+              The [1m-F [22moption implies [1m-f[22m.  The [1m-g [22moption forces variables to be created or modified at the global scope, even
+              when  [1mdeclare [22mis executed in a shell function.  It is ignored in all other cases.  The [1m-I [22moption causes local
+              variables to inherit the attributes (except the [4mnameref[24m attribute) and value of any  existing  variable  with
+              the  same [4mname[24m at a surrounding scope.  If there is no existing variable, the local variable is initially un‐
+              set.  The following options can be used to restrict output to variables with the specified  attribute  or  to
+              give variables attributes:
+              [1m-a     [22mEach [4mname[24m is an indexed array variable (see [1mArrays [22mabove).
+              [1m-A     [22mEach [4mname[24m is an associative array variable (see [1mArrays [22mabove).
+              [1m-f     [22mUse function names only.
+              [1m-i     [22mThe variable is treated as an integer; arithmetic evaluation (see [1mARITHMETIC EVALUATION [22mabove) is per‐
+                     formed when the variable is assigned a value.
+              [1m-l     [22mWhen the variable is assigned a value, all upper-case characters are converted to lower-case.  The up‐
+                     per-case attribute is disabled.
+              [1m-n     [22mGive  each  [4mname[24m  the  [4mnameref[24m  attribute, making it a name reference to another variable.  That other
+                     variable is defined by the value of [4mname[24m.  All references, assignments, and attribute modifications to
+                     [4mname[24m, except those using or changing the [1m-n [22mattribute itself, are performed on the variable referenced
+                     by [4mname[24m's value.  The nameref attribute cannot be applied to array variables.
+              [1m-r     [22mMake [4mname[24ms readonly.  These names cannot then be assigned values by subsequent  assignment  statements
+                     or unset.
+              [1m-t     [22mGive  each  [4mname[24m  the  [4mtrace[24m  attribute.  Traced functions inherit the [1mDEBUG [22mand [1mRETURN [22mtraps from the
+                     calling shell.  The trace attribute has no special meaning for variables.
+              [1m-u     [22mWhen the variable is assigned a value, all lower-case characters are  converted  to  upper-case.   The
+                     lower-case attribute is disabled.
+              [1m-x     [22mMark [4mname[24ms for export to subsequent commands via the environment.
+
+              Using  `+' instead of `-' turns off the attribute instead, with the exceptions that [1m+a [22mand [1m+A [22mmay not be used
+              to destroy array variables and [1m+r [22mwill not remove the readonly attribute.  When used in a  function,  [1mdeclare[0m
+              and [1mtypeset [22mmake each [4mname[24m local, as with the [1mlocal [22mcommand, unless the [1m-g [22moption is supplied.  If a variable
+              name is followed by =[4mvalue[24m, the value of the variable is set to [4mvalue[24m.  When using [1m-a [22mor [1m-A [22mand the  compound
+              assignment  syntax  to  create array variables, additional attributes do not take effect until subsequent as‐
+              signments.  The return value is 0 unless an invalid option is encountered, an attempt is  made  to  define  a
+              function  using  ``-f  foo=bar'',  an attempt is made to assign a value to a readonly variable, an attempt is
+              made to assign a value to an array variable without using the compound assignment syntax (see [1mArrays  [22mabove),
+              one  of  the  [4mnames[24m  is not a valid shell variable name, an attempt is made to turn off readonly status for a
+              readonly variable, an attempt is made to turn off array status for an array variable, or an attempt  is  made
+              to display a non-existent function with [1m-f[22m.
+
+       [1mdirs [-clpv] [+[4m[22mn[24m[1m] [-[4m[22mn[24m[1m][0m
+              Without  options,  displays the list of currently remembered directories.  The default display is on a single
+              line with directory names separated by spaces.  Directories are added to the list with the [1mpushd [22mcommand; the
+              [1mpopd  [22mcommand  removes  entries  from  the  list.  The current directory is always the first directory in the
+              stack.
+              [1m-c     [22mClears the directory stack by deleting all of the entries.
+              [1m-l     [22mProduces a listing using full pathnames; the default listing format uses a tilde to  denote  the  home
+                     directory.
+              [1m-p     [22mPrint the directory stack with one entry per line.
+              [1m-v     [22mPrint the directory stack with one entry per line, prefixing each entry with its index in the stack.
+              [1m+[4m[22mn[24m     Displays  the [4mn[24mth entry counting from the left of the list shown by [1mdirs [22mwhen invoked without options,
+                     starting with zero.
+              [1m-[4m[22mn[24m     Displays the [4mn[24mth entry counting from the right of the list shown by [1mdirs [22mwhen invoked without options,
+                     starting with zero.
+
+              The  return  value  is  0  unless  an invalid option is supplied or [4mn[24m indexes beyond the end of the directory
+              stack.
+
+       [1mdisown [22m[[1m-ar[22m] [[1m-h[22m] [[4mjobspec[24m ... | [4mpid[24m ... ]
+              Without options, remove each [4mjobspec[24m from the table of active jobs.  If [4mjobspec[24m is not present,  and  neither
+              the  [1m-a  [22mnor  the [1m-r [22moption is supplied, the [4mcurrent[24m [4mjob[24m is used.  If the [1m-h [22moption is given, each [4mjobspec[24m is
+              not removed from the table, but is marked so that [1mSIGHUP [22mis not sent to the  job  if  the  shell  receives  a
+              [1mSIGHUP[22m.   If  no [4mjobspec[24m is supplied, the [1m-a [22moption means to remove or mark all jobs; the [1m-r [22moption without a
+              [4mjobspec[24m argument restricts operation to running jobs.  The return value is 0 unless a [4mjobspec[24m does not  spec‐
+              ify a valid job.
+
+       [1mecho [22m[[1m-neE[22m] [[4marg[24m ...]
+              Output the [4marg[24ms, separated by spaces, followed by a newline.  The return status is 0 unless a write error oc‐
+              curs.  If [1m-n [22mis specified, the trailing newline is suppressed.  If the [1m-e [22moption is given, interpretation  of
+              the  following  backslash-escaped  characters is enabled.  The [1m-E [22moption disables the interpretation of these
+              escape characters, even on systems where they are interpreted by default.  The [1mxpg_echo [22mshell option  may  be
+              used  to dynamically determine whether or not [1mecho [22mexpands these escape characters by default.  [1mecho [22mdoes not
+              interpret [1m-- [22mto mean the end of options.  [1mecho [22minterprets the following escape sequences:
+              [1m\a     [22malert (bell)
+              [1m\b     [22mbackspace
+              [1m\c     [22msuppress further output
+              [1m\e[0m
+              [1m\E     [22man escape character
+              [1m\f     [22mform feed
+              [1m\n     [22mnew line
+              [1m\r     [22mcarriage return
+              [1m\t     [22mhorizontal tab
+              [1m\v     [22mvertical tab
+              [1m\\     [22mbackslash
+              [1m\0[4m[22mnnn[24m  the eight-bit character whose value is the octal value [4mnnn[24m (zero to three octal digits)
+              [1m\x[4m[22mHH[24m   the eight-bit character whose value is the hexadecimal value [4mHH[24m (one or two hex digits)
+              [1m\u[4m[22mHHHH[24m the Unicode (ISO/IEC 10646) character whose value is the hexadecimal value [4mHHHH[24m (one to four hex  dig‐
+                     its)
+              [1m\U[4m[22mHHHHHHHH[0m
+                     the  Unicode (ISO/IEC 10646) character whose value is the hexadecimal value [4mHHHHHHHH[24m (one to eight hex
+                     digits)
+
+       [1menable [22m[[1m-a[22m] [[1m-dnps[22m] [[1m-f [4m[22mfilename[24m] [[4mname[24m ...]
+              Enable and disable builtin shell commands.  Disabling a builtin allows a disk command which has the same name
+              as a shell builtin to be executed without specifying a full pathname, even though the shell normally searches
+              for builtins before disk commands.  If [1m-n [22mis used, each [4mname[24m is disabled; otherwise, [4mnames[24m are enabled.   For
+              example,  to  use  the  [1mtest  [22mbinary found via the [1mPATH [22minstead of the shell builtin version, run ``enable -n
+              test''.  The [1m-f [22moption means to load the new builtin command [4mname[24m from shared  object  [4mfilename[24m,  on  systems
+              that support dynamic loading.  The [1m-d [22moption will delete a builtin previously loaded with [1m-f[22m.  If no [4mname[24m ar‐
+              guments are given, or if the [1m-p [22moption is supplied, a list of shell builtins is printed.  With no  other  op‐
+              tion  arguments,  the list consists of all enabled shell builtins.  If [1m-n [22mis supplied, only disabled builtins
+              are printed.  If [1m-a [22mis supplied, the list printed includes all builtins, with an indication of whether or not
+              each  is  enabled.   If  [1m-s  [22mis supplied, the output is restricted to the POSIX [4mspecial[24m builtins.  The return
+              value is 0 unless a [4mname[24m is not a shell builtin or there is an error loading a new builtin from a shared  ob‐
+              ject.
+
+       [1meval [22m[[4marg[24m ...]
+              The [4marg[24ms are read and concatenated together into a single command.  This command is then read and executed by
+              the shell, and its exit status is returned as the value of [1meval[22m.  If there are no [4margs[24m, or  only  null  argu‐
+              ments, [1meval [22mreturns 0.
+
+       [1mexec [22m[[1m-cl[22m] [[1m-a [4m[22mname[24m] [[4mcommand[24m [[4marguments[24m]]
+              If  [4mcommand[24m  is specified, it replaces the shell.  No new process is created.  The [4marguments[24m become the argu‐
+              ments to [4mcommand[24m.  If the [1m-l [22moption is supplied, the shell places a dash at the beginning of the zeroth argu‐
+              ment  passed  to  [4mcommand[24m.   This is what [4mlogin[24m(1) does.  The [1m-c [22moption causes [4mcommand[24m to be executed with an
+              empty environment.  If [1m-a [22mis supplied, the shell passes [4mname[24m as the zeroth argument to the executed  command.
+              If  [4mcommand[24m  cannot be executed for some reason, a non-interactive shell exits, unless the [1mexecfail [22mshell op‐
+              tion is enabled.  In that case, it returns failure.  An interactive shell returns failure if the file  cannot
+              be  executed.  A subshell exits unconditionally if [1mexec [22mfails.  If [4mcommand[24m is not specified, any redirections
+              take effect in the current shell, and the return status is 0.  If there is a redirection  error,  the  return
+              status is 1.
+
+       [1mexit [22m[[4mn[24m]
+              Cause the shell to exit with a status of [4mn[24m.  If [4mn[24m is omitted, the exit status is that of the last command ex‐
+              ecuted.  A trap on [1mEXIT [22mis executed before the shell terminates.
+
+       [1mexport [22m[[1m-fn[22m] [[4mname[24m[=[4mword[24m]] ...
+       [1mexport -p[0m
+              The supplied [4mnames[24m are marked for automatic export to the environment of subsequently executed commands.   If
+              the  [1m-f  [22moption  is  given, the [4mnames[24m refer to functions.  If no [4mnames[24m are given, or if the [1m-p [22moption is sup‐
+              plied, a list of names of all exported variables is printed.  The [1m-n [22moption causes the export property to  be
+              removed  from  each [4mname[24m.  If a variable name is followed by =[4mword[24m, the value of the variable is set to [4mword[24m.
+              [1mexport [22mreturns an exit status of 0 unless an invalid option is encountered, one of the [4mnames[24m is not  a  valid
+              shell variable name, or [1m-f [22mis supplied with a [4mname[24m that is not a function.
+
+       [1mfc [22m[[1m-e [4m[22mename[24m] [[1m-lnr[22m] [[4mfirst[24m] [[4mlast[24m]
+       [1mfc -s [22m[[4mpat[24m=[4mrep[24m] [[4mcmd[24m]
+              The first form selects a range of commands from [4mfirst[24m to [4mlast[24m from the history list and displays or edits and
+              re-executes them.  [4mFirst[24m and [4mlast[24m may be specified as a string (to locate the  last  command  beginning  with
+              that  string)  or  as  a number (an index into the history list, where a negative number is used as an offset
+              from the current command number).  When listing, a [4mfirst[24m or [4mlast[24m of 0 is equivalent to -1 and -0  is  equiva‐
+              lent  to the current command (usually the [1mfc [22mcommand); otherwise 0 is equivalent to -1 and -0 is invalid.  If
+              [4mlast[24m is not specified, it is set to the current command for listing (so that ``fc -l -10'' prints the last 10
+              commands)  and  to [4mfirst[24m otherwise.  If [4mfirst[24m is not specified, it is set to the previous command for editing
+              and -16 for listing.
+
+              The [1m-n [22moption suppresses the command numbers when listing.  The [1m-r [22moption reverses the order of the commands.
+              If  the [1m-l [22moption is given, the commands are listed on standard output.  Otherwise, the editor given by [4mename[0m
+              is invoked on a file containing those commands.  If [4mename[24m is not given, the value of the [1mFCEDIT  [22mvariable  is
+              used, and the value of [1mEDITOR [22mif [1mFCEDIT [22mis not set.  If neither variable is set, [4mvi[24m is used.  When editing is
+              complete, the edited commands are echoed and executed.
+
+              In the second form, [4mcommand[24m is re-executed after each instance of [4mpat[24m is replaced by [4mrep[24m.  [4mCommand[24m is  inter‐
+              preted  the  same  as [4mfirst[24m above.  A useful alias to use with this is ``r="fc -s"'', so that typing ``r cc''
+              runs the last command beginning with ``cc'' and typing ``r'' re-executes the last command.
+
+              If the first form is used, the return value is 0 unless an invalid option is encountered  or  [4mfirst[24m  or  [4mlast[0m
+              specify  history lines out of range.  If the [1m-e [22moption is supplied, the return value is the value of the last
+              command executed or failure if an error occurs with the temporary file of commands.  If the  second  form  is
+              used, the return status is that of the command re-executed, unless [4mcmd[24m does not specify a valid history line,
+              in which case [1mfc [22mreturns failure.
+
+       [1mfg [22m[[4mjobspec[24m]
+              Resume [4mjobspec[24m in the foreground, and make it the current job.  If [4mjobspec[24m is not present, the shell's notion
+              of  the  [4mcurrent[24m [4mjob[24m is used.  The return value is that of the command placed into the foreground, or failure
+              if run when job control is disabled or, when run with job control enabled, if  [4mjobspec[24m  does  not  specify  a
+              valid job or [4mjobspec[24m specifies a job that was started without job control.
+
+       [1mgetopts [4m[22moptstring[24m [4mname[24m [[4marg[24m [4m...[24m]
+              [1mgetopts [22mis used by shell procedures to parse positional parameters.  [4moptstring[24m contains the option characters
+              to be recognized; if a character is followed by a colon, the option is expected to have  an  argument,  which
+              should be separated from it by white space.  The colon and question mark characters may not be used as option
+              characters.  Each time it is invoked, [1mgetopts [22mplaces the next option in the shell variable [4mname[24m, initializing
+              [4mname[24m  if  it  does  not  exist,  and the index of the next argument to be processed into the variable [1mOPTIND[22m.
+              [1mOPTIND [22mis initialized to 1 each time the shell or a shell script is invoked.  When an option requires an  ar‐
+              gument,  [1mgetopts  [22mplaces  that  argument into the variable [1mOPTARG[22m.  The shell does not reset [1mOPTIND [22mautomati‐
+              cally; it must be manually reset between multiple calls to [1mgetopts [22mwithin the same shell invocation if a  new
+              set of parameters is to be used.
+
+              When  the  end of options is encountered, [1mgetopts [22mexits with a return value greater than zero.  [1mOPTIND [22mis set
+              to the index of the first non-option argument, and [4mname[24m is set to ?.
+
+              [1mgetopts [22mnormally parses the positional parameters, but if more arguments are supplied as [4marg[24m values,  [1mgetopts[0m
+              parses those instead.
+
+              [1mgetopts  [22mcan report errors in two ways.  If the first character of [4moptstring[24m is a colon, [4msilent[24m error report‐
+              ing is used.  In normal operation, diagnostic messages are printed when invalid options or missing option ar‐
+              guments  are  encountered.   If the variable [1mOPTERR [22mis set to 0, no error messages will be displayed, even if
+              the first character of [4moptstring[24m is not a colon.
+
+              If an invalid option is seen, [1mgetopts [22mplaces ? into [4mname[24m and, if not silent, prints an error message and  un‐
+              sets  [1mOPTARG[22m.  If [1mgetopts [22mis silent, the option character found is placed in [1mOPTARG [22mand no diagnostic message
+              is printed.
+
+              If a required argument is not found, and [1mgetopts [22mis not silent, a question mark ([1m?[22m) is placed in [4mname[24m, [1mOPTARG[0m
+              is  unset, and a diagnostic message is printed.  If [1mgetopts [22mis silent, then a colon ([1m:[22m) is placed in [4mname[24m and
+              [1mOPTARG [22mis set to the option character found.
+
+              [1mgetopts [22mreturns true if an option, specified or unspecified, is found.  It returns false if the  end  of  op‐
+              tions is encountered or an error occurs.
+
+       [1mhash [22m[[1m-lr[22m] [[1m-p [4m[22mfilename[24m] [[1m-dt[22m] [[4mname[24m]
+              Each  time  [1mhash [22mis invoked, the full pathname of the command [4mname[24m is determined by searching the directories
+              in [1m$PATH [22mand remembered.  Any previously-remembered pathname is discarded.  If the [1m-p [22moption is supplied,  no
+              path search is performed, and [4mfilename[24m is used as the full filename of the command.  The [1m-r [22moption causes the
+              shell to forget all remembered locations.  The [1m-d [22moption causes the shell to forget the  remembered  location
+              of each [4mname[24m.  If the [1m-t [22moption is supplied, the full pathname to which each [4mname[24m corresponds is printed.  If
+              multiple [4mname[24m arguments are supplied with [1m-t[22m, the [4mname[24m is printed before the hashed full  pathname.   The  [1m-l[0m
+              option  causes output to be displayed in a format that may be reused as input.  If no arguments are given, or
+              if only [1m-l [22mis supplied, information about remembered commands is printed.  The return status is true unless a
+              [4mname[24m is not found or an invalid option is supplied.
+
+       [1mhelp [22m[[1m-dms[22m] [[4mpattern[24m]
+              Display helpful information about builtin commands.  If [4mpattern[24m is specified, [1mhelp [22mgives detailed help on all
+              commands matching [4mpattern[24m; otherwise help for all the builtins and shell control structures is printed.
+              [1m-d     [22mDisplay a short description of each [4mpattern[0m
+              [1m-m     [22mDisplay the description of each [4mpattern[24m in a manpage-like format
+              [1m-s     [22mDisplay only a short usage synopsis for each [4mpattern[0m
+
+              The return status is 0 unless no command matches [4mpattern[24m.
+
+       [1mhistory [[4m[22mn[24m[1m][0m
+       [1mhistory -c[0m
+       [1mhistory -d [4m[22moffset[0m
+       [1mhistory -d [4m[22mstart[24m-[4mend[0m
+       [1mhistory -anrw [22m[[4mfilename[24m]
+       [1mhistory -p [4m[22marg[24m [[4marg[24m [4m...[24m]
+       [1mhistory -s [4m[22marg[24m [[4marg[24m [4m...[24m]
+              With no options, display the command history list with line numbers.  Lines listed with a [1m* [22mhave  been  modi‐
+              fied.   An  argument  of  [4mn[24m lists only the last [4mn[24m lines.  If the shell variable [1mHISTTIMEFORMAT [22mis set and not
+              null, it is used as a format string for [4mstrftime[24m(3) to display the time stamp associated with each  displayed
+              history  entry.   No  intervening blank is printed between the formatted time stamp and the history line.  If
+              [4mfilename[24m is supplied, it is used as the name of the history file; if not, the value of [1mHISTFILE [22mis used.  Op‐
+              tions, if supplied, have the following meanings:
+              [1m-c     [22mClear the history list by deleting all the entries.
+              [1m-d [4m[22moffset[0m
+                     Delete  the history entry at position [4moffset[24m.  If [4moffset[24m is negative, it is interpreted as relative to
+                     one greater than the last history position, so negative indices count back from the end  of  the  his‐
+                     tory, and an index of -1 refers to the current [1mhistory -d [22mcommand.
+              [1m-d [4m[22mstart[24m-[4mend[0m
+                     Delete  the  history entries between positions [4mstart[24m and [4mend[24m, inclusive.  Positive and negative values
+                     for [4mstart[24m and [4mend[24m are interpreted as described above.
+              [1m-a     [22mAppend the ``new'' history lines to the history file.  These are history lines entered since  the  be‐
+                     ginning of the current [1mbash [22msession, but not already appended to the history file.
+              [1m-n     [22mRead  the  history  lines not already read from the history file into the current history list.  These
+                     are lines appended to the history file since the beginning of the current [1mbash [22msession.
+              [1m-r     [22mRead the contents of the history file and append them to the current history list.
+              [1m-w     [22mWrite the current history list to the history file, overwriting the history file's contents.
+              [1m-p     [22mPerform history substitution on the following [4margs[24m and display the  result  on  the  standard  output.
+                     Does not store the results in the history list.  Each [4marg[24m must be quoted to disable normal history ex‐
+                     pansion.
+              [1m-s     [22mStore the [4margs[24m in the history list as a single entry.  The last command in the history list is removed
+                     before the [4margs[24m are added.
+
+              If the [1mHISTTIMEFORMAT [22mvariable is set, the time stamp information associated with each history entry is writ‐
+              ten to the history file, marked with the history comment character.  When the history file is read, lines be‐
+              ginning  with the history comment character followed immediately by a digit are interpreted as timestamps for
+              the following history entry.  The return value is 0 unless an invalid option is encountered, an error  occurs
+              while reading or writing the history file, an invalid [4moffset[24m is supplied as an argument to [1m-d[22m, or the history
+              expansion supplied as an argument to [1m-p [22mfails.
+
+       [1mjobs [22m[[1m-lnprs[22m] [ [4mjobspec[24m ... ]
+       [1mjobs -x [4m[22mcommand[24m [ [4margs[24m ... ]
+              The first form lists the active jobs.  The options have the following meanings:
+              [1m-l     [22mList process IDs in addition to the normal information.
+              [1m-n     [22mDisplay information only about jobs that have changed status since the user was last notified of their
+                     status.
+              [1m-p     [22mList only the process ID of the job's process group leader.
+              [1m-r     [22mDisplay only running jobs.
+              [1m-s     [22mDisplay only stopped jobs.
+
+              If  [4mjobspec[24m  is  given, output is restricted to information about that job.  The return status is 0 unless an
+              invalid option is encountered or an invalid [4mjobspec[24m is supplied.
+
+              If the [1m-x [22moption is supplied, [1mjobs [22mreplaces any [4mjobspec[24m found in  [4mcommand[24m  or  [4margs[24m  with  the  corresponding
+              process group ID, and executes [4mcommand[24m passing it [4margs[24m, returning its exit status.
+
+       [1mkill [22m[[1m-s [4m[22msigspec[24m | [1m-n [4m[22msignum[24m | [1m-[4m[22msigspec[24m] [[4mpid[24m | [4mjobspec[24m] ...
+       [1mkill -l[22m|[1m-L [22m[[4msigspec[24m | [4mexit_status[24m]
+              Send  the  signal  named  by [4msigspec[24m or [4msignum[24m to the processes named by [4mpid[24m or [4mjobspec[24m.  [4msigspec[24m is either a
+              case-insensitive signal name such as [1mSIGKILL [22m(with or without the [1mSIG [22mprefix) or a signal number; [4msignum[24m is a
+              signal  number.   If  [4msigspec[24m  is  not  present, then [1mSIGTERM [22mis assumed.  An argument of [1m-l [22mlists the signal
+              names.  If any arguments are supplied when [1m-l [22mis given, the names of the signals corresponding to  the  argu‐
+              ments are listed, and the return status is 0.  The [4mexit_status[24m argument to [1m-l [22mis a number specifying either a
+              signal number or the exit status of a process terminated by a signal.  The [1m-L [22moption  is  equivalent  to  [1m-l[22m.
+              [1mkill [22mreturns true if at least one signal was successfully sent, or false if an error occurs or an invalid op‐
+              tion is encountered.
+
+       [1mlet [4m[22marg[24m [[4marg[24m ...]
+              Each [4marg[24m is an arithmetic expression to be evaluated (see [1mARITHMETIC EVALUATION  [22mabove).   If  the  last  [4marg[0m
+              evaluates to 0, [1mlet [22mreturns 1; 0 is returned otherwise.
+
+       [1mlocal [22m[[4moption[24m] [[4mname[24m[=[4mvalue[24m] ... | - ]
+              For  each argument, a local variable named [4mname[24m is created, and assigned [4mvalue[24m.  The [4moption[24m can be any of the
+              options accepted by [1mdeclare[22m.  When [1mlocal [22mis used within a function, it causes the variable  [4mname[24m  to  have  a
+              visible  scope  restricted to that function and its children.  If [4mname[24m is -, the set of shell options is made
+              local to the function in which [1mlocal [22mis invoked: shell options changed using the [1mset [22mbuiltin inside the func‐
+              tion are restored to their original values when the function returns.  The restore is effected as if a series
+              of [1mset [22mcommands were executed to restore the values that were in place before the function.   With  no  oper‐
+              ands,  [1mlocal  [22mwrites  a list of local variables to the standard output.  It is an error to use [1mlocal [22mwhen not
+              within a function.  The return status is 0 unless [1mlocal [22mis used outside a function, an invalid [4mname[24m  is  sup‐
+              plied, or [4mname[24m is a readonly variable.
+
+       [1mlogout [22mExit a login shell.
+
+       [1mmapfile [22m[[1m-d [4m[22mdelim[24m] [[1m-n [4m[22mcount[24m] [[1m-O [4m[22morigin[24m] [[1m-s [4m[22mcount[24m] [[1m-t[22m] [[1m-u [4m[22mfd[24m] [[1m-C [4m[22mcallback[24m] [[1m-c [4m[22mquantum[24m] [[4marray[24m]
+       [1mreadarray [22m[[1m-d [4m[22mdelim[24m] [[1m-n [4m[22mcount[24m] [[1m-O [4m[22morigin[24m] [[1m-s [4m[22mcount[24m] [[1m-t[22m] [[1m-u [4m[22mfd[24m] [[1m-C [4m[22mcallback[24m] [[1m-c [4m[22mquantum[24m] [[4marray[24m]
+              Read  lines  from the standard input into the indexed array variable [4marray[24m, or from file descriptor [4mfd[24m if the
+              [1m-u [22moption is supplied.  The variable [1mMAPFILE [22mis the default [4marray[24m.  Options, if supplied, have the  following
+              meanings:
+              [1m-d     [22mThe  first  character of [4mdelim[24m is used to terminate each input line, rather than newline.  If [4mdelim[24m is
+                     the empty string, [1mmapfile [22mwill terminate a line when it reads a NUL character.
+              [1m-n     [22mCopy at most [4mcount[24m lines.  If [4mcount[24m is 0, all lines are copied.
+              [1m-O     [22mBegin assigning to [4marray[24m at index [4morigin[24m.  The default index is 0.
+              [1m-s     [22mDiscard the first [4mcount[24m lines read.
+              [1m-t     [22mRemove a trailing [4mdelim[24m (default newline) from each line read.
+              [1m-u     [22mRead lines from file descriptor [4mfd[24m instead of the standard input.
+              [1m-C     [22mEvaluate [4mcallback[24m each time [4mquantum[24m lines are read.  The [1m-c [22moption specifies [4mquantum[24m.
+              [1m-c     [22mSpecify the number of lines read between each call to [4mcallback[24m.
+
+              If [1m-C [22mis specified without [1m-c[22m, the default quantum is 5000.  When [4mcallback[24m is evaluated, it is  supplied  the
+              index  of the next array element to be assigned and the line to be assigned to that element as additional ar‐
+              guments.  [4mcallback[24m is evaluated after the line is read but before the array element is assigned.
+
+              If not supplied with an explicit origin, [1mmapfile [22mwill clear [4marray[24m before assigning to it.
+
+              [1mmapfile [22mreturns successfully unless an invalid option or option argument is supplied,  [4marray[24m  is  invalid  or
+              unassignable, or if [4marray[24m is not an indexed array.
+
+       [1mpopd [22m[-[1mn[22m] [+[4mn[24m] [-[4mn[24m]
+              Removes  entries  from the directory stack.  With no arguments, removes the top directory from the stack, and
+              performs a [1mcd [22mto the new top directory.  Arguments, if supplied, have the following meanings:
+              [1m-n     [22mSuppresses the normal change of directory when removing directories from the stack, so that  only  the
+                     stack is manipulated.
+              [1m+[4m[22mn[24m     Removes the [4mn[24mth entry counting from the left of the list shown by [1mdirs[22m, starting with zero.  For exam‐
+                     ple: ``popd +0'' removes the first directory, ``popd +1'' the second.
+              [1m-[4m[22mn[24m     Removes the [4mn[24mth entry counting from the right of the list shown by [1mdirs[22m, starting with zero.  For  ex‐
+                     ample: ``popd -0'' removes the last directory, ``popd -1'' the next to last.
+
+              If  the  [1mpopd  [22mcommand  is successful, a [1mdirs [22mis performed as well, and the return status is 0.  [1mpopd [22mreturns
+              false if an invalid option is encountered, the directory stack is empty, a non-existent directory stack entry
+              is specified, or the directory change fails.
+
+       [1mprintf [22m[[1m-v [4m[22mvar[24m] [4mformat[24m [[4marguments[24m]
+              Write  the  formatted [4marguments[24m to the standard output under the control of the [4mformat[24m.  The [1m-v [22moption causes
+              the output to be assigned to the variable [4mvar[24m rather than being printed to the standard output.
+
+              The [4mformat[24m is a character string which contains three types of objects: plain characters,  which  are  simply
+              copied to standard output, character escape sequences, which are converted and copied to the standard output,
+              and format specifications, each of which causes printing of the next successive [4margument[24m.  In addition to the
+              standard [4mprintf[24m(1) format specifications, [1mprintf [22minterprets the following extensions:
+              [1m%b     [22mcauses  [1mprintf  [22mto  expand backslash escape sequences in the corresponding [4margument[24m in the same way as
+                     [1mecho -e[22m.
+              [1m%q     [22mcauses [1mprintf [22mto output the corresponding [4margument[24m in a format that can be reused as shell input.
+              [1m%([4m[22mdatefmt[24m[1m)T[0m
+                     causes [1mprintf [22mto output the date-time string resulting from using [4mdatefmt[24m as a format string for [4mstrf‐[0m
+                     [4mtime[24m(3).  The corresponding [4margument[24m is an integer representing the number of seconds since the epoch.
+                     Two special argument values may be used: -1 represents the current time, and -2  represents  the  time
+                     the shell was invoked.  If no argument is specified, conversion behaves as if -1 had been given.  This
+                     is an exception to the usual [1mprintf [22mbehavior.
+
+              The %b, %q, and %T directives all use the field width and precision arguments from the  format  specification
+              and  write  that many bytes from (or use that wide a field for) the expanded argument, which usually contains
+              more characters than the original.
+
+              Arguments to non-string format specifiers are treated as C constants, except that a  leading  plus  or  minus
+              sign  is  allowed,  and if the leading character is a single or double quote, the value is the ASCII value of
+              the following character.
+
+              The [4mformat[24m is reused as necessary to consume all of the [4marguments[24m.  If the  [4mformat[24m  requires  more  [4marguments[0m
+              than  are supplied, the extra format specifications behave as if a zero value or null string, as appropriate,
+              had been supplied.  The return value is zero on success, non-zero on failure.
+
+       [1mpushd [22m[[1m-n[22m] [+[4mn[24m] [-[4mn[24m]
+       [1mpushd [22m[[1m-n[22m] [[4mdir[24m]
+              Adds a directory to the top of the directory stack, or rotates the stack, making the new top of the stack the
+              current  working directory.  With no arguments, [1mpushd [22mexchanges the top two directories and returns 0, unless
+              the directory stack is empty.  Arguments, if supplied, have the following meanings:
+              [1m-n     [22mSuppresses the normal change of directory when rotating or adding directories to the  stack,  so  that
+                     only the stack is manipulated.
+              [1m+[4m[22mn[24m     Rotates  the stack so that the [4mn[24mth directory (counting from the left of the list shown by [1mdirs[22m, start‐
+                     ing with zero) is at the top.
+              [1m-[4m[22mn[24m     Rotates the stack so that the [4mn[24mth directory (counting from the right of the list shown by [1mdirs[22m, start‐
+                     ing with zero) is at the top.
+              [4mdir[24m    Adds  [4mdir[24m  to the directory stack at the top, making it the new current working directory as if it had
+                     been supplied as the argument to the [1mcd [22mbuiltin.
+
+              If the [1mpushd [22mcommand is successful, a [1mdirs [22mis performed as well.  If the first form is used, [1mpushd [22mreturns  0
+              unless  the  cd  to  [4mdir[24m fails.  With the second form, [1mpushd [22mreturns 0 unless the directory stack is empty, a
+              non-existent directory stack element is specified, or the directory change to the specified new  current  di‐
+              rectory fails.
+
+       [1mpwd [22m[[1m-LP[22m]
+              Print  the  absolute  pathname  of  the current working directory.  The pathname printed contains no symbolic
+              links if the [1m-P [22moption is supplied or the [1m-o physical [22moption to the [1mset [22mbuiltin command is enabled.   If  the
+              [1m-L  [22moption  is used, the pathname printed may contain symbolic links.  The return status is 0 unless an error
+              occurs while reading the name of the current directory or an invalid option is supplied.
+
+       [1mread [22m[[1m-ers[22m] [[1m-a [4m[22maname[24m] [[1m-d [4m[22mdelim[24m] [[1m-i [4m[22mtext[24m] [[1m-n [4m[22mnchars[24m] [[1m-N [4m[22mnchars[24m] [[1m-p [4m[22mprompt[24m] [[1m-t [4m[22mtimeout[24m] [[1m-u [4m[22mfd[24m] [[4mname[24m ...]
+              One line is read from the standard input, or from the file descriptor [4mfd[24m supplied as an argument  to  the  [1m-u[0m
+              option, split into words as described above under [1mWord Splitting[22m, and the first word is assigned to the first
+              [4mname[24m, the second word to the second [4mname[24m, and so on.  If there are more words than names, the remaining words
+              and their intervening delimiters are assigned to the last [4mname[24m.  If there are fewer words read from the input
+              stream than names, the remaining names are assigned empty values.  The characters in [1mIFS [22mare  used  to  split
+              the line into words using the same rules the shell uses for expansion (described above under [1mWord Splitting[22m).
+              The backslash character ([1m\[22m) may be used to remove any special meaning for the next  character  read  and  for
+              line continuation.  Options, if supplied, have the following meanings:
+              [1m-a [4m[22maname[0m
+                     The words are assigned to sequential indices of the array variable [4maname[24m, starting at 0.  [4maname[24m is un‐
+                     set before any new values are assigned.  Other [4mname[24m arguments are ignored.
+              [1m-d [4m[22mdelim[0m
+                     The first character of [4mdelim[24m is used to terminate the input line, rather than newline.   If  [4mdelim[24m  is
+                     the empty string, [1mread [22mwill terminate a line when it reads a NUL character.
+              [1m-e     [22mIf  the  standard input is coming from a terminal, [1mreadline [22m(see [1mREADLINE [22mabove) is used to obtain the
+                     line.  Readline uses the current (or default, if line editing was not previously active) editing  set‐
+                     tings, but uses Readline's default filename completion.
+              [1m-i [4m[22mtext[0m
+                     If  [1mreadline [22mis being used to read the line, [4mtext[24m is placed into the editing buffer before editing be‐
+                     gins.
+              [1m-n [4m[22mnchars[0m
+                     [1mread [22mreturns after reading [4mnchars[24m characters rather than waiting for a complete  line  of  input,  but
+                     honors a delimiter if fewer than [4mnchars[24m characters are read before the delimiter.
+              [1m-N [4m[22mnchars[0m
+                     [1mread [22mreturns after reading exactly [4mnchars[24m characters rather than waiting for a complete line of input,
+                     unless EOF is encountered or [1mread [22mtimes out.  Delimiter characters encountered in the  input  are  not
+                     treated specially and do not cause [1mread [22mto return until [4mnchars[24m characters are read.  The result is not
+                     split on the characters in [1mIFS[22m; the intent is that the variable is  assigned  exactly  the  characters
+                     read (with the exception of backslash; see the [1m-r [22moption below).
+              [1m-p [4m[22mprompt[0m
+                     Display  [4mprompt[24m  on  standard  error, without a trailing newline, before attempting to read any input.
+                     The prompt is displayed only if input is coming from a terminal.
+              [1m-r     [22mBackslash does not act as an escape character.  The backslash is considered to be part  of  the  line.
+                     In particular, a backslash-newline pair may not then be used as a line continuation.
+              [1m-s     [22mSilent mode.  If input is coming from a terminal, characters are not echoed.
+              [1m-t [4m[22mtimeout[0m
+                     Cause  [1mread [22mto time out and return failure if a complete line of input (or a specified number of char‐
+                     acters) is not read within [4mtimeout[24m seconds.  [4mtimeout[24m may be a decimal number with a fractional portion
+                     following  the decimal point.  This option is only effective if [1mread [22mis reading input from a terminal,
+                     pipe, or other special file; it has no effect when reading from regular files.   If  [1mread  [22mtimes  out,
+                     [1mread [22msaves any partial input read into the specified variable [4mname[24m.  If [4mtimeout[24m is 0, [1mread [22mreturns im‐
+                     mediately, without trying to read any data.  The exit status is 0 if input is available on the  speci‐
+                     fied  file  descriptor, non-zero otherwise.  The exit status is greater than 128 if the timeout is ex‐
+                     ceeded.
+              [1m-u [4m[22mfd[24m  Read input from file descriptor [4mfd[24m.
+
+              If no [4mnames[24m are supplied, the line read, without the ending delimiter but otherwise unmodified,  is  assigned
+              to  the variable [1mREPLY[22m.  The exit status is zero, unless end-of-file is encountered, [1mread [22mtimes out (in which
+              case the status is greater than 128), a variable assignment error (such as assigning to a readonly  variable)
+              occurs, or an invalid file descriptor is supplied as the argument to [1m-u[22m.
+
+       [1mreadonly [22m[[1m-aAf[22m] [[1m-p[22m] [[4mname[24m[=[4mword[24m] ...]
+              The  given  [4mnames[24m are marked readonly; the values of these [4mnames[24m may not be changed by subsequent assignment.
+              If the [1m-f [22moption is supplied, the functions corresponding to the [4mnames[24m are so  marked.   The  [1m-a  [22moption  re‐
+              stricts  the  variables  to  indexed arrays; the [1m-A [22moption restricts the variables to associative arrays.  If
+              both options are supplied, [1m-A [22mtakes precedence.  If no [4mname[24m arguments are given, or if the [1m-p [22moption is  sup‐
+              plied,  a  list  of all readonly names is printed.  The other options may be used to restrict the output to a
+              subset of the set of readonly names.  The [1m-p [22moption causes output to be displayed in a  format  that  may  be
+              reused as input.  If a variable name is followed by =[4mword[24m, the value of the variable is set to [4mword[24m.  The re‐
+              turn status is 0 unless an invalid option is encountered, one of the [4mnames[24m is  not  a  valid  shell  variable
+              name, or [1m-f [22mis supplied with a [4mname[24m that is not a function.
+
+       [1mreturn [22m[[4mn[24m]
+              Causes  a function to stop executing and return the value specified by [4mn[24m to its caller.  If [4mn[24m is omitted, the
+              return status is that of the last command executed in the function body.  If [1mreturn [22mis  executed  by  a  trap
+              handler,  the last command used to determine the status is the last command executed before the trap handler.
+              If [1mreturn [22mis executed during a [1mDEBUG [22mtrap, the last command used to determine the status is the last  command
+              executed by the trap handler before [1mreturn [22mwas invoked.  If [1mreturn [22mis used outside a function, but during ex‐
+              ecution of a script by the [1m.  [22m([1msource[22m) command, it causes the shell to stop executing that script and  return
+              either  [4mn[24m or the exit status of the last command executed within the script as the exit status of the script.
+              If [4mn[24m is supplied, the return value is its least significant 8 bits.  The return status is non-zero if  [1mreturn[0m
+              is  supplied  a non-numeric argument, or is used outside a function and not during execution of a script by [1m.[0m
+              or [1msource[22m.  Any command associated with the [1mRETURN [22mtrap is executed before execution resumes after the  func‐
+              tion or script.
+
+       [1mset [22m[[1m--abefhkmnptuvxBCEHPT[22m] [[1m-o [4m[22moption-name[24m] [[4marg[24m ...]
+       [1mset [22m[[1m+abefhkmnptuvxBCEHPT[22m] [[1m+o [4m[22moption-name[24m] [[4marg[24m ...]
+              Without  options,  the  name and value of each shell variable are displayed in a format that can be reused as
+              input for setting or resetting the currently-set variables.  Read-only variables cannot be reset.   In  [4mposix[0m
+              [4mmode[24m,  only  shell variables are listed.  The output is sorted according to the current locale.  When options
+              are specified, they set or unset shell attributes.  Any  arguments  remaining  after  option  processing  are
+              treated  as values for the positional parameters and are assigned, in order, to [1m$1[22m, [1m$2[22m, [1m...  $[4m[22mn[24m.  Options, if
+              specified, have the following meanings:
+              [1m-a      [22mEach variable or function that is created or modified is given the export attribute  and  marked  for
+                      export to the environment of subsequent commands.
+              [1m-b      [22mReport  the  status  of  terminated  background jobs immediately, rather than before the next primary
+                      prompt.  This is effective only when job control is enabled.
+              [1m-e      [22mExit immediately if a [4mpipeline[24m (which may consist of a single [4msimple[24m [4mcommand[24m), a [4mlist[24m, or a  [4mcompound[0m
+                      [4mcommand[24m (see [1mSHELL GRAMMAR [22mabove), exits with a non-zero status.  The shell does not exit if the com‐
+                      mand that fails is part of the command list immediately following a [1mwhile [22mor [1muntil [22mkeyword,  part  of
+                      the test following the [1mif [22mor [1melif [22mreserved words, part of any command executed in a [1m&& [22mor [1m|| [22mlist ex‐
+                      cept the command following the final [1m&& [22mor [1m||[22m, any command in a pipeline but the last, or if the com‐
+                      mand's  return value is being inverted with [1m![22m.  If a compound command other than a subshell returns a
+                      non-zero status because a command failed while [1m-e [22mwas being ignored, the shell does not exit.  A trap
+                      on [1mERR[22m, if set, is executed before the shell exits.  This option applies to the shell environment and
+                      each subshell environment separately (see [1mCOMMAND EXECUTION ENVIRONMENT [22mabove), and  may  cause  sub‐
+                      shells to exit before executing all the commands in the subshell.
+
+                      If  a compound command or shell function executes in a context where [1m-e [22mis being ignored, none of the
+                      commands executed within the compound command or function body will be affected by  the  [1m-e  [22msetting,
+                      even  if  [1m-e  [22mis set and a command returns a failure status.  If a compound command or shell function
+                      sets [1m-e [22mwhile executing in a context where [1m-e [22mis ignored, that setting will not have any effect until
+                      the compound command or the command containing the function call completes.
+              [1m-f      [22mDisable pathname expansion.
+              [1m-h      [22mRemember the location of commands as they are looked up for execution.  This is enabled by default.
+              [1m-k      [22mAll  arguments  in the form of assignment statements are placed in the environment for a command, not
+                      just those that precede the command name.
+              [1m-m      [22mMonitor mode.  Job control is enabled.  This option is on by default for interactive shells  on  sys‐
+                      tems that support it (see [1mJOB CONTROL [22mabove).  All processes run in a separate process group.  When a
+                      background job completes, the shell prints a line containing its exit status.
+              [1m-n      [22mRead commands but do not execute them.  This may be used to check a shell script for  syntax  errors.
+                      This is ignored by interactive shells.
+              [1m-o [4m[22moption-name[0m
+                      The [4moption-name[24m can be one of the following:
+                      [1mallexport[0m
+                              Same as [1m-a[22m.
+                      [1mbraceexpand[0m
+                              Same as [1m-B[22m.
+                      [1memacs   [22mUse an emacs-style command line editing interface.  This is enabled by default when the shell
+                              is interactive, unless the shell is started with the [1m--noediting [22moption.  This  also  affects
+                              the editing interface used for [1mread -e[22m.
+                      [1merrexit [22mSame as [1m-e[22m.
+                      [1merrtrace[0m
+                              Same as [1m-E[22m.
+                      [1mfunctrace[0m
+                              Same as [1m-T[22m.
+                      [1mhashall [22mSame as [1m-h[22m.
+                      [1mhistexpand[0m
+                              Same as [1m-H[22m.
+                      [1mhistory [22mEnable  command  history,  as described above under [1mHISTORY[22m.  This option is on by default in
+                              interactive shells.
+                      [1mignoreeof[0m
+                              The effect is as if the shell command ``IGNOREEOF=10'' had been executed (see [1mShell Variables[0m
+                              above).
+                      [1mkeyword [22mSame as [1m-k[22m.
+                      [1mmonitor [22mSame as [1m-m[22m.
+                      [1mnoclobber[0m
+                              Same as [1m-C[22m.
+                      [1mnoexec  [22mSame as [1m-n[22m.
+                      [1mnoglob  [22mSame as [1m-f[22m.
+                      [1mnolog   [22mCurrently ignored.
+                      [1mnotify  [22mSame as [1m-b[22m.
+                      [1mnounset [22mSame as [1m-u[22m.
+                      [1monecmd  [22mSame as [1m-t[22m.
+                      [1mphysical[0m
+                              Same as [1m-P[22m.
+                      [1mpipefail[0m
+                              If  set,  the return value of a pipeline is the value of the last (rightmost) command to exit
+                              with a non-zero status, or zero if all commands in the pipeline exit successfully.  This  op‐
+                              tion is disabled by default.
+                      [1mposix   [22mChange  the  behavior  of [1mbash [22mwhere the default operation differs from the POSIX standard to
+                              match the standard ([4mposix[24m [4mmode[24m).  See [1mSEE ALSO [22mbelow for a reference to a document  that  de‐
+                              tails how posix mode affects bash's behavior.
+                      [1mprivileged[0m
+                              Same as [1m-p[22m.
+                      [1mverbose [22mSame as [1m-v[22m.
+                      [1mvi      [22mUse  a vi-style command line editing interface.  This also affects the editing interface used
+                              for [1mread -e[22m.
+                      [1mxtrace  [22mSame as [1m-x[22m.
+                      If [1m-o [22mis supplied with no [4moption-name[24m, the values of the current options are printed.  If [1m+o [22mis  sup‐
+                      plied  with  no [4moption-name[24m, a series of [1mset [22mcommands to recreate the current option settings is dis‐
+                      played on the standard output.
+              [1m-p      [22mTurn on [4mprivileged[24m mode.  In this mode, the [1m$ENV [22mand [1m$BASH_ENV [22mfiles are not processed,  shell  func‐
+                      tions  are  not  inherited  from the environment, and the [1mSHELLOPTS[22m, [1mBASHOPTS[22m, [1mCDPATH[22m, and [1mGLOBIGNORE[0m
+                      variables, if they appear in the environment, are ignored.  If the shell is started with  the  effec‐
+                      tive  user (group) id not equal to the real user (group) id, and the [1m-p [22moption is not supplied, these
+                      actions are taken and the effective user id is set to the real user id.  If the [1m-p [22moption is supplied
+                      at  startup,  the  effective user id is not reset.  Turning this option off causes the effective user
+                      and group ids to be set to the real user and group ids.
+              [1m-t      [22mExit after reading and executing one command.
+              [1m-u      [22mTreat unset variables and parameters other than the special parameters "@" and "*" as an  error  when
+                      performing  parameter  expansion.   If  expansion is attempted on an unset variable or parameter, the
+                      shell prints an error message, and, if not interactive, exits with a non-zero status.
+              [1m-v      [22mPrint shell input lines as they are read.
+              [1m-x      [22mAfter expanding each [4msimple[24m [4mcommand[24m, [1mfor [22mcommand, [1mcase [22mcommand, [1mselect  [22mcommand,  or  arithmetic  [1mfor[0m
+                      command, display the expanded value of [1mPS4[22m, followed by the command and its expanded arguments or as‐
+                      sociated word list.
+              [1m-B      [22mThe shell performs brace expansion (see [1mBrace Expansion [22mabove).  This is on by default.
+              [1m-C      [22mIf set, [1mbash [22mdoes not overwrite an existing file with the [1m>[22m, [1m>&[22m, and [1m<> [22mredirection operators.   This
+                      may be overridden when creating output files by using the redirection operator [1m>| [22minstead of [1m>[22m.
+              [1m-E      [22mIf set, any trap on [1mERR [22mis inherited by shell functions, command substitutions, and commands executed
+                      in a subshell environment.  The [1mERR [22mtrap is normally not inherited in such cases.
+              [1m-H      [22mEnable [1m!  [22mstyle history substitution.  This option is on by default when the shell is interactive.
+              [1m-P      [22mIf set, the shell does not resolve symbolic links when executing commands such as [1mcd [22mthat change  the
+                      current  working directory.  It uses the physical directory structure instead.  By default, [1mbash [22mfol‐
+                      lows the logical chain of directories when performing commands which change the current directory.
+              [1m-T      [22mIf set, any traps on [1mDEBUG [22mand [1mRETURN [22mare inherited by shell functions,  command  substitutions,  and
+                      commands  executed  in a subshell environment.  The [1mDEBUG [22mand [1mRETURN [22mtraps are normally not inherited
+                      in such cases.
+              [1m--      [22mIf no arguments follow this option, then the positional parameters are unset.  Otherwise,  the  posi‐
+                      tional parameters are set to the [4marg[24ms, even if some of them begin with a [1m-[22m.
+              [1m-       [22mSignal the end of options, cause all remaining [4marg[24ms to be assigned to the positional parameters.  The
+                      [1m-x [22mand [1m-v [22moptions are turned off.  If there are no [4marg[24ms, the positional parameters remain unchanged.
+
+              The options are off by default unless otherwise noted.  Using + rather than -  causes  these  options  to  be
+              turned  off.   The options can also be specified as arguments to an invocation of the shell.  The current set
+              of options may be found in [1m$-[22m.  The return status is always true unless an invalid option is encountered.
+
+       [1mshift [22m[[4mn[24m]
+              The positional parameters from [4mn[24m+1 ... are renamed to [1m$1 ....  [22mParameters represented by the numbers [1m$#  [22mdown
+              to [1m$#[22m-[4mn[24m+1 are unset.  [4mn[24m must be a non-negative number less than or equal to [1m$#[22m.  If [4mn[24m is 0, no parameters are
+              changed.  If [4mn[24m is not given, it is assumed to be 1.  If [4mn[24m is greater than [1m$#[22m, the positional  parameters  are
+              not changed.  The return status is greater than zero if [4mn[24m is greater than [1m$# [22mor less than zero; otherwise 0.
+
+       [1mshopt [22m[[1m-pqsu[22m] [[1m-o[22m] [[4moptname[24m ...]
+              Toggle  the  values of settings controlling optional shell behavior.  The settings can be either those listed
+              below, or, if the [1m-o [22moption is used, those available with the [1m-o [22moption to the [1mset [22mbuiltin command.  With  no
+              options, or with the [1m-p [22moption, a list of all settable options is displayed, with an indication of whether or
+              not each is set; if [4moptnames[24m are supplied, the output is restricted to those options.  The [1m-p  [22moption  causes
+              output to be displayed in a form that may be reused as input.  Other options have the following meanings:
+              [1m-s     [22mEnable (set) each [4moptname[24m.
+              [1m-u     [22mDisable (unset) each [4moptname[24m.
+              [1m-q     [22mSuppresses  normal  output (quiet mode); the return status indicates whether the [4moptname[24m is set or un‐
+                     set.  If multiple [4moptname[24m arguments are given with [1m-q[22m, the return status is zero if all  [4moptnames[24m  are
+                     enabled; non-zero otherwise.
+              [1m-o     [22mRestricts the values of [4moptname[24m to be those defined for the [1m-o [22moption to the [1mset [22mbuiltin.
+
+              If  either [1m-s [22mor [1m-u [22mis used with no [4moptname[24m arguments, [1mshopt [22mshows only those options which are set or unset,
+              respectively.  Unless otherwise noted, the [1mshopt [22moptions are disabled (unset) by default.
+
+              The return status when listing options is zero if all [4moptnames[24m are enabled, non-zero otherwise.  When setting
+              or unsetting options, the return status is zero unless an [4moptname[24m is not a valid shell option.
+
+              The list of [1mshopt [22moptions is:
+
+              [1massoc_expand_once[0m
+                      If  set,  the  shell suppresses multiple evaluation of associative array subscripts during arithmetic
+                      expression evaluation, while executing builtins that can perform variable assignments, and while exe‐
+                      cuting builtins that perform array dereferencing.
+              [1mautocd  [22mIf  set, a command name that is the name of a directory is executed as if it were the argument to the
+                      [1mcd [22mcommand.  This option is only used by interactive shells.
+              [1mcdable_vars[0m
+                      If set, an argument to the [1mcd [22mbuiltin command that is not a directory is assumed to be the name of  a
+                      variable whose value is the directory to change to.
+              [1mcdspell [22mIf set, minor errors in the spelling of a directory component in a [1mcd [22mcommand will be corrected.  The
+                      errors checked for are transposed characters, a missing character, and one character too many.  If  a
+                      correction  is  found,  the  corrected filename is printed, and the command proceeds.  This option is
+                      only used by interactive shells.
+              [1mcheckhash[0m
+                      If set, [1mbash [22mchecks that a command found in the hash table exists before trying to execute it.  If  a
+                      hashed command no longer exists, a normal path search is performed.
+              [1mcheckjobs[0m
+                      If  set,  [1mbash  [22mlists the status of any stopped and running jobs before exiting an interactive shell.
+                      If any jobs are running, this causes the exit to be deferred until a second exit is attempted without
+                      an  intervening  command (see [1mJOB CONTROL [22mabove).  The shell always postpones exiting if any jobs are
+                      stopped.
+              [1mcheckwinsize[0m
+                      If set, [1mbash [22mchecks the window size after each external (non-builtin) command and, if necessary,  up‐
+                      dates the values of [1mLINES [22mand [1mCOLUMNS[22m.  This option is enabled by default.
+              [1mcmdhist [22mIf  set,  [1mbash [22mattempts to save all lines of a multiple-line command in the same history entry.  This
+                      allows easy re-editing of multi-line commands.  This option is enabled by default, but  only  has  an
+                      effect if command history is enabled, as described above under [1mHISTORY[22m.
+              [1mcompat31[0m
+              [1mcompat32[0m
+              [1mcompat40[0m
+              [1mcompat41[0m
+              [1mcompat42[0m
+              [1mcompat43[0m
+              [1mcompat44[0m
+                      These control aspects of the shell's compatibility mode (see [1mSHELL COMPATIBILITY MODE [22mbelow).
+
+              [1mcomplete_fullquote[0m
+                      If set, [1mbash [22mquotes all shell metacharacters in filenames and directory names when performing comple‐
+                      tion.  If not set, [1mbash [22mremoves metacharacters such as the dollar sign from  the  set  of  characters
+                      that  will be quoted in completed filenames when these metacharacters appear in shell variable refer‐
+                      ences in words to be completed.  This means that dollar signs in variable names that expand to direc‐
+                      tories  will  not be quoted; however, any dollar signs appearing in filenames will not be quoted, ei‐
+                      ther.  This is active only when bash is using backslashes to quote completed filenames.   This  vari‐
+                      able is set by default, which is the default bash behavior in versions through 4.2.
+
+              [1mdirexpand[0m
+                      If  set,  [1mbash  [22mreplaces  directory names with the results of word expansion when performing filename
+                      completion.  This changes the contents of the readline editing buffer.  If not set, [1mbash [22mattempts  to
+                      preserve what the user typed.
+
+              [1mdirspell[0m
+                      If  set, [1mbash [22mattempts spelling correction on directory names during word completion if the directory
+                      name initially supplied does not exist.
+
+              [1mdotglob [22mIf set, [1mbash [22mincludes filenames beginning with a `.' in the results of pathname expansion.  The file‐
+                      names [1m``.''  [22mand [1m``..''  [22mmust always be matched explicitly, even if [1mdotglob [22mis set.
+
+              [1mexecfail[0m
+                      If  set, a non-interactive shell will not exit if it cannot execute the file specified as an argument
+                      to the [1mexec [22mbuiltin command.  An interactive shell does not exit if [1mexec [22mfails.
+
+              [1mexpand_aliases[0m
+                      If set, aliases are expanded as described above under [1mALIASES[22m.  This option is enabled by default for
+                      interactive shells.
+
+              [1mextdebug[0m
+                      If  set  at shell invocation, or in a shell startup file, arrange to execute the debugger profile be‐
+                      fore the shell starts, identical to the [1m--debugger [22moption.  If set  after  invocation,  behavior  in‐
+                      tended for use by debuggers is enabled:
+
+                      [1m1.     [22mThe [1m-F [22moption to the [1mdeclare [22mbuiltin displays the source file name and line number correspond‐
+                             ing to each function name supplied as an argument.
+
+                      [1m2.     [22mIf the command run by the [1mDEBUG [22mtrap returns a non-zero value, the next command is skipped and
+                             not executed.
+
+                      [1m3.     [22mIf  the  command  run  by the [1mDEBUG [22mtrap returns a value of 2, and the shell is executing in a
+                             subroutine (a shell function or a shell script executed by the  [1m.  [22mor  [1msource  [22mbuiltins),  the
+                             shell simulates a call to [1mreturn[22m.
+
+                      [1m4.     BASH_ARGC [22mand [1mBASH_ARGV [22mare updated as described in their descriptions above.
+
+                      [1m5.     [22mFunction tracing is enabled: command substitution, shell functions, and subshells invoked with
+                             [1m( [4m[22mcommand[24m [1m) [22minherit the [1mDEBUG [22mand [1mRETURN [22mtraps.
+
+                      [1m6.     [22mError tracing is enabled: command substitution, shell functions, and subshells invoked with  [1m([0m
+                             [4mcommand[24m [1m) [22minherit the [1mERR [22mtrap.
+
+              [1mextglob [22mIf set, the extended pattern matching features described above under [1mPathname Expansion [22mare enabled.
+
+              [1mextquote[0m
+                      If  set, [1m$[22m'[4mstring[24m' and [1m$[22m"[4mstring[24m" quoting is performed within [1m${[4m[22mparameter[24m[1m} [22mexpansions enclosed in dou‐
+                      ble quotes.  This option is enabled by default.
+
+              [1mfailglob[0m
+                      If set, patterns which fail to match filenames during pathname expansion result in an  expansion  er‐
+                      ror.
+
+              [1mforce_fignore[0m
+                      If  set, the suffixes specified by the [1mFIGNORE [22mshell variable cause words to be ignored when perform‐
+                      ing word completion even if the ignored words are the only possible completions.  See [1mSHELL VARIABLES[0m
+                      above for a description of [1mFIGNORE[22m.  This option is enabled by default.
+
+              [1mglobasciiranges[0m
+                      If  set,  range expressions used in pattern matching bracket expressions (see [1mPattern Matching [22mabove)
+                      behave as if in the traditional C locale when performing comparisons.  That is, the current  locale's
+                      collating  sequence  is not taken into account, so [1mb [22mwill not collate between [1mA [22mand [1mB[22m, and upper-case
+                      and lower-case ASCII characters will collate together.
+
+              [1mglobstar[0m
+                      If set, the pattern [1m** [22mused in a pathname expansion context will match all files and zero or more di‐
+                      rectories and subdirectories.  If the pattern is followed by a [1m/[22m, only directories and subdirectories
+                      match.
+
+              [1mgnu_errfmt[0m
+                      If set, shell error messages are written in the standard GNU error message format.
+
+              [1mhistappend[0m
+                      If set, the history list is appended to the file named by the value of the [1mHISTFILE [22mvariable when the
+                      shell exits, rather than overwriting the file.
+
+              [1mhistreedit[0m
+                      If  set, and [1mreadline [22mis being used, a user is given the opportunity to re-edit a failed history sub‐
+                      stitution.
+
+              [1mhistverify[0m
+                      If set, and [1mreadline [22mis being used, the results of history substitution are not immediately passed to
+                      the  shell  parser.  Instead, the resulting line is loaded into the [1mreadline [22mediting buffer, allowing
+                      further modification.
+
+              [1mhostcomplete[0m
+                      If set, and [1mreadline [22mis being used, [1mbash [22mwill attempt to perform hostname completion when a word con‐
+                      taining a [1m@ [22mis being completed (see [1mCompleting [22munder [1mREADLINE [22mabove).  This is enabled by default.
+
+              [1mhuponexit[0m
+                      If set, [1mbash [22mwill send [1mSIGHUP [22mto all jobs when an interactive login shell exits.
+
+              [1minherit_errexit[0m
+                      If set, command substitution inherits the value of the [1merrexit [22moption, instead of unsetting it in the
+                      subshell environment.  This option is enabled when [4mposix[24m [4mmode[24m is enabled.
+
+              [1minteractive_comments[0m
+                      If set, allow a word beginning with [1m# [22mto cause that word and all remaining characters on that line to
+                      be ignored in an interactive shell (see [1mCOMMENTS [22mabove).  This option is enabled by default.
+
+              [1mlastpipe[0m
+                      If  set, and job control is not active, the shell runs the last command of a pipeline not executed in
+                      the background in the current shell environment.
+
+              [1mlithist [22mIf set, and the [1mcmdhist [22moption is enabled, multi-line commands are saved to the history with embedded
+                      newlines rather than using semicolon separators where possible.
+
+              [1mlocalvar_inherit[0m
+                      If  set,  local variables inherit the value and attributes of a variable of the same name that exists
+                      at a previous scope before any new value is assigned.  The nameref attribute is not inherited.
+
+              [1mlocalvar_unset[0m
+                      If set, calling [1munset [22mon local variables in previous function scopes marks them so subsequent lookups
+                      find  them  unset  until  that function returns. This is identical to the behavior of unsetting local
+                      variables at the current function scope.
+
+              [1mlogin_shell[0m
+                      The shell sets this option if it is started as a login shell (see [1mINVOCATION [22mabove).  The  value  may
+                      not be changed.
+
+              [1mmailwarn[0m
+                      If  set,  and  a  file  that  [1mbash  [22mis checking for mail has been accessed since the last time it was
+                      checked, the message ``The mail in [4mmailfile[24m has been read'' is displayed.
+
+              [1mno_empty_cmd_completion[0m
+                      If set, and [1mreadline [22mis being used, [1mbash [22mwill not attempt to search the [1mPATH [22mfor possible completions
+                      when completion is attempted on an empty line.
+
+              [1mnocaseglob[0m
+                      If  set, [1mbash [22mmatches filenames in a case-insensitive fashion when performing pathname expansion (see
+                      [1mPathname Expansion [22mabove).
+
+              [1mnocasematch[0m
+                      If set, [1mbash [22mmatches patterns in a case-insensitive fashion when performing matching while  executing
+                      [1mcase  [22mor  [1m[[ [22mconditional commands, when performing pattern substitution word expansions, or when fil‐
+                      tering possible completions as part of programmable completion.
+
+              [1mnullglob[0m
+                      If set, [1mbash [22mallows patterns which match no files (see [1mPathname Expansion [22mabove) to expand to a  null
+                      string, rather than themselves.
+
+              [1mprogcomp[0m
+                      If set, the programmable completion facilities (see [1mProgrammable Completion [22mabove) are enabled.  This
+                      option is enabled by default.
+
+              [1mprogcomp_alias[0m
+                      If set, and programmable completion is enabled, [1mbash [22mtreats a command name that doesn't have any com‐
+                      pletions as a possible alias and attempts alias expansion. If it has an alias, [1mbash [22mattempts program‐
+                      mable completion using the command word resulting from the expanded alias.
+
+              [1mpromptvars[0m
+                      If set, prompt strings undergo parameter expansion, command substitution, arithmetic  expansion,  and
+                      quote  removal  after  being expanded as described in [1mPROMPTING [22mabove.  This option is enabled by de‐
+                      fault.
+
+              [1mrestricted_shell[0m
+                      The shell sets this option if it is started in restricted mode (see  [1mRESTRICTED  SHELL  [22mbelow).   The
+                      value  may  not  be  changed.   This  is  not reset when the startup files are executed, allowing the
+                      startup files to discover whether or not a shell is restricted.
+
+              [1mshift_verbose[0m
+                      If set, the [1mshift [22mbuiltin prints an error message when the shift count exceeds the  number  of  posi‐
+                      tional parameters.
+
+              [1msourcepath[0m
+                      If  set, the [1msource [22m([1m.[22m) builtin uses the value of [1mPATH [22mto find the directory containing the file sup‐
+                      plied as an argument.  This option is enabled by default.
+
+              [1msyslog_history[0m
+                      If set, command history is logged to syslog.
+
+              [1mxpg_echo[0m
+                      If set, the [1mecho [22mbuiltin expands backslash-escape sequences by default.
+
+       [1msuspend [22m[[1m-f[22m]
+              Suspend the execution of this shell until it receives a [1mSIGCONT [22msignal.  A login shell cannot  be  suspended;
+              the [1m-f [22moption can be used to override this and force the suspension.  The return status is 0 unless the shell
+              is a login shell and [1m-f [22mis not supplied, or if job control is not enabled.
+
+       [1mtest [4m[22mexpr[0m
+       [1m[ [4m[22mexpr[24m [1m][0m
+              Return a status of 0 (true) or 1 (false) depending on the evaluation  of  the  conditional  expression  [4mexpr[24m.
+              Each  operator  and operand must be a separate argument.  Expressions are composed of the primaries described
+              in the [1mbash [22mmanual page under [1mCONDITIONAL EXPRESSIONS[22m.  [1mtest [22mdoes not accept any options, nor does it  accept
+              and ignore an argument of [1m-- [22mas signifying the end of options.
+
+              Expressions  may  be  combined  using the following operators, listed in decreasing order of precedence.  The
+              evaluation depends on the number of arguments; see below.  Operator precedence is used when there are five or
+              more arguments.
+              [1m! [4m[22mexpr[24m True if [4mexpr[24m is false.
+              [1m( [4m[22mexpr[24m [1m)[0m
+                     Returns the value of [4mexpr[24m.  This may be used to override the normal precedence of operators.
+              [4mexpr1[24m -[1ma [4m[22mexpr2[0m
+                     True if both [4mexpr1[24m and [4mexpr2[24m are true.
+              [4mexpr1[24m -[1mo [4m[22mexpr2[0m
+                     True if either [4mexpr1[24m or [4mexpr2[24m is true.
+
+              [1mtest [22mand [1m[ [22mevaluate conditional expressions using a set of rules based on the number of arguments.
+
+              0 arguments
+                     The expression is false.
+              1 argument
+                     The expression is true if and only if the argument is not null.
+              2 arguments
+                     If the first argument is [1m![22m, the expression is true if and only if the second argument is null.  If the
+                     first argument is one of the unary conditional operators listed above under  [1mCONDITIONAL  EXPRESSIONS[22m,
+                     the  expression  is true if the unary test is true.  If the first argument is not a valid unary condi‐
+                     tional operator, the expression is false.
+              3 arguments
+                     The following conditions are applied in the order listed.  If the second argument is one of the binary
+                     conditional  operators listed above under [1mCONDITIONAL EXPRESSIONS[22m, the result of the expression is the
+                     result of the binary test using the first and third arguments as operands.  The [1m-a  [22mand  [1m-o  [22moperators
+                     are considered binary operators when there are three arguments.  If the first argument is [1m![22m, the value
+                     is the negation of the two-argument test using the second and third arguments.  If the first  argument
+                     is  exactly  [1m(  [22mand the third argument is exactly [1m)[22m, the result is the one-argument test of the second
+                     argument.  Otherwise, the expression is false.
+              4 arguments
+                     If the first argument is [1m![22m, the result is the negation of the three-argument  expression  composed  of
+                     the  remaining  arguments.   Otherwise, the expression is parsed and evaluated according to precedence
+                     using the rules listed above.
+              5 or more arguments
+                     The expression is parsed and evaluated according to precedence using the rules listed above.
+
+              When used with [1mtest [22mor [1m[[22m, the [1m< [22mand [1m> [22moperators sort lexicographically using ASCII ordering.
+
+       [1mtimes  [22mPrint the accumulated user and system times for the shell and for processes run from the shell.   The  return
+              status is 0.
+
+       [1mtrap [22m[[1m-lp[22m] [[[4marg[24m] [4msigspec[24m ...]
+              The  command [4marg[24m is to be read and executed when the shell receives signal(s) [4msigspec[24m.  If [4marg[24m is absent (and
+              there is a single [4msigspec[24m) or [1m-[22m, each specified signal is reset to its original disposition (the value it had
+              upon  entrance  to  the shell).  If [4marg[24m is the null string the signal specified by each [4msigspec[24m is ignored by
+              the shell and by the commands it invokes.  If [4marg[24m is not present and [1m-p [22mhas been supplied, then the trap com‐
+              mands  associated with each [4msigspec[24m are displayed.  If no arguments are supplied or if only [1m-p [22mis given, [1mtrap[0m
+              prints the list of commands associated with each signal.  The [1m-l [22moption causes the shell to print a  list  of
+              signal names and their corresponding numbers.  Each [4msigspec[24m is either a signal name defined in <[4msignal.h[24m>, or
+              a signal number.  Signal names are case insensitive and the [1mSIG [22mprefix is optional.
+
+              If a [4msigspec[24m is [1mEXIT [22m(0) the command [4marg[24m is executed on exit from the shell.  If a [4msigspec[24m is [1mDEBUG[22m, the com‐
+              mand [4marg[24m is executed before every [4msimple[24m [4mcommand[24m, [4mfor[24m command, [4mcase[24m command, [4mselect[24m command, every arithmetic
+              [4mfor[24m command, and before the first command executes in a shell function (see [1mSHELL GRAMMAR [22mabove).   Refer  to
+              the  description of the [1mextdebug [22moption to the [1mshopt [22mbuiltin for details of its effect on the [1mDEBUG [22mtrap.  If
+              a [4msigspec[24m is [1mRETURN[22m, the command [4marg[24m is executed each time a shell function or a script executed with  the  [1m.[0m
+              or [1msource [22mbuiltins finishes executing.
+
+              If  a  [4msigspec[24m  is [1mERR[22m, the command [4marg[24m is executed whenever a pipeline (which may consist of a single simple
+              command), a list, or a compound command returns a non-zero exit status, subject to the following  conditions.
+              The  [1mERR [22mtrap is not executed if the failed command is part of the command list immediately following a [1mwhile[0m
+              or [1muntil [22mkeyword, part of the test in an [4mif[24m statement, part of a command executed in a [1m&& [22mor [1m||  [22mlist  except
+              the  command following the final [1m&& [22mor [1m||[22m, any command in a pipeline but the last, or if the command's return
+              value is being inverted using [1m![22m.  These are the same conditions obeyed by the [1merrexit [22m([1m-e[22m) option.
+
+              Signals ignored upon entry to the shell cannot be trapped, reset or listed.  Trapped signals that are not be‐
+              ing  ignored  are  reset  to their original values in a subshell or subshell environment when one is created.
+              The return status is false if any [4msigspec[24m is invalid; otherwise [1mtrap [22mreturns true.
+
+       [1mtype [22m[[1m-aftpP[22m] [4mname[24m [[4mname[24m ...]
+              With no options, indicate how each [4mname[24m would be interpreted if used as a command name.  If the [1m-t [22moption  is
+              used,  [1mtype  [22mprints  a string which is one of [4malias[24m, [4mkeyword[24m, [4mfunction[24m, [4mbuiltin[24m, or [4mfile[24m if [4mname[24m is an alias,
+              shell reserved word, function, builtin, or disk file, respectively.  If the [4mname[24m is not found,  then  nothing
+              is  printed, and an exit status of false is returned.  If the [1m-p [22moption is used, [1mtype [22meither returns the name
+              of the disk file that would be executed if [4mname[24m were specified as a command name, or  nothing  if  ``type  -t
+              name''  would  not  return  [4mfile[24m.  The [1m-P [22moption forces a [1mPATH [22msearch for each [4mname[24m, even if ``type -t name''
+              would not return [4mfile[24m.  If a command is hashed, [1m-p [22mand [1m-P [22mprint the hashed value, which  is  not  necessarily
+              the file that appears first in [1mPATH[22m.  If the [1m-a [22moption is used, [1mtype [22mprints all of the places that contain an
+              executable named [4mname[24m.  This includes aliases and functions, if and only if the [1m-p [22moption is not  also  used.
+              The table of hashed commands is not consulted when using [1m-a[22m.  The [1m-f [22moption suppresses shell function lookup,
+              as with the [1mcommand [22mbuiltin.  [1mtype [22mreturns true if all of the arguments are  found,  false  if  any  are  not
+              found.
+
+       [1mulimit [22m[[1m-HS[22m] [1m-a[0m
+       [1mulimit [22m[[1m-HS[22m] [[1m-bcdefiklmnpqrstuvxPRT [22m[[4mlimit[24m]]
+              Provides  control  over  the resources available to the shell and to processes started by it, on systems that
+              allow such control.  The [1m-H [22mand [1m-S [22moptions specify that the hard or soft limit is set for the given resource.
+              A  hard  limit cannot be increased by a non-root user once it is set; a soft limit may be increased up to the
+              value of the hard limit.  If neither [1m-H [22mnor [1m-S [22mis specified, both the soft and  hard  limits  are  set.   The
+              value  of  [4mlimit[24m  can  be  a number in the unit specified for the resource or one of the special values [1mhard[22m,
+              [1msoft[22m, or [1munlimited[22m, which stand for the current hard limit, the current soft limit,  and  no  limit,  respec‐
+              tively.   If  [4mlimit[24m is omitted, the current value of the soft limit of the resource is printed, unless the [1m-H[0m
+              option is given.  When more than one resource is specified, the limit name  and  unit,  if  appropriate,  are
+              printed before the value.  Other options are interpreted as follows:
+              [1m-a     [22mAll current limits are reported; no limits are set
+              [1m-b     [22mThe maximum socket buffer size
+              [1m-c     [22mThe maximum size of core files created
+              [1m-d     [22mThe maximum size of a process's data segment
+              [1m-e     [22mThe maximum scheduling priority ("nice")
+              [1m-f     [22mThe maximum size of files written by the shell and its children
+              [1m-i     [22mThe maximum number of pending signals
+              [1m-k     [22mThe maximum number of kqueues that may be allocated
+              [1m-l     [22mThe maximum size that may be locked into memory
+              [1m-m     [22mThe maximum resident set size (many systems do not honor this limit)
+              [1m-n     [22mThe maximum number of open file descriptors (most systems do not allow this value to be set)
+              [1m-p     [22mThe pipe size in 512-byte blocks (this may not be set)
+              [1m-q     [22mThe maximum number of bytes in POSIX message queues
+              [1m-r     [22mThe maximum real-time scheduling priority
+              [1m-s     [22mThe maximum stack size
+              [1m-t     [22mThe maximum amount of cpu time in seconds
+              [1m-u     [22mThe maximum number of processes available to a single user
+              [1m-v     [22mThe maximum amount of virtual memory available to the shell and, on some systems, to its children
+              [1m-x     [22mThe maximum number of file locks
+              [1m-P     [22mThe maximum number of pseudoterminals
+              [1m-R     [22mThe maximum time a real-time process can run before blocking, in microseconds
+              [1m-T     [22mThe maximum number of threads
+
+              If  [4mlimit[24m  is  given, and the [1m-a [22moption is not used, [4mlimit[24m is the new value of the specified resource.  If no
+              option is given, then [1m-f [22mis assumed.  Values are in 1024-byte increments, except for [1m-t[22m, which is in seconds;
+              [1m-R[22m, which is in microseconds; [1m-p[22m, which is in units of 512-byte blocks; [1m-P[22m, [1m-T[22m, [1m-b[22m, [1m-k[22m, [1m-n[22m, and [1m-u[22m, which are
+              unscaled values; and, when in posix mode, [1m-c [22mand [1m-f[22m, which are in 512-byte increments.  The return status  is
+              0  unless  an invalid option or argument is supplied, or an error occurs while setting a new limit.  In POSIX
+              Mode 512-byte blocks are used for the `-c' and `-f' options.
+
+       [1mumask [22m[[1m-p[22m] [[1m-S[22m] [[4mmode[24m]
+              The user file-creation mask is set to [4mmode[24m.  If [4mmode[24m begins with a digit, it is interpreted as an octal  num‐
+              ber;  otherwise  it  is interpreted as a symbolic mode mask similar to that accepted by [4mchmod[24m(1).  If [4mmode[24m is
+              omitted, the current value of the mask is printed.  The [1m-S [22moption causes the mask to be printed  in  symbolic
+              form;  the  default output is an octal number.  If the [1m-p [22moption is supplied, and [4mmode[24m is omitted, the output
+              is in a form that may be reused as input.  The return status is 0 if the mode was successfully changed or  if
+              no [4mmode[24m argument was supplied, and false otherwise.
+
+       [1munalias [22m[-[1ma[22m] [[4mname[24m ...]
+              Remove  each  [4mname[24m  from  the list of defined aliases.  If [1m-a [22mis supplied, all alias definitions are removed.
+              The return value is true unless a supplied [4mname[24m is not a defined alias.
+
+       [1munset [22m[-[1mfv[22m] [-[1mn[22m] [[4mname[24m ...]
+              For each [4mname[24m, remove the corresponding variable or function.  If the [1m-v [22moption is given, each [4mname[24m refers to
+              a  shell  variable, and that variable is removed.  Read-only variables may not be unset.  If [1m-f [22mis specified,
+              each [4mname[24m refers to a shell function, and the function definition is removed.  If the [1m-n [22moption is  supplied,
+              and [4mname[24m is a variable with the [4mnameref[24m attribute, [4mname[24m will be unset rather than the variable it references.
+              [1m-n [22mhas no effect if the [1m-f [22moption is supplied.  If no options are supplied, each [4mname[24m refers to  a  variable;
+              if  there  is  no variable by that name, a function with that name, if any, is unset.  Each unset variable or
+              function is removed from the environment passed to subsequent commands.  If any of [1mBASH_ALIASES[22m,  [1mBASH_ARGV0[22m,
+              [1mBASH_CMDS[22m,  [1mBASH_COMMAND[22m,  [1mBASH_SUBSHELL[22m,  [1mBASHPID[22m,  [1mCOMP_WORDBREAKS[22m,  [1mDIRSTACK[22m, [1mEPOCHREALTIME[22m, [1mEPOCHSECONDS[22m,
+              [1mFUNCNAME[22m, [1mGROUPS[22m, [1mHISTCMD[22m, [1mLINENO[22m, [1mRANDOM[22m, [1mSECONDS[22m, or [1mSRANDOM [22mare unset, they lose their special properties,
+              even if they are subsequently reset.  The exit status is true unless a [4mname[24m is readonly.
+
+       [1mwait [22m[[1m-fn[22m] [[1m-p [4m[22mvarname[24m] [[4mid[24m [4m...[24m]
+              Wait  for  each  specified child process and return its termination status.  Each [4mid[24m may be a process ID or a
+              job specification; if a job spec is given, all processes in that job's pipeline are waited for.  If [4mid[24m is not
+              given,  [1mwait [22mwaits for all running background jobs and the last-executed process substitution, if its process
+              id is the same as [1m$![22m, and the return status is zero.  If the [1m-n [22moption is supplied, [1mwait [22mwaits for  a  single
+              job  from  the  list of [4mid[24ms or, if no [4mid[24ms are supplied, any job, to complete and returns its exit status.  If
+              none of the supplied arguments is a child of the shell, or if no arguments are supplied and the shell has  no
+              unwaited-for  children,  the exit status is 127.  If the [1m-p [22moption is supplied, the process or job identifier
+              of the job for which the exit status is returned is assigned to the variable [4mvarname[24m named by the option  ar‐
+              gument.  The variable will be unset initially, before any assignment.  This is useful only when the [1m-n [22moption
+              is supplied.  Supplying the [1m-f [22moption, when job control is enabled, forces [1mwait [22mto wait for [4mid[24m  to  terminate
+              before  returning  its  status,  instead of returning when it changes status.  If [4mid[24m specifies a non-existent
+              process or job, the return status is 127.  Otherwise, the return status  is  the  exit  status  of  the  last
+              process or job waited for.
+
+[1mSHELL COMPATIBILITY MODE[0m
+       Bash-4.0 introduced the concept of a `shell compatibility level', specified as a set of options to the shopt builtin
+       [1mcompat31[22m, [1mcompat32[22m, [1mcompat40[22m, [1mcompat41[22m, and so on).  There is only one current compatibility level -- each option is
+       mutually  exclusive.   The  compatibility level is intended to allow users to select behavior from previous versions
+       that is incompatible with newer versions while they migrate scripts to use current features and behavior.  It's  in‐
+       tended to be a temporary solution.
+
+       This  section does not mention behavior that is standard for a particular version (e.g., setting [1mcompat32 [22mmeans that
+       quoting the rhs of the regexp matching operator quotes special regexp characters in the word, which is  default  be‐
+       havior in bash-3.2 and above).
+
+       If  a  user enables, say, [1mcompat32[22m, it may affect the behavior of other compatibility levels up to and including the
+       current compatibility level.  The idea is that each compatibility level controls behavior that changed in that  ver‐
+       sion  of [1mbash[22m, but that behavior may have been present in earlier versions.  For instance, the change to use locale-
+       based comparisons with the [1m[[ [22mcommand came in bash-4.1, and earlier versions used ASCII-based  comparisons,  so  en‐
+       abling  [1mcompat32  [22mwill enable ASCII-based comparisons as well.  That granularity may not be sufficient for all uses,
+       and as a result users should employ compatibility levels carefully.  Read the documentation for a particular feature
+       to find out the current behavior.
+
+       Bash-4.3  introduced a new shell variable: [1mBASH_COMPAT[22m.  The value assigned to this variable (a decimal version num‐
+       ber like 4.2, or an integer corresponding to the [1mcompat[4m[22mNN[24m option, like 42) determines the compatibility level.
+
+       Starting with bash-4.4, Bash has begun deprecating older compatibility levels.  Eventually, the options will be  re‐
+       moved in favor of [1mBASH_COMPAT[22m.
+
+       Bash-5.0  is  the  final  version for which there will be an individual shopt option for the previous version. Users
+       should use [1mBASH_COMPAT [22mon bash-5.0 and later versions.
+
+       The following table describes the behavior changes controlled by each compatibility level setting.  The [1mcompat[4m[22mNN[24m tag
+       is  used as shorthand for setting the compatibility level to [4mNN[24m using one of the following mechanisms.  For versions
+       prior to bash-5.0, the compatibility level may be set using the corresponding [1mcompat[4m[22mNN[24m shopt option.   For  bash-4.3
+       and later versions, the [1mBASH_COMPAT [22mvariable is preferred, and it is required for bash-5.1 and later versions.
+
+       [1mcompat31[0m
+              •      quoting the rhs of the [1m[[ [22mcommand's regexp matching operator (=~) has no special effect
+
+       [1mcompat32[0m
+              •      interrupting  a  command list such as "a ; b ; c" causes the execution of the next command in the list
+                     (in bash-4.0 and later versions, the shell acts as if it received the interrupt, so  interrupting  one
+                     command in a list aborts the execution of the entire list)
+
+       [1mcompat40[0m
+              •      the  [1m<  [22mand  [1m>  [22moperators to the [1m[[ [22mcommand do not consider the current locale when comparing strings;
+                     they use ASCII ordering.  Bash versions prior to bash-4.1 use ASCII collation and [4mstrcmp[24m(3);  bash-4.1
+                     and later use the current locale's collation sequence and [4mstrcoll[24m(3).
+
+       [1mcompat41[0m
+              •      in  [4mposix[24m  mode,  [1mtime  [22mmay be followed by options and still be recognized as a reserved word (this is
+                     POSIX interpretation 267)
+              •      in [4mposix[24m mode, the parser requires that an even number of single quotes occur in the [4mword[24m portion of a
+                     double-quoted  parameter  expansion  and  treats  them specially, so that characters within the single
+                     quotes are considered quoted (this is POSIX interpretation 221)
+
+       [1mcompat42[0m
+              •      the replacement string in double-quoted pattern substitution does not undergo  quote  removal,  as  it
+                     does in versions after bash-4.2
+              •      in posix mode, single quotes are considered special when expanding the [4mword[24m portion of a double-quoted
+                     parameter expansion and can be used to quote a closing brace or other special character (this is  part
+                     of  POSIX  interpretation  221); in later versions, single quotes are not special within double-quoted
+                     word expansions
+
+       [1mcompat43[0m
+              •      the shell does not print a warning message if an attempt is made to use a quoted  compound  assignment
+                     as an argument to declare (declare -a foo='(1 2)'). Later versions warn that this usage is deprecated
+              •      word  expansion errors are considered non-fatal errors that cause the current command to fail, even in
+                     posix mode (the default behavior is to make them fatal errors that cause the shell to exit)
+              •      when executing a shell function, the loop state (while/until/etc.)  is not reset, so [1mbreak [22mor [1mcontinue[0m
+                     in  that  function  will  break or continue loops in the calling context. Bash-4.4 and later reset the
+                     loop state to prevent this
+
+       [1mcompat44[0m
+              •      the shell sets up the values used by [1mBASH_ARGV [22mand [1mBASH_ARGC [22mso they can expand to the  shell's  posi‐
+                     tional parameters even if extended debugging mode is not enabled
+              •      a  subshell  inherits  loops  from its parent context, so [1mbreak [22mor [1mcontinue [22mwill cause the subshell to
+                     exit.  Bash-5.0 and later reset the loop state to prevent the exit
+              •      variable assignments preceding builtins like [1mexport [22mand [1mreadonly [22mthat set attributes continue  to  af‐
+                     fect variables with the same name in the calling environment even if the shell is not in posix mode
+
+       [1mcompat50[0m
+              •      Bash-5.1 changed the way [1m$RANDOM [22mis generated to introduce slightly more randomness. If the shell com‐
+                     patibility level is set to 50 or lower, it reverts to the method from bash-5.0 and previous  versions,
+                     so  seeding  the random number generator by assigning a value to [1mRANDOM [22mwill produce the same sequence
+                     as in bash-5.0
+              •      If the command hash table is empty, bash versions prior to bash-5.1 printed an  informational  message
+                     to  that effect, even when producing output that can be reused as input. Bash-5.1 suppresses that mes‐
+                     sage when the [1m-l [22moption is supplied.
+
+[1mSEE ALSO[0m
+       bash(1), sh(1)
+
+GNU Bash 5.0                                            2004 Apr 20                                        BASH_BUILTINS(1)
