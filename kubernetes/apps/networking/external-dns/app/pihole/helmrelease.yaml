@@ -32,7 +32,7 @@ spec:
         value: pihole
     extraArgs:
       - --ingress-class=internal
-      - --pihole-server=http://10.10.31.9
+      - --pihole-server=http://192.168.99.99
     # registry: txt
     policy: upsert-only
     sources: ["service", "ingress"]
