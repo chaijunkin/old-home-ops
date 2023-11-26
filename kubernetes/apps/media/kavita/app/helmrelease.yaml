@@ -54,7 +54,7 @@ spec:
         className: external
         annotations:
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Media
+          gethomepage.dev/group: Media Service
           gethomepage.dev/name: Kavita
           gethomepage.dev/icon: kavita.png
           gethomepage.dev/description: Comic/Manga service
