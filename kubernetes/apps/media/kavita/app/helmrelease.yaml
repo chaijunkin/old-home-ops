@@ -51,7 +51,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: external
+        className: internal
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media
@@ -62,7 +62,7 @@ spec:
           gethomepage.dev/widget.url: http://kavita.media:5000
           # gethomepage.dev/widget.username: "{{HOMEPAGE_VAR_KAVITA_USERNAME}"
           # gethomepage.dev/widget.password: "{{HOMEPAGE_VAR_KAVITA_PASSWORD}"
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          # external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: &host "kavita.${SECRET_DOMAIN}"
             paths:
