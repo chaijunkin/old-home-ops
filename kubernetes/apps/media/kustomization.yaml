@@ -11,6 +11,7 @@ resources:
   # - ./freshrss/ks.yaml
   # - ./ghost/ks.yaml
   - ./jellyfin/ks.yaml
+  - ./kavita/ks.yaml
   - ./minio/ks.yaml
   - ./navidrome/ks.yaml
   - ./nextcloud/ks.yaml
