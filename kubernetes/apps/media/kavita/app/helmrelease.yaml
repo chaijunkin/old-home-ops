@@ -81,16 +81,16 @@ spec:
           - hosts:
               - *host
               - *customHost
-    # persistence:
-    #   config:
-    #     enabled: true
-    #     existingClaim: *app
-    #     advancedMounts:
-    #       main:
-    #         main:
-    #           - path: /kavita/config
-    #   media:
-    #     existingClaim: pvc-smb-media
-    #     globalMounts:
-    #       - path: /data/
-    #         subPath: media
+    persistence:
+      # config:
+      #   enabled: true
+      #   existingClaim: *app
+      #   advancedMounts:
+      #     main:
+      #       main:
+      #         - path: /kavita/config
+      media:
+        existingClaim: pvc-smb-media
+        globalMounts:
+          - path: /data/
+            subPath: media
