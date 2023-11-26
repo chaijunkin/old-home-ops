@@ -37,12 +37,12 @@ spec:
               tag: 0.7.8@sha256:48b3c2c07f90feb4641ddb791f96a1bf6e70a2b27da8c8b2ca0cc2c627b91d72
             env:
               TZ: ${TIMEZONE}
-            resources:
-              requests:
-                cpu: 15m
-                memory: 300M
-              limits:
-                memory: 700M
+            # resources:
+            #   requests:
+            #     cpu: 15m
+            #     memory: 300M
+            #   limits:
+            #     memory: 700M
     service:
       main:
         ports:
@@ -51,7 +51,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: internal
+        className: external
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/group: Media
@@ -62,7 +62,7 @@ spec:
           gethomepage.dev/widget.url: http://kavita.media:5000
           # gethomepage.dev/widget.username: "{{HOMEPAGE_VAR_KAVITA_USERNAME}"
           # gethomepage.dev/widget.password: "{{HOMEPAGE_VAR_KAVITA_PASSWORD}"
-          # external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: &host "kavita.${SECRET_DOMAIN}"
             paths:
