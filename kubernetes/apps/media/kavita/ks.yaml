@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-kavita
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/media/minio/app
+  path: ./kubernetes/apps/media/kavita/app
   prune: true
   sourceRef:
     kind: GitRepository
