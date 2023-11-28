@@ -132,7 +132,7 @@ spec:
             - *host
     persistence:
       enabled: true
-      # existingClaim: pvc-smb-nextcloud
+      existingClaim: pvc-smb-nextcloud-config
       nextcloudData:
         enabled: true
         existingClaim: pvc-smb-nextcloud
