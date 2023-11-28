@@ -133,7 +133,7 @@ spec:
     persistence:
       enabled: true
       # storageClass: local-path
-      existingClaim: pvc-smb-nextcloud-config
+      existingClaim: pvc-smb-nextcloud
       nextcloudData:
         enabled: true
         existingClaim: pvc-smb-nextcloud
