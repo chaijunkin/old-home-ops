@@ -56,7 +56,7 @@ spec:
             secretKeyRef:
               name: *secret
               key: NEXTCLOUD_REDIS_PASSWORD
-      host: &host nextcloud.${SECRET_DOMAIN}
+      host: &host cloud.${SECRET_DOMAIN}
       mail:
         enabled: false
         fromAddress: admin
@@ -93,10 +93,10 @@ spec:
         databaseKey: NEXTCLOUD_POSTGRESQL_NAME
     ingress:
       enabled: true
-      className: "internal"
+      className: "external"
       # servicePort: http
       annotations:
-        # external-dns.alpha.kubernetes.io/target: "nextcloud.${SECRET_DOMAIN}"
+        external-dns.alpha.kubernetes.io/target: "cloud.${SECRET_DOMAIN}"
         nginx.ingress.kubernetes.io/server-snippet: |-
           server_tokens off;
           proxy_hide_header X-Powered-By;
@@ -132,7 +132,8 @@ spec:
             - *host
     persistence:
       enabled: true
-      existingClaim: pvc-smb-nextcloud-config
+      storageClass: local-path
+      # existingClaim: pvc-smb-nextcloud-config
       nextcloudData:
         enabled: true
         existingClaim: pvc-smb-nextcloud
