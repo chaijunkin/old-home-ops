@@ -132,8 +132,8 @@ spec:
             - *host
     persistence:
       enabled: true
-      storageClass: local-path
-      # existingClaim: pvc-smb-nextcloud-config
+      # storageClass: local-path
+      existingClaim: pvc-smb-nextcloud-config
       nextcloudData:
         enabled: true
         existingClaim: pvc-smb-nextcloud
