@@ -99,10 +99,10 @@ spec:
         databaseKey: NEXTCLOUD_POSTGRESQL_NAME
     ingress:
       enabled: true
-      className: "external"
+      className: "internal"
       # servicePort: http
       annotations:
-        external-dns.alpha.kubernetes.io/target: "drive.${SECRET_DOMAIN}"
+        # external-dns.alpha.kubernetes.io/target: "drive.${SECRET_DOMAIN}"
         nginx.ingress.kubernetes.io/server-snippet: |-
           server_tokens off;
           proxy_hide_header X-Powered-By;
