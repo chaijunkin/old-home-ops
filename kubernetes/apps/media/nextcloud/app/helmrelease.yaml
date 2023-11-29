@@ -34,6 +34,12 @@ spec:
     nginx:
       enabled: true
     nextcloud:
+      extraInitContainers:
+        - name: init-db
+          image: ghcr.io/onedr0p/postgres-init:14.8
+          envFrom:
+            - secretRef:
+                name: nextcloud-secret
       configs:
         local.config.php: |-
           <?php
@@ -82,12 +88,6 @@ spec:
           authtype: tls
           name: ""
           password: ""
-      extraInitContainers:
-        - name: init-db
-          image: ghcr.io/onedr0p/postgres-init:14.8
-          envFrom:
-            - secretRef:
-                name: nextcloud-secret
       # securityContext:
       #   runAsUser: 1000
       #   runAsGroup: 1000
