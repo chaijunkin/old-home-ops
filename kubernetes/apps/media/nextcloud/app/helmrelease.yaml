@@ -41,21 +41,20 @@ spec:
             - secretRef:
                 name: nextcloud-secret
       configs:
-        local.config.php: |-
+        proxy.config.php: |-
           <?php
           $CONFIG = array (
             'trusted_proxies' =>
             array (
-              0 => '127.0.0.1',
-              1 => '172.16.0.0/16',
+              0 => '${SERVICE_CIDR}',
             ),
             'forwarded_for_headers' =>
             array (
               0 => 'HTTP_X_FORWARDED_FOR',
             ),
-            'default_phone_region' => 'PL',
-            'trashbin_retention_obligation' => 'auto, 30',
-            'auth.bruteforce.protection.enabled' => true,
+            'overwrite.cli.url' => 'https://drive.${SECRET_DOMAIN}',
+            'overwriteprotocol' => 'https',
+            'skeletondirectory' => '',
           );
       datadir: /var/www/data
       existingSecret:
