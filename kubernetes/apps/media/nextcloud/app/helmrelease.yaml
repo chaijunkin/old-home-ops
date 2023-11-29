@@ -71,12 +71,12 @@ spec:
           authtype: tls
           name: ""
           password: ""
-      extraInitContainers:
-        - name: init-db
-          image: ghcr.io/onedr0p/postgres-init:14.8
-          envFrom:
-            - secretRef:
-                name: nextcloud-secret
+      # extraInitContainers:
+      #   - name: init-db
+      #     image: ghcr.io/onedr0p/postgres-init:14.8
+      #     envFrom:
+      #       - secretRef:
+      #           name: nextcloud-secret
     redis:
       enabled: false
       # auth:
@@ -136,8 +136,8 @@ spec:
             - *host
     persistence:
       enabled: true
-      storageClass: local-path
-      # existingClaim: pvc-smb-nextcloud
+      # storageClass: local-path
+      existingClaim: pvc-smb-nextcloud
       nextcloudData:
         enabled: true
         existingClaim: pvc-smb-nextcloud
