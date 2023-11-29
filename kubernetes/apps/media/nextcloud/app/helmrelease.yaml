@@ -34,12 +34,23 @@ spec:
     nginx:
       enabled: true
     nextcloud:
-      # configs:
-      #   proxy.config.php: |-
-      #     <?php
-      #     $CONFIG = array (
-      #       'trusted_proxies' => array('${SERVICE_CIDR}')
-      #     );
+      configs:
+        local.config.php: |-
+          <?php
+          $CONFIG = array (
+            'trusted_proxies' =>
+            array (
+              0 => '127.0.0.1',
+              1 => '172.16.0.0/16',
+            ),
+            'forwarded_for_headers' =>
+            array (
+              0 => 'HTTP_X_FORWARDED_FOR',
+            ),
+            'default_phone_region' => 'PL',
+            'trashbin_retention_obligation' => 'auto, 30',
+            'auth.bruteforce.protection.enabled' => true,
+          );
       datadir: /var/www/data
       existingSecret:
         enabled: true
@@ -101,20 +112,32 @@ spec:
       # servicePort: http
       annotations:
         external-dns.alpha.kubernetes.io/target: "drive.${SECRET_DOMAIN}"
-        nginx.ingress.kubernetes.io/proxy-body-size: 512M
+        nginx.ingress.kubernetes.io/proxy-body-size: "10G"
         nginx.ingress.kubernetes.io/proxy-buffering: "off"
         nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
-        nginx.ingress.kubernetes.io/server-snippet: |
+        nginx.ingress.kubernetes.io/server-snippet: |-
           server_tokens off;
-          location ^~ /.well-known {
-            location = /.well-known/carddav { return 301 /remote.php/dav/; }
-            location = /.well-known/caldav { return 301 /remote.php/dav/; }
-            location = /.well-known/acme-challenge { try_files $uri $uri/ =404; }
-            location = /.well-known/pki-validation { try_files $uri $uri/ =404; }
-            return 301 /index.php$request_uri;
+          proxy_hide_header X-Powered-By;
+          rewrite ^/.well-known/webfinger /public.php?service=webfinger last;
+          rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+          rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json;
+          location = /.well-known/carddav {
+            return 301 $scheme://$host/remote.php/dav;
           }
-          location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)(?:$|/)  { return 404; }
-          location ~ ^/(?:\.|autotest|occ|issue|indie|db_|console)                { return 404; }
+          location = /.well-known/caldav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /robots.txt {
+            allow all;
+            log_not_found off;
+            access_log off;
+          }
+          location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+            deny all;
+          }
+          location ~ ^/(?:autotest|occ|issue|indie|db_|console) {
+            deny all;
+          }
       path: /
       pathType: Prefix
       tls:
@@ -122,12 +145,12 @@ spec:
             - *host
     persistence:
       enabled: true
-      storageClass: local-path
-      # existingClaim: pvc-smb-nextcloud
-      nextcloudData:
-        enabled: true
-        existingClaim: pvc-smb-nextcloud
-        accessMode: ReadWriteMany
+      # storageClass: local-path
+      existingClaim: pvc-smb-nextcloud
+      # nextcloudData:
+      #   enabled: true
+      #   existingClaim: pvc-smb-nextcloud
+      #   accessMode: ReadWriteMany
   # valuesFrom:
   #   - targetPath: externalDatabase.user
   #     kind: Secret
