@@ -34,12 +34,12 @@ spec:
     nginx:
       enabled: true
     nextcloud:
-      configs:
-        proxy.config.php: |-
-          <?php
-          $CONFIG = array (
-            'trusted_proxies' => array('${SERVICE_CIDR}')
-          );
+      # configs:
+      #   proxy.config.php: |-
+      #     <?php
+      #     $CONFIG = array (
+      #       'trusted_proxies' => array('${SERVICE_CIDR}')
+      #     );
       datadir: /var/www/data
       existingSecret:
         enabled: true
