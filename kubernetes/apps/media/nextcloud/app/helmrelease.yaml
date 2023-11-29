@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: nextcloud
-      version: 4.5.1
+      version: 4.5.2
       sourceRef:
         kind: HelmRepository
         name: nextcloud
@@ -88,8 +88,6 @@ spec:
     externalDatabase:
       enabled: true
       type: 'postgresql'
-      database: nextcloud
-      host: postgres-rw.database.svc.cluster.local
       existingSecret:
         enabled: true
         secretName: *secret
