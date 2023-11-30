@@ -58,6 +58,7 @@ spec:
             'overwrite.cli.url' => 'https://drive.${SECRET_DOMAIN}',
             'overwriteprotocol' => 'https',
             'skeletondirectory' => '',
+            'default_phone_region' => 'MY',
           );
       datadir: /var/www/data
       existingSecret:
@@ -66,9 +67,9 @@ spec:
         usernameKey: NEXTCLOUD_ADMIN_USER
         passwordKey: NEXTCLOUD_ADMIN_PASSWORD
         # tokenKey: METRICS_TOKEN
-        # smtpHostKey: SMTP_HOST
-        # smtpUsernameKey: SMTP_USERNAME
-        # smtpPasswordKey: SMTP_PASSWORD
+        smtpHostKey: SMTP_HOST
+        smtpUsernameKey: SMTP_USERNAME
+        smtpPasswordKey: SMTP_PASSWORD
       extraEnv:
         - name: REDIS_HOST
           value: nextcloud-redis.media.svc.cluster.local
@@ -81,15 +82,12 @@ spec:
               key: NEXTCLOUD_REDIS_PASSWORD
       
       mail:
-        enabled: false
-        fromAddress: admin
+        enabled: true
+        fromAddress: apphub
         domain: ${SECRET_DOMAIN}
         smtp:
-          host: smtp.${SECRET_DOMAIN}
           port: 587
           authtype: tls
-          name: ""
-          password: ""
       # securityContext:
       #   runAsUser: 1000
       #   runAsGroup: 1000
@@ -126,8 +124,8 @@ spec:
         nginx.ingress.kubernetes.io/server-snippet: |-
           server_tokens off;
           proxy_hide_header X-Powered-By;
-          rewrite ^/.well-known/webfinger /public.php?service=webfinger last;
-          rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+          rewrite ^/.well-known/webfinger /index.php/.well-known/webfinger last;
+          rewrite ^/.well-known/nodeinfo /index.php/.well-known/nodeinfo last;
           rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json;
           location = /.well-known/carddav {
             return 301 $scheme://$host/remote.php/dav;
