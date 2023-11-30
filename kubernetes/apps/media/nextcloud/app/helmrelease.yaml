@@ -159,3 +159,7 @@ spec:
       #   enabled: true
         # existingClaim: pvc-smb-nextcloud
         # accessMode: ReadWriteMany
+    livenessProbe:
+      enabled: false
+    readinessProbe:
+      enabled: false
