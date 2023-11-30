@@ -151,4 +151,8 @@ spec:
             - *host
     persistence:
       enabled: true
-      existingClaim: pvc-smb-nextcloud
+      storageClass: local-path
+      nextcloudData:
+        enabled: true
+        existingClaim: pvc-smb-nextcloud
+        accessMode: ReadWriteMany
