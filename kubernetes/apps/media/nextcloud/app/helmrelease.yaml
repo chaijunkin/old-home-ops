@@ -33,6 +33,8 @@ spec:
       #   - myRegistrKeySecretName
     nginx:
       enabled: true
+    lifecyle:
+      postStartCommand: ["/bin/sh", "-c", "echo \"ServerName drive.cloudjur.com\" | tee -a /etc/apache2/apache2.conf"]
     nextcloud:
       host: &host drive.${SECRET_DOMAIN}
       extraInitContainers:
