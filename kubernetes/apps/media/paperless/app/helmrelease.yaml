@@ -43,8 +43,6 @@ spec:
             envFrom:
               - secretRef:
                   name: paperless-secret
-              - configMapRef:
-                  name: paperless-configmap
             env:
               PAPERLESS_URL: https://paperless.${SECRET_DOMAIN}
               PAPERLESS_PORT: "8000"
