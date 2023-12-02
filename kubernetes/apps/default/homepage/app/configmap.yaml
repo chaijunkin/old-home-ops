@@ -51,14 +51,6 @@ data:
             description: Backup Password manager
             href: https://vault.bitwarden.com/#/login
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/bitwarden.png
-        # - FireFly-iii:
-        #     description: Finance & Budgeting service
-        #     href: https://firefly-iii.${SECRET_DOMAIN}
-        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/firefly.png
-        # - Ghost:
-        #     description: Blogging service
-        #     href: https://ghost.${SECRET_DOMAIN}
-        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/ghost.png
 
     - Home Service:
         - Home Assistant:
@@ -69,7 +61,6 @@ data:
             description: ERP service
             href: https://odoo.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/odoo.png
-
         # - Wikijs:
         #     description: Wiki service
         #     href: https://wikijs.${SECRET_DOMAIN}
