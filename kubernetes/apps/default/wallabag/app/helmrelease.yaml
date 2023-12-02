@@ -87,9 +87,14 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "internal"
-        # annotations:
-        #   external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        className: "external"
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Application Service
+          gethomepage.dev/name: Wallabag
+          gethomepage.dev/description: Bookmarking Service
+          gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/wallabag.png
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: &host "wallabag.${SECRET_DOMAIN}"
             paths:

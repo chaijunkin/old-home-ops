@@ -71,6 +71,11 @@ spec:
         enabled: true
         className: internal
         annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Downloads Service
+          gethomepage.dev/name: Readarr
+          gethomepage.dev/description: Readarr service
+          gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/readarr.png
           nginx.ingress.kubernetes.io/configuration-snippet: |-
             proxy_set_header Accept-Encoding "";
             sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/readarr/nord.css"></head>';

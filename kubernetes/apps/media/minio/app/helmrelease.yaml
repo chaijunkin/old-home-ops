@@ -63,6 +63,12 @@ spec:
 
     ingress:
       main:
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Compute/Storage Infrastructure
+          gethomepage.dev/name: Minio
+          gethomepage.dev/description: Object Storage
+          gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/minio.png
         enabled: true
         className: "internal"
         hosts:

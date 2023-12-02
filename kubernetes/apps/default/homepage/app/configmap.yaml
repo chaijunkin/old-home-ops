@@ -59,14 +59,6 @@ data:
             description: Feed aggregator services
             href: https://miniflux.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/miniflux.png
-        - Excalidraw:
-            description: Drawing services
-            href: https://draw.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/excalidraw.png
-        - Wallabag:
-            description: Book marking services
-            href: https://wallabag.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/wallabag.png
         # - Ghost:
         #     description: Blogging service
         #     href: https://ghost.${SECRET_DOMAIN}
@@ -87,10 +79,6 @@ data:
             description: File hosting service
             href: https://nextcloud.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/nextcloud.png
-        - Paperless-ngx:
-            description: Document service
-            href: https://paperless.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/paperless.png
         # - Wikijs:
         #     description: Wiki service
         #     href: https://wikijs.${SECRET_DOMAIN}
@@ -104,48 +92,11 @@ data:
         #     href: https://immich.${SECRET_DOMAIN}
         #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/immich.png
 
-    - Downloads Service:
-        - Autobrr:
-            description: Autobrr service
-            href: https://autobrr.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/autobrr.png
-        - Lidarr:
-            description: Lidarr service
-            href: https://lidarr.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/lidarr.png
-        - Prowlarr:
-            description: Prowlarr service
-            href: https://prowlarr.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/prowlarr.png
-        - qbittorrent:
-            description: qbittorrent service
-            href: https://qbittorrent.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/qbittorrent.png
-        - Radarr:
-            description: Radarr service
-            href: https://radarr.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/radarr.png
-        - Readarr:
-            description: Readarr service
-            href: https://readarr.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/readarr.png
-        - Sabnzbd:
-            description: Sabnzbd service
-            href: https://sabnzbd.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/sabnzbd.png
-        - Sonarr:
-            description: Sonarr service
-            href: https://sonarr.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/sonarr.png
     - Compute/Storage Infrastructure:
         - Proxmox (Dashy):
             description: Compute hypervisor
             href: https://dashy.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/proxmox.png
-        - Minio:
-            description: Object Storage
-            href: https://minio.${SECRET_DOMAIN}/login
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/minio.png
         - NAS:
             description: SMB service provider
             href: https://nas.${SECRET_DOMAIN}/login
@@ -171,28 +122,12 @@ data:
             description: Wifi provider
             href: https://ap.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/omada.png
-        - Hubble:
-            description: Network, Service & Security Observability
-            href: https://hubble.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/hubble.png
-        - Kutt:
-            description: URL shortner
-            href: https://kutt.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kutt.png
+        # - Kutt:
+        #     description: URL shortner
+        #     href: https://kutt.${SECRET_DOMAIN}
+        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kutt.png
 
     - Platform Service:
-        - GitOps:
-            description: Kubernetes GitOps
-            href: https://gitops.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/svg/flux-cd.svg
-        - Authentik:
-            description: Authentication provider
-            href: https://auth.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/authentik.png
-        - Kubernetes:
-            description: Container Orchestrator dashboard
-            href: https://kubernetes.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kubernetes-dashboard.png
         - NetBox:
             description: DCIM/IPAM tools
             href: https://netbox.${SECRET_DOMAIN}
@@ -211,18 +146,10 @@ data:
             description: Alert manager server
             href: https://alertmanager.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/alertmanager.png
-        - Grafana:
-            description: Monitoring Visualization Dashboard
-            href: https://grafana.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/grafana.png
         - Loki:
             description: Log management server
             href: https://grafana.${SECRET_DOMAIN}/explore?orgId=1&left=%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D%7D
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/loki.png
-        - Prometheus:
-            description: Metrics server
-            href: https://prometheus.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/prometheus.png
         # - Jaeger:
         #     description: Distributed tracing server
         #     href: https://jaeger.${SECRET_DOMAIN}
@@ -237,10 +164,10 @@ data:
             description: Mail provider
             href: https://mailadmin.zoho.com/hosting?domain=${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/zohomail.png
-        - Porkbun:
-            description: DNS registrar
-            href: https://porkbun.com/
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/porkbun.png
+        - Fly.io:
+            description: Edge computing platform
+            href: https://fly.io/dashboard
+            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/fly-io.png
         - Tailscale:
             description: Mesh VPN provider
             href: https://login.tailscale.com/admin/machines
@@ -249,6 +176,10 @@ data:
             description: External backup provider
             href: https://secure.backblaze.com/user_overview.htm
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/backblaze.png
+        - Porkbun:
+            description: DNS registrar
+            href: https://porkbun.com/
+            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/porkbun.png
         - Proton VPN:
             description: Proton VPN
             href: https://account.protonvpn.com/login
@@ -257,20 +188,7 @@ data:
             description: External Uptime monitoring
             href: https://ext-uptime.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/uptime-kuma.png
-
-    - Utility Service:
-        - It-Tools:
-            description: Developer utility tools
-            href: https://it-tools.${SECRET_DOMAIN}/
-            icon: https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/it-tools.png
-        - CyberChef:
-            description: Cyber operation tools
-            href: https://cyberchef.${SECRET_DOMAIN}/
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/cyberchef.png
-        - PrivateBin:
-            description: Pastebin services
-            href: https://privatebin.${SECRET_DOMAIN}/
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/privatebin.png
+        
 
     - Management Tools:
         - VsCode:

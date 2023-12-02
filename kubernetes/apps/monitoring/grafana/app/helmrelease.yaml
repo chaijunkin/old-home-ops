@@ -161,6 +161,11 @@ spec:
       enabled: true
       ingressClassName: internal
       annotations:
+        gethomepage.dev/enabled: "true"
+        gethomepage.dev/group: Monitoring Service
+        gethomepage.dev/name: Grafana
+        gethomepage.dev/description: Monitoring Visualization Dashboard
+        gethomepage.dev/icon: grafana.png
         hajimari.io/icon: simple-icons:grafana
       hosts:
         - &host "grafana.${SECRET_DOMAIN}"

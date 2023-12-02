@@ -117,6 +117,11 @@ spec:
       className: "external"
       # servicePort: http
       annotations:
+        gethomepage.dev/enabled: "true"
+        gethomepage.dev/group: Media Service
+        gethomepage.dev/name: Nextcloud
+        gethomepage.dev/description: File Hosting Service
+        gethomepage.dev/icon: nextcloud.png
         external-dns.alpha.kubernetes.io/target: "drive.${SECRET_DOMAIN}"
         nginx.ingress.kubernetes.io/proxy-body-size: "10G"
         nginx.ingress.kubernetes.io/proxy-buffering: "off"

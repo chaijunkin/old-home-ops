@@ -70,6 +70,11 @@ spec:
         enabled: true
         className: internal
         annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Downloads Service
+          gethomepage.dev/name: Prowlarr
+          gethomepage.dev/description: Prowlarr service
+          gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/prowlarr.png
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_set_header Accept-Encoding "";
             sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/prowlarr/nord.css"></head>';

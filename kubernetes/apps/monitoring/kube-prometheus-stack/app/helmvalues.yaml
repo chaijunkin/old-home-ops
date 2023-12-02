@@ -90,6 +90,11 @@ data:
         enabled: true
         ingressClassName: internal
         annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Monitoring Service
+          gethomepage.dev/name: Prometheus
+          gethomepage.dev/description: Metrics server
+          gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/prometheus.png
           hajimari.io/appName: Prometheus
           hajimari.io/icon: simple-icons:prometheus
         pathType: Prefix

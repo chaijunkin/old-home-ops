@@ -65,6 +65,12 @@ spec:
       main:
         enabled: true
         className: "internal"
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Downloads Service
+          gethomepage.dev/name: Sonarr
+          gethomepage.dev/description: Sonarr service
+          gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/sonarr.png
         hosts:
           - host: &host "sonarr.${SECRET_DOMAIN}"
             paths:

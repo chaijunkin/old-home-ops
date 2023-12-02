@@ -33,6 +33,11 @@ spec:
       enabled: true
       className: internal
       annotations:
+        gethomepage.dev/enabled: "true"
+        gethomepage.dev/group: Platform Service
+        gethomepage.dev/name: GitOps
+        gethomepage.dev/description: Kubernetes GitOps
+        gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/svg/flux-cd.svg
         hajimari.io/icon: sawtooth-wave
       hosts:
         - host: &host "gitops.${SECRET_DOMAIN}"

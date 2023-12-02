@@ -33,6 +33,11 @@ spec:
       enabled: true
       className: internal
       annotations:
+        gethomepage.dev/enabled: "true"
+        gethomepage.dev/group: Platform Service
+        gethomepage.dev/name: Kubernetes
+        gethomepage.dev/description: Container Orchestrator dashboard
+        gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kubernetes-dashboard.png
         hajimari.io/icon: mdi:kubernetes
       hosts:
         - &host "kubernetes.${SECRET_DOMAIN}"
