@@ -70,7 +70,6 @@ data:
             href: https://odoo.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/odoo.png
 
-    - Media Service:
         # - Wikijs:
         #     description: Wiki service
         #     href: https://wikijs.${SECRET_DOMAIN}
