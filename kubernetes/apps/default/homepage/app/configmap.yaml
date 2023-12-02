@@ -119,16 +119,6 @@ data:
         #     href: https://kutt.${SECRET_DOMAIN}
         #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kutt.png
 
-    # - Platform Service:
-    #     - NetBox:
-    #         description: DCIM/IPAM tools
-    #         href: https://netbox.${SECRET_DOMAIN}
-    #         icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/netbox.png
-        # - Node-Red:
-        #     description: Flow-based tools
-        #     href: https://node-red.${SECRET_DOMAIN}
-        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/nodered.png
-
     - Monitoring Service:
         - ChangeDetection.io:
             description: Change detection
