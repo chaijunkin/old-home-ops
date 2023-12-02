@@ -51,14 +51,10 @@ data:
             description: Backup Password manager
             href: https://vault.bitwarden.com/#/login
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/bitwarden.png
-        - FireFly-iii:
-            description: Finance & Budgeting service
-            href: https://firefly-iii.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/firefly.png
-        - Miniflux:
-            description: Feed aggregator services
-            href: https://miniflux.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/miniflux.png
+        # - FireFly-iii:
+        #     description: Finance & Budgeting service
+        #     href: https://firefly-iii.${SECRET_DOMAIN}
+        #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/firefly.png
         # - Ghost:
         #     description: Blogging service
         #     href: https://ghost.${SECRET_DOMAIN}
