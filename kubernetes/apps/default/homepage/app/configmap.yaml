@@ -75,10 +75,6 @@ data:
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/odoo.png
 
     - Media Service:
-        - Nextcloud:
-            description: File hosting service
-            href: https://nextcloud.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/nextcloud.png
         # - Wikijs:
         #     description: Wiki service
         #     href: https://wikijs.${SECRET_DOMAIN}
@@ -127,11 +123,11 @@ data:
         #     href: https://kutt.${SECRET_DOMAIN}
         #     icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/kutt.png
 
-    - Platform Service:
-        - NetBox:
-            description: DCIM/IPAM tools
-            href: https://netbox.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/netbox.png
+    # - Platform Service:
+    #     - NetBox:
+    #         description: DCIM/IPAM tools
+    #         href: https://netbox.${SECRET_DOMAIN}
+    #         icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/netbox.png
         # - Node-Red:
         #     description: Flow-based tools
         #     href: https://node-red.${SECRET_DOMAIN}

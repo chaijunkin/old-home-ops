@@ -83,14 +83,14 @@ spec:
 
     ingress:
       enabled: true
-      ingressClassName: internal
+      ingressClassName: external
       annotations:
         gethomepage.dev/enabled: "true"
         gethomepage.dev/group: Platform Service
         gethomepage.dev/name: Authentik
         gethomepage.dev/description: Authentication provider
         gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/authentik.png
-        # external-dns.alpha.kubernetes.io/target: authentik.${SECRET_DOMAIN}
+        external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
         nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
         nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
       hosts:
