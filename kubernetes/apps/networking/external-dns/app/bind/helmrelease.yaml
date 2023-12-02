@@ -53,4 +53,4 @@ spec:
     serviceMonitor:
       enabled: true
     podAnnotations:
-      secret.reloader.stakater.com/reload: external-dns-bind-secret
+      secret.reloader.stakater.com/reload: bind-secret
