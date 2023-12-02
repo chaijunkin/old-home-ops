@@ -5,6 +5,6 @@ kind: Kustomization
 namespace: networking
 resources:
   - ./dnsendpoint-crd.yaml
-  - ./bind
+  # - ./bind
   - ./cloudflare
   - ./pihole
