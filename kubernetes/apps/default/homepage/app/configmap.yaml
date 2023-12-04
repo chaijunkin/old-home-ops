@@ -87,7 +87,7 @@ data:
     - Network Infrastructure:
         - Opnsense:
             description: Router & Firewall Appliance
-            href: https://opnsense.${SECRET_DOMAIN}
+            href: https://gateway.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/opnsense.png
         - Pihole:
             description: Local DNS Server and Adblocker

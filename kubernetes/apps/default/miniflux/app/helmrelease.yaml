@@ -44,7 +44,7 @@ spec:
               repository: ghcr.io/miniflux/miniflux
               tag: 2.0.50
             env:
-              BASE_URL: https://miniflux.devbu.io
+              BASE_URL: https://miniflux.${SECRET_DOMAIN}
               CREATE_ADMIN: "1"
               DEBUG: "1"
               LOG_DATE_TIME: "1"
@@ -52,9 +52,9 @@ spec:
               # METRICS_COLLECTOR: "1"
               # OAUTH2_CLIENT_ID: miniflux
               # OAUTH2_USER_CREATION: "1"
-              # OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://auth.devbu.io
+              # OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://auth.${SECRET_DOMAIN}
               # OAUTH2_PROVIDER: oidc
-              # OAUTH2_REDIRECT_URL: https://miniflux.devbu.io/oauth2/oidc/callback
+              # OAUTH2_REDIRECT_URL: https://miniflux.${SECRET_DOMAIN}/oauth2/oidc/callback
               POLLING_SCHEDULER: entry_frequency
               POLLING_FREQUENCY: "15"
               PORT: &port 80
