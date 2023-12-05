@@ -50,12 +50,10 @@ spec:
               APP_BASE_URL: https://joplin.${SECRET_DOMAIN}
               APP_PORT: &port 8080
               DB_CLIENT: pg
-              # MAILER_ENABLED: 1
-              # MAILER_HOST: smtp-relay.default.svc.cluster.local.
-              # MAILER_PORT: 2525
-              # MAILER_SECURITY: none
-              # MAILER_NOREPLY_NAME: JoplinServer
-              # MAILER_NOREPLY_EMAIL: joplin@${SECRET_DOMAIN}
+              MAILER_ENABLED: 1
+              MAILER_PORT: 587
+              MAILER_SECURITY: tls
+              MAILER_NOREPLY_NAME: JoplinServer
             envFrom: *envFrom
             resources:
               requests:
