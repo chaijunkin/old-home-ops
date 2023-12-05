@@ -52,7 +52,7 @@ spec:
               DB_CLIENT: pg
               MAILER_ENABLED: 1
               MAILER_PORT: 587
-              MAILER_SECURITY: tls
+              MAILER_SECURITY: starttls
               MAILER_NOREPLY_NAME: JoplinServer
             envFrom: *envFrom
             resources:
