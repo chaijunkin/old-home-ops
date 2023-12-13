@@ -163,11 +163,11 @@ spec:
             deny all;
           }
 
-          # location = /robots.txt {
-          #     allow all;
-          #     log_not_found off;
-          #     access_log off;
-          # }
+          location = /robots.txt {
+              allow all;
+              log_not_found off;
+              access_log off;
+          }
         # nginx.ingress.kubernetes.io/server-snippet: |-
         #   server_tokens off;
         #   proxy_hide_header X-Powered-By;
