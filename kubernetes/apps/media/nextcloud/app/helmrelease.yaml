@@ -89,7 +89,7 @@ spec:
         fromAddress: apphub
         domain: ${SECRET_DOMAIN}
         smtp:
-          port: 587
+          port: 465
           authtype: tls
       # securityContext:
       #   runAsUser: 1000

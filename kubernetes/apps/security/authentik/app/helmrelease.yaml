@@ -31,8 +31,8 @@ spec:
     authentik:
       log_level: info
       email:
-        port: 587
-        use_tls: true
+        port: 465
+        use_ssl: true
       error_reporting:
         enabled: false
         send_pii: false
