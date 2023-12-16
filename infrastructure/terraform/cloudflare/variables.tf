@@ -16,8 +16,23 @@ variable "cloudflare_zone_name" {
 }
 
 
-variable "zoho_txt_value" {
-  description = "Zoho TXT value"
+variable "mail_txt_value" {
+  description = "Mail TXT value"
+  sensitive   = true
+}
+
+variable "mail_mx1_value" {
+  description = "Mail MX 1 value"
+  sensitive   = true
+}
+
+variable "mail_mx2_value" {
+  description = "Mail MX 2 value"
+  sensitive   = true
+}
+
+variable "mail_spf_value" {
+  description = "Mail SPF value"
   sensitive   = true
 }
 

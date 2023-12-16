@@ -4,7 +4,10 @@ locals {
   cloudflare_account_id = var.cloudflare_account_id
   cloudflare_api_token =  var.cloudflare_api_token
 
-  zoho_txt_value = var.zoho_txt_value
+  mail_txt_value = var.mail_txt_value
+  mail_mx1_value = var.mail_mx1_value
+  mail_mx2_value = var.mail_mx2_value
+  mail_spf_value = var.mail_spf_value
   dkim_value     = var.dkim_value
   dmarc_value    = var.dmarc_value
 
@@ -15,41 +18,67 @@ locals {
     #     type = "CNAME"
     #     proxied = true
     # }
-    "zoho_txt" = {
-      name  = "@"
-      value = local.zoho_txt_value
-      type  = "TXT"
+    # "mail_txt" = {
+    #   name  = "@"
+    #   value = local.mail_txt_value
+    #   type  = "TXT"
+    # }
+    "ftp" = {
+      name = "ftp"
+      value = local.mail_mx1_value
+      type = "CNAME"
     }
-    "zoho_mx1" = {
+    "webmail" = {
+      name    = "webmail"
+      value   = local.mail_mx1_value
+      type    = "CNAME"
+    }
+    "mail" = {
+      name = "mail"
+      value = local.mail_mx1_value
+      type = "CNAME"
+    }
+    "pop" = {
+      name = "pop"
+      value = local.mail_mx1_value
+      type = "CNAME"
+    }
+    "smtp" = {
+      name = "smtp"
+      value = local.mail_mx1_value
+      type = "CNAME"
+    }
+    ## This maybe don't need
+    "mail_mx0" = {
+      name     = "${local.cloudflare_zone_name}."
+      value    = "mail.${local.cloudflare_zone_name}"
+      type     = "MX"
+      priority = 5
+    }
+    "mail_mx1" = {
       name     = "@"
-      value    = "mx.zoho.com"
+      value    = local.mail_mx1_value
       type     = "MX"
       priority = 10
     }
-    "zoho_mx2" = {
+    "mail_mx2" = {
       name     = "@"
-      value    = "mx2.zoho.com"
+      value    = local.mail_mx2_value
       type     = "MX"
       priority = 20
     }
-    "zoho_mx3" = {
-      name     = "@"
-      value    = "mx3.zoho.com"
-      type     = "MX"
-      priority = 50
-    }
-    "zoho_spf" = {
+    "mail_spf" = {
       name  = "@"
-      value = "v=spf1 include:zoho.com ~all"
+      value = local.mail_spf_value
       type  = "TXT"
     }
-    "zoho_dkim" = {
-      name  = "zmail._domainkey"
+    "mail_dkim" = {
+      name  = "x._domainkey"
       value = local.dkim_value
       type  = "TXT"
       ttl   = 1
     }
-    "zoho_dmarc" = {
+    "mail_dmarc" = {
       name  = "_dmarc"
       value = local.dmarc_value
       type  = "TXT"
@@ -76,11 +105,6 @@ locals {
       value = "uptime-kuma-rdm12exn709.fly.dev"
       type = "CNAME"
     }
-    # "external-uptimekuma-status-page" = {
-    #   name = "ext-status"
-    #   value = "ext-uptime.${var.cloudflare_zone_name}"
-    #   type = "CNAME"
-    # }
   }
 
   github_A_record = [
