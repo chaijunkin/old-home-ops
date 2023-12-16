@@ -49,12 +49,12 @@ locals {
       type = "CNAME"
     }
     ## This maybe don't need
-    "mail_mx0" = {
-      name     = "${local.cloudflare_zone_name}."
-      value    = "mail.${local.cloudflare_zone_name}"
-      type     = "MX"
-      priority = 5
-    }
+    # "mail_mx0" = {
+    #   name     = "${local.cloudflare_zone_name}."
+    #   value    = "mail.${local.cloudflare_zone_name}"
+    #   type     = "MX"
+    #   priority = 5
+    # }
     "mail_mx1" = {
       name     = "@"
       value    = local.mail_mx1_value
