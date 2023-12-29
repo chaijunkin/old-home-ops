@@ -1,0 +1,109 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: syncthing
+  namespace: default
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.0.3
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    global:
+      nameOverride: syncthing
+
+    controllers:
+      main:
+        replicas: 1
+        type: deployment
+        strategy: Recreate
+        containers:
+          main:
+            nameOverride: syncthing
+            main:
+            image:
+              repository: syncthing/syncthing
+              tag: 1.27.1
+            probes:
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+              liveness:
+                enabled: false # Need to get this working
+                custom: false
+                type: TCP
+                spec:
+                  initialDelaySeconds: 120
+                  periodSeconds: 30
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+
+
+    service:
+      main:
+        enabled: true
+        ports:
+          http:
+            port: 8384
+      listen:
+        enabled: true
+        type: LoadBalancer
+        controller: main
+        annotations:
+          io.cilium/lb-ipam-ips: "${SVC_SYNCTHING_ADDR}"
+        ports:
+          discovery:
+            enabled: true
+            port: 21027
+            protocol: UDP
+          listen:
+            enabled: true
+            port: 22000
+            protocol: TCP
+          listen-udp:
+            enabled: true
+            port: 22000
+            protocol: UDP
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: internal
+        hosts:
+          - host: &host "syncthing.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+
+    persistence:
+      data:
+        enabled: true
+        type: emptyDir
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            memory: 500Mi

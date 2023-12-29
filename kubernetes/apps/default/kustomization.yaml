@@ -15,5 +15,6 @@ resources:
   - ./miniflux/ks.yaml
   - ./odoo/ks.yaml
   - ./privatebin/ks.yaml
+  - ./syncthing/ks.yaml
   - ./tabby/ks.yaml
   - ./wallabag/ks.yaml
