@@ -38,6 +38,11 @@ locals {
       value = local.mail_mx1_value
       type = "CNAME"
     }
+    "imap" = {
+      name = "imap"
+      value = local.mail_mx1_value
+      type = "CNAME"
+    }
     "pop" = {
       name = "pop"
       value = local.mail_mx1_value
