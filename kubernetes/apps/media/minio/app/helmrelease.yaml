@@ -52,12 +52,12 @@ spec:
               limits:
                 memory: 1Gi
             securityContext:
-              privileged: true
-              runAsUser: 0
-              # runAsUser: 1000
-              # runAsGroup: 1000
-              # fsGroup: 1000
-              # fsGroupChangePolicy: OnRootMismatch
+              # privileged: true
+              # runAsUser: 0
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 1004  # 1004
+              fsGroupChangePolicy: OnRootMismatch
             probes:
               liveness: &probes
                 enabled: true
