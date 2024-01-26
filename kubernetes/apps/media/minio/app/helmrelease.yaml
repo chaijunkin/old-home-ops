@@ -45,6 +45,8 @@ spec:
               - --console-address
               - :9001
             env:
+              USERMAP_UID: 568
+              USERMAP_GID: 568
               MINIO_ROOT_USER:
                 valueFrom:
                   secretKeyRef:
@@ -68,13 +70,11 @@ spec:
                 cpu: 100m
               limits:
                 memory: 1Gi
-            securityContext:
-              # privileged: true
-              # runAsUser: 0
-              # runAsUser: 568
-              # runAsGroup: 568
-              fsGroup: 568  # 1004
-              fsGroupChangePolicy: OnRootMismatch
+            # securityContext:
+            #   # privileged: true
+            #   # runAsUser: 0
+            #   fsGroup: 568  # 1004
+            #   fsGroupChangePolicy: OnRootMismatch
             probes:
               liveness: &probes
                 enabled: true
