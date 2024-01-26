@@ -47,11 +47,29 @@ spec:
                     key: MINIO_ROOT_PASSWORD
             resources:
               requests:
-                cpu: 5m
-                memory: 128M
+                memory: 100Mi
+                cpu: 100m
+              limits:
+                memory: 1Gi
             securityContext:
               privileged: true
-              runAsUser: 0
+              runAsUser: 99
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /minio/health/live
+                    port: 9000
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 10
+                  failureThreshold: 6
+              readiness: *probes
+              startup:
+                enabled: false
+            
 
     service:
       main:
@@ -60,6 +78,16 @@ spec:
             port: 9001
           s3:
             port: 9000
+
+    serviceMonitor:
+      main:
+        enabled: true
+        endpoints:
+          - port: s3
+            scheme: http
+            path: /minio/v2/metrics/cluster
+            interval: 1m
+            scrapeTimeout: 10s
 
     ingress:
       main:
@@ -78,7 +106,16 @@ spec:
                 service:
                   name: main
                   port: http
-          - host: &host "s3.${SECRET_DOMAIN}"
+      api:
+        enabled: true
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            more_set_headers "Host $host";
+            more_set_headers "X-Forwarded-For $remote_addr"
+        hosts:
+          - host: &s3Host s3.${SECRET_DOMAIN}
             paths:
               - path: /
                 service:
