@@ -116,9 +116,9 @@ spec:
           gethomepage.dev/name: Minio
           gethomepage.dev/description: Object Storage
           gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/minio.png
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            more_set_headers "Host $host";
-            more_set_headers "X-Forwarded-For $remote_addr"
+          # nginx.ingress.kubernetes.io/configuration-snippet: |
+          #   more_set_headers "Host $host";
+          #   more_set_headers "X-Forwarded-For $remote_addr"
         enabled: true
         className: "internal"
         hosts:
