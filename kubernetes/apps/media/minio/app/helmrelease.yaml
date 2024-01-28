@@ -61,6 +61,7 @@ spec:
               MINIO_PROMETHEUS_URL: https://prometheus.${SECRET_DOMAIN}
               MINIO_PROMETHEUS_AUTH_TYPE: public
               MINIO_SERVER_URL: https://s3.${SECRET_DOMAIN}
+              MINIO_SERVER_HOST: minio.${SECRET_DOMAIN}
               MINIO_UPDATE: "off"
             resources:
               requests:
