@@ -60,7 +60,7 @@ spec:
               MINIO_PROMETHEUS_JOB_ID: minio
               MINIO_PROMETHEUS_URL: https://prometheus.${SECRET_DOMAIN}
               MINIO_PROMETHEUS_AUTH_TYPE: public
-              MINIO_SERVER_URL: https://s3.${SECRET_DOMAIN}
+              # MINIO_SERVER_URL: https://s3.${SECRET_DOMAIN}
               MINIO_SERVER_HOST: minio.${SECRET_DOMAIN}
               MINIO_UPDATE: "off"
             resources:
@@ -117,9 +117,9 @@ spec:
           gethomepage.dev/name: Minio
           gethomepage.dev/description: Object Storage
           gethomepage.dev/icon: https://raw.githubusercontent.com/chaijunkin/dashboard-icons/main/png/minio.png
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            more_set_headers "Host $host";
-            more_set_headers "X-Forwarded-For $remote_addr"
+          # nginx.ingress.kubernetes.io/configuration-snippet: |
+          #   more_set_headers "Host $host";
+          #   more_set_headers "X-Forwarded-For $remote_addr"
         enabled: true
         className: "internal"
         hosts:
@@ -131,12 +131,12 @@ spec:
                   port: http
       api:
         enabled: true
-        className: external
+        className: internal
         annotations:
-          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            more_set_headers "Host $host";
-            more_set_headers "X-Forwarded-For $remote_addr"
+          external-dns.alpha.kubernetes.io/target: internal.${SECRET_DOMAIN}
+          # nginx.ingress.kubernetes.io/configuration-snippet: |
+          #   more_set_headers "Host $host";
+          #   more_set_headers "X-Forwarded-For $remote_addr"
         hosts:
           - host: &s3Host s3.${SECRET_DOMAIN}
             paths:
