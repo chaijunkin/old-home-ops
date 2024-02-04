@@ -29,12 +29,16 @@ spec:
             envFrom: &envFrom
               - secretRef:
                   name: firefly-secret
+              # TODO: set smtp secret
         containers:
           main:
             image:
               repository: fireflyiii/core
               tag: version-6.1.8
             envFrom: *envFrom
+            env:
+              TZ: "Asia/Kuala_Lumpur"
+              TRUSTED_PROXIES: "**"  # TODO: This should be changed..
             resources:
               requests:
                 cpu: 10m
