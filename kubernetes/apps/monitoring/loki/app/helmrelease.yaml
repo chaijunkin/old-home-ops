@@ -80,7 +80,7 @@ spec:
               period: 24h
         common:
           path_prefix: /var/loki
-          replication_factor: 2
+          replication_factor: 1
           storage:
             s3:
               s3: null
