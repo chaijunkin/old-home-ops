@@ -33,6 +33,9 @@ spec:
             image:
               repository: ghcr.io/onedr0p/home-assistant
               tag: 2024.2.3
+            env:
+              HASS_HTTP_TRUSTED_PROXY_1: 10.0.0.0/8
+              HASS_HTTP_TRUSTED_PROXY_2: 10.42.0.0/16
             probes:
               liveness:
                 enabled: false
