@@ -1,35 +1,35 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: home-assistant
-  namespace: home-automation
+  name: &app home-assistant
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.0.3
-      interval: 30m
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
     controllers:
       main:
-        type: statefulset
-
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
           main:
-            resources:
-              requests:
-                cpu: 15m
-                memory: 324Mi
-              limits:
-                memory: 600Mi
             image:
               repository: ghcr.io/onedr0p/home-assistant
               tag: 2024.2.3
@@ -40,25 +40,60 @@ spec:
                 enabled: false
               startup:
                 enabled: false
-            # resources:
-            #   requests:
-            #     cpu: 47m
-            #     memory: 1254M
-            #   limits:
-            #     memory: 1254M
-
+            resources:
+              requests:
+                cpu: 50m
+                memory: 400Mi
+              limits:
+                memory: 700Mi
+          codeserver:
+            image:
+              repository: ghcr.io/coder/code-server
+              tag: 4.21.1
+            env:
+              TZ: ${TIMEZONE}
+            args:
+              - "/config"
+              - --auth
+              - "none"
+              - --user-data-dir
+              - "/config/.vscode"
+              - --extensions-dir
+              - "/config/.vscode"
+            volumeMounts:
+            - name: config
+              mountPath: /config
     service:
       main:
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: "192.168.1.252"
         ports:
           http:
             port: 8123
-
+      codeserver:
+        type: ClusterIP
+        controller: main
+        ports:
+          http:
+            enabled: true
+            port: 8080
     ingress:
       main:
         enabled: true
-        className: "internal"
+        className: internal
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Home
+          gethomepage.dev/name: Home-Assistant
+          gethomepage.dev/icon: home-assistant.png
+          gethomepage.dev/description: Home Automation Software
+          # gethomepage.dev/widget.type: homeassistant
+          # gethomepage.dev/widget.url: http://home-assistant.default:8123
+          # gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_HASS_TOKEN}}"
+          # external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
         hosts:
-          - host: &host "hass.${SECRET_DOMAIN}"
+          - host: &host hass.${SECRET_DOMAIN}
             paths:
               - path: /
                 service:
@@ -67,7 +102,19 @@ spec:
         tls:
           - hosts:
               - *host
-
+      codeserver:
+        enabled: true
+        className: internal
+        hosts:
+          - host: &host hass-code.${SECRET_DOMAIN}
+            paths:
+            - path: /
+              service:
+                name: codeserver
+                port: http
+        tls:
+          - hosts:
+              - *host
     persistence:
       config:
         enabled: true
