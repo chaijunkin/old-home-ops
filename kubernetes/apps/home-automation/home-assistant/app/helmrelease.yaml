@@ -21,41 +21,18 @@ spec:
     controllers:
       main:
         type: statefulset
-        # annotations:
-        #   reloader.stakater.com/auto: "true"
-
-        # statefulset:
-        #   volumeClaimTemplates:
-        #     - name: config
-        #       accessMode: ReadWriteOnce
-        #       size: 1Gi
-        #       storageClass: local-path
-        #       globalMounts:
-        #         - path: /config
-
-        # pod:
-        #   annotations:
-        #     k8s.v1.cni.cncf.io/networks: |
-        #       [{
-        #         "name":"multus-iot",
-        #         "namespace": "network",
-        #         "ips": ["10.1.3.151/24"]
-        #       }]
 
         containers:
           main:
+            resources:
+              requests:
+                cpu: 15m
+                memory: 324Mi
+              limits:
+                memory: 600Mi
             image:
-              repository: ghcr.io/home-assistant/home-assistant
-              tag: 2023.10.3@sha256:021e2afc6e573a3623dadfe7028e63b370ebc249f3217e1f8fce80ebbfe9afe5
-            # env:
-            #   SECRET_RECORDER_DB_URL:
-            #     valueFrom:
-            #       secretKeyRef:
-            #         name: home-assistant-pguser-home-assistant
-            #         key: uri
-            # envFrom:
-            #   - secretRef:
-            #       name: home-assistant-secret
+              repository: ghcr.io/onedr0p/home-assistant
+              tag: 2024.2.3
             probes:
               liveness:
                 enabled: false
