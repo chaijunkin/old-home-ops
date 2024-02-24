@@ -4,5 +4,5 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - ./externalsecret.yaml
-  # - ./helmrelease.yaml
-  # - ./prometheus-rule.yaml
+  - ./helmrelease.yaml
+  - ./prometheus-rule.yaml
