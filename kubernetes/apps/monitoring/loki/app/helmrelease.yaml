@@ -146,13 +146,6 @@ spec:
       replicas: 2
       persistence:
         storageClass: local-path
-      extraVolumeMounts:
-      - name: rules
-        mountPath: /rules/fake
-      - name: scratch
-        mountPath: /tmp/scratch
-      - name: scratch
-        emptyDir: {}
       affinity: *affinity
     gateway:
       replicas: 2
