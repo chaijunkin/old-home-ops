@@ -123,7 +123,7 @@ spec:
     write:
       replicas: 2
       persistence:
-        storageClass: local-hostpath
+        storageClass: local-path
       affinity: &affinity |
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -134,7 +134,7 @@ spec:
     read:
       replicas: 2
       persistence:
-        storageClass: local-hostpath
+        storageClass: local-path
       extraVolumeMounts:
       - name: rules
         mountPath: /rules
@@ -145,7 +145,7 @@ spec:
     backend:
       replicas: 2
       persistence:
-        storageClass: local-hostpath
+        storageClass: local-path
       extraVolumeMounts:
       - name: rules
         mountPath: /rules/fake
