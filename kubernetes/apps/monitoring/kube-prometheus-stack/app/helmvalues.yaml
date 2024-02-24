@@ -10,7 +10,7 @@ data:
       enabled: true
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
-      enabled: false
+      enabled: true
     kube-state-metrics:
       metricLabelsAllowlist:
         - "deployments=[*]"
